@@ -1,11 +1,13 @@
-add_library(Keybind "")
+add_library(Keybind "KeyBindController.cpp")
 
 ##Library insertion
 add_subdirectory(control)
+add_subdirectory(binds)
 
 target_link_libraries(Keybind
 	PRIVATE
 	Control
+	Binds
 )
 
 target_include_directories(Keybind PRIVATE "control")
@@ -14,8 +16,6 @@ target_include_directories(Keybind PRIVATE "control")
 target_sources(Keybind
 	PRIVATE
 		"${CMAKE_CURRENT_LIST_DIR}/KeyBindController.cpp"
-		"${CMAKE_CURRENT_LIST_DIR}/Bind.cpp"
-		"${CMAKE_CURRENT_LIST_DIR}/Bind.h"
 	PUBLIC
 		"${CMAKE_CURRENT_LIST_DIR}/KeyBindController.h"
 		
