@@ -5,7 +5,7 @@
 class Key
 {
 	public:
-		Key(int k_id, char local, bool mod);
+		Key(int param_key_id, char param_local_key, bool param_modifier);
 		//Adds a bind to the key
 		int add_bind();
 		//Sets the local key

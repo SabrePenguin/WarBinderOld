@@ -1,9 +1,9 @@
 #include "Key.h"
 
-Key::Key(int k_id, char local, bool mod) {
-	key_id = k_id;
-	local_key = local;
-	modifier_key = mod;
+Key::Key(int param_key_id, char param_local_id, bool param_modifier) {
+	key_id = param_key_id;
+	local_key = param_local_id;
+	modifier_key = param_modifier;
 }
 
 int Key::add_bind()
