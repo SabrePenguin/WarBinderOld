@@ -2,14 +2,16 @@
 #define KEY_H
 
 #include <vector>
-class Key
+#include <string>
+#include "Control.h"
+class Key : public Control
 {
 	public:
 		Key(int k_id, char local, bool mod);
 		//Adds a bind to the key
 		int add_bind();
 		//Sets the local key
-		bool set_local_key(char local_key);
+		bool set_local_key(std::string local_key);
 		//Enables the key to be used in a combination
 		bool set_modifier(bool enable);
 	private:
