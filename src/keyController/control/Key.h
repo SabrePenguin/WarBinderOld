@@ -4,12 +4,13 @@
 #include <vector>
 #include <string>
 #include "Control.h"
+class Bind;
 class Key : public Control
 {
 	public:
 		Key(int k_id, char local, bool mod);
 		//Adds a bind to the key
-		int add_bind();
+		void add_bind(Bind* _bind);
 		//Sets the local key
 		bool set_local_key(std::string local_key);
 		//Enables the key to be used in a combination
@@ -18,7 +19,7 @@ class Key : public Control
 		//The internal key id of the file
 		int key_id;
 		//A list of the binds assigned to this key
-		std::vector<int> binds;
+		std::vector<Bind*> binds;
 		//The local key
 		char local_key;
 		//Indicates a combination key, like shift, ctrl, alt. Can be assigned to regular keys
