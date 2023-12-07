@@ -1,15 +1,16 @@
 #include <string>
+#include <vector>
 #include "Key.h"
+#include "Control.h"
+#include "../bind/Bind.h"
 
-Key::Key(int k_id, char local, bool mod) {
-	key_id = k_id;
-	local_key = local;
-	modifier_key = mod;
+Key::Key(int k_id, char local, bool mod) : Control(), key_id( k_id ), local_key( local ), modifier_key( mod ) {
+
 }
 
-int Key::add_bind()
+void Key::add_bind(Bind* _bind)
 {
-	return 1;
+	binds.push_back(_bind);
 }
 
 bool Key::set_local_key(std::string local_key)
