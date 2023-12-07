@@ -2,7 +2,7 @@
 #define BIND_H
 #include <vector>
 #include <string>
-#include "../control/Control.h"
+class Control;
 
 class Bind
 {
