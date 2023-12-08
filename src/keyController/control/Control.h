@@ -10,5 +10,8 @@ class Control
 		virtual void add_bind(Bind* _bind) {};
 		virtual bool set_local_key(std::string local_key) { return false; };
 		virtual bool set_modifer(bool enable) { return false; };
+		template <typename T>
+		T get_id() { return T(); };
+		virtual bool is_modifier() { return false; };
 };
 #endif // CONTROL_H
