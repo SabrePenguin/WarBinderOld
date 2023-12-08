@@ -16,4 +16,4 @@ class Axis: public Bind
 		float relative_control_sensivity;
 		float relative_control_step;
 };
-#endif
+#endif // AXIS_H
