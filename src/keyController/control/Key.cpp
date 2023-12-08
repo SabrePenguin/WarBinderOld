@@ -10,7 +10,7 @@
  * @param _local_key: Local key ("backspace", "a", "1")
  * @param _modifier: Modifier key, such as ctrl or alt
 */
-Key::Key(int _key_id, std::string _local_key, bool _modifier) : 
+Key::Key(std::string _key_id, std::string _local_key, bool _modifier) : 
 	Control(), key_id( _key_id ), local_key( _local_key ), modifier_key( _modifier ) {
 
 }
@@ -20,7 +20,7 @@ Key::Key(int _key_id, std::string _local_key, bool _modifier) :
  * @param _key_id: Key id
  * @param _local_key: Local key ("backspace", "b", "2")
 */
-Key::Key(int _key_id, std::string _local_key) :
+Key::Key(std::string _key_id, std::string _local_key) :
 	Control(), key_id( _key_id ), local_key( _local_key ), modifier_key( false )
 {
 
@@ -54,4 +54,14 @@ bool Key::set_local_key(std::string local_key)
 bool Key::set_modifier(bool enable)
 {
 	return true;
+}
+
+std::string Key::get_id()
+{
+	return this->key_id;
+}
+
+bool Key::is_modifier()
+{
+	return this->modifier_key;
 }
