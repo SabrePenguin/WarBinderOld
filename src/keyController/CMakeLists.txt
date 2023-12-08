@@ -1,4 +1,4 @@
-add_library(Keybind "")
+add_library(Keybind)
 
 ##Library insertion
 add_subdirectory(control)
