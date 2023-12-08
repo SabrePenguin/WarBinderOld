@@ -8,17 +8,19 @@ class Bind;
 class Key : public Control
 {
 	public:
-		Key(int k_id, std::string local, bool mod);
+		Key(std::string k_id, std::string local, bool mod);
 		//Adds a bind to the key
-		Key(int _key_id, std::string _local_key);
+		Key(std::string _key_id, std::string _local_key);
 		void add_bind(Bind* _bind);
 		//Sets the local key
 		bool set_local_key(std::string local_key);
 		//Enables the key to be used in a combination
 		bool set_modifier(bool enable);
+		std::string get_id();
+		bool is_modifier();
 	private:
 		//The internal key id of the file
-		int key_id;
+		std::string key_id;
 		//A list of the binds assigned to this key
 		std::vector<Bind*> binds;
 		//The local key
