@@ -4,6 +4,7 @@
 #include "Control.h"
 #include "Key.h"
 #include "Bind.h"
+#include "CSVin.h"
 
 using namespace std;
 
@@ -17,9 +18,9 @@ void helloWorld() {
 	cout << "Hello World" << endl;
 }
 
-KeyBindController::KeyBindController(std::string _language) : language(_language) 
+KeyBindController::KeyBindController(std::string _filename, std::string _language) : language(_language) 
 {
-
+	get_control(_filename, _language);
 }
 
 KeyBindController::~KeyBindController() 
@@ -42,6 +43,11 @@ void KeyBindController::add_key(std::string _key_id, std::string _local_key)
 {
 	Key* new_key = new Key(_key_id, _local_key);
 	this->system_keys.insert({ _key_id, new_key });
+	//Test block. Will be removed
+	std::vector<Control*> asdf;
+	asdf.push_back(new_key);
+	//this->add_keys_to_bind("One Test", asdf);
+	cout << "success" << endl;
 }
 
 void KeyBindController::add_modifier_key(std::string _key_id, std::string _local_key)
@@ -65,6 +71,8 @@ void KeyBindController::set_language(std::string _language)
 	this->language = _language;
 }
 
+
+/* Remove for now to just fix up the add functions
 bool KeyBindController::add_keys_to_bind(std::string _bind_name, std::vector<Control*> _added_keys)
 {
 	//Find block
@@ -76,21 +84,26 @@ bool KeyBindController::add_keys_to_bind(std::string _bind_name, std::vector<Con
 	bool success = false;
 	for (auto key_iterator = _added_keys.begin(); key_iterator != _added_keys.end(); ++key_iterator)
 	{
-		//if ( key_iterator->is_modifier())
-		if (i >= _added_keys.size() - 2)
+		if ((*key_iterator)->is_modifier())
+		{
+			i++;
+		}
+		if (i+2 >= _added_keys.size())
 		{
 			iterator->second->add_control(_added_keys);
 			success = true;
 			break;
 		}
-		
-		i++;
 	}
 
 	//Block adds the bind to all keys in the list
-	for (auto key_iterator = _added_keys.begin(); key_iterator != _added_keys.end(); ++key_iterator)
+	if (success)
 	{
-		key_iterator
+		for (auto key_iterator = _added_keys.begin(); key_iterator != _added_keys.end(); ++key_iterator)
+		{
+			(*key_iterator)->add_bind(iterator->second);
+		}
 	}
-	return false;
+	return success;
 }
+*/
