@@ -21,7 +21,6 @@ std::vector<std::tuple<std::string, std::string, bool>> get_control(std::string 
 		std::string holder;
 		std::string key_id;
 		char c;
-		std::regex language(_language) ;
 		//Start base_index at -1 to allow for loop to work
 		int base_index = -1 ;
 		size_t local_index = 0 ;
@@ -37,13 +36,13 @@ std::vector<std::tuple<std::string, std::string, bool>> get_control(std::string 
 				//Runs once for the header to find the index
 				if( header )
 				{
-					if( std::regex_match( in_string, language ) )
+					if( in_string.compare( _language) == 0 )
 					{
 						header = !header ;
 					}
 					base_index++ ;
 				}
-				if( local_index == 0 )
+				else if( local_index == 0 )
 				{
 					key_id = in_string ;
 				}
