@@ -9,6 +9,12 @@
 
 const int BUFFER_SIZE = 100;
 
+/**
+ * @brief Reads in the control_list.csv and selects the language, then returns a vector of binds
+ * @param _filename: The name of the file to import
+ * @param _language: The language to import
+ * @return A vector of tuples in the <id, local_name, modifier> format
+*/
 std::vector<std::tuple<std::string, std::string, bool>> get_control(std::string _filename, std::string _language)
 {
 	std::vector<std::tuple<std::string, std::string, bool>> controls;
