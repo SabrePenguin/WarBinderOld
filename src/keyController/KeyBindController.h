@@ -9,14 +9,14 @@ class Bind;
 class KeyBindController 
 {
 	public:
-		KeyBindController(std::string _language);
+		KeyBindController(std::string _filename, std::string _language);
 		~KeyBindController();
 		void add_key(std::string _key_id, std::string _local_key);
 		void add_modifier_key(std::string _key_id, std::string _local_key);
 		void add_new_control(std::string _key_id, std::string _local_key);
 		void add_new_bind(std::string _internal_id, std::string _local_id);
 		void set_language(std::string _language);
-		bool add_keys_to_bind(std::string _bind_name, std::vector<Control*> _added_keys);
+		//bool add_keys_to_bind(std::string _bind_name, std::vector<Control*> _added_keys);
 	private:
 		//The language to be used. Will determine the csv column to use
 		std::string language;
