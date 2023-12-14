@@ -2,7 +2,6 @@
 #include <string>
 #include "Bind.h"
 #include "../control/Control.h"
-#include "../control/Key.h"
 
 Bind::Bind(std::string _internal_id, std::string _text_id) : internal_id(_internal_id), text_id(_text_id)
 {
@@ -14,5 +13,5 @@ Bind::Bind(std::string _internal_id, std::string _text_id) : internal_id(_intern
 */
 void Bind::add_control(std::vector<Control*> _control_combo)
 {
-
+	this->control.push_back(_control_combo);
 }
