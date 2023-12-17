@@ -7,8 +7,6 @@
 
 #include "CSVin.h"
 
-const int BUFFER_SIZE = 100;
-
 /**
  * @brief Reads in the control_list.csv and selects the language, then returns a vector of binds
  * @param _filename: The name of the file to import
@@ -29,7 +27,7 @@ std::vector<std::tuple<std::string, std::string, bool>> get_control(std::string 
 		char c;
 		//Start base_index at -1 to allow for loop to work
 		int base_index = -1 ;
-		size_t local_index = 0 ;
+		int local_index = 0 ;
 		bool header = true ;
 		bool correct_column = false ;
 
@@ -64,8 +62,8 @@ std::vector<std::tuple<std::string, std::string, bool>> get_control(std::string 
 				break ;
 
 			case '\n':
-				in_string = "" ;
 				local_index = 0 ;
+				in_string = "" ;
 				break ;
 
 			default:
@@ -84,4 +82,72 @@ std::vector<std::tuple<std::string, std::string, bool>> get_control(std::string 
 		in_file.close();
 	}
 	return controls;
+}
+
+/**
+ * @brief A version of a csv parser that takes out only 2 pieces of information per row
+ * @param _filename: The name of the file
+ * @param _language: The language to use 
+ * @return A vector of tuples with 2 parameters
+*/
+std::vector<std::tuple<std::string, std::string>> get_binds( std::string _filename, std::string _language )
+{
+	std::vector<std::tuple<std::string, std::string>> binds;
+	{
+		std::ifstream in_file( _filename );
+		if( !in_file.is_open() )
+			return binds;
+
+		std::string in_string;
+		std::string local_name;
+		std::string bind_id;
+		char c;
+		//Start base_index at -1 to allow for loop to work
+		int base_index = -1 ;
+		int local_index = 0 ;
+		bool offset = false ;
+		bool header = true ;
+		bool correct_column = false ;
+
+		while( in_file.good() )
+		{
+			in_file.get( c ) ;
+			switch( c )
+			{
+			case '\n':
+				offset = true ;
+			case ',':
+				if( header ) 
+				{
+					if( in_string.compare( _language ) == 0 )
+						header = !header ;
+					base_index++;
+				}
+				else if( local_index == 0 )
+				{
+					bind_id = in_string ;
+				}
+				else if( local_index == base_index )
+				{
+					binds.push_back( { bind_id, in_string } ) ;
+					bind_id = "";
+				}
+				if( offset )
+				{
+					local_index = 0 ;
+					offset = false; 
+				}
+				else
+				{
+					local_index++ ;
+				}
+				in_string = "" ;
+				break ;
+			default:
+				in_string += c ;
+			}
+		}
+		in_file.close();
+	}
+	return binds ;
 }
