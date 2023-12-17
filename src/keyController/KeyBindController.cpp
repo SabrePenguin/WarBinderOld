@@ -18,9 +18,11 @@ void helloWorld() {
 	cout << "Hello World" << endl;
 }
 
-KeyBindController::KeyBindController(std::string _filename, std::string _language) : language(_language) 
+KeyBindController::KeyBindController(std::string _controlfile, std::string _bindfile, std::string _language) : 
+	language(_language) 
 {
-	get_control(_filename, _language);
+	get_control( _controlfile, _language ) ;
+	get_binds( _bindfile, _language ) ;
 }
 
 KeyBindController::~KeyBindController() 
