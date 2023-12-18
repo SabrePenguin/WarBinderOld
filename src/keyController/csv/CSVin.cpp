@@ -95,16 +95,15 @@ std::vector<std::tuple<std::string, char, std::string, bool>> get_control( std::
  * @param _language: The language to use 
  * @return A vector of tuples with 2 parameters
 */
-std::vector<std::tuple<std::string, std::string>> get_binds( std::string _filename, std::string _language )
+std::vector<std::tuple<std::string, bool, std::string>> get_binds( std::string _filename, std::string _language )
 {
-	std::vector<std::tuple<std::string, std::string>> binds;
+	std::vector<std::tuple<std::string, bool, std::string>> binds;
 	{
 		std::ifstream in_file( _filename );
 		if( !in_file.is_open() )
 			return binds;
 
 		std::string in_string;
-		std::string local_name;
 		std::string bind_id;
 		char c;
 		//Start base_index at -1 to allow for loop to work
@@ -112,7 +111,7 @@ std::vector<std::tuple<std::string, std::string>> get_binds( std::string _filena
 		int local_index = 0 ;
 		bool offset = false ;
 		bool header = true ;
-		bool correct_column = false ;
+		bool axis = true ;
 
 		while( in_file.good() )
 		{
@@ -130,17 +129,20 @@ std::vector<std::tuple<std::string, std::string>> get_binds( std::string _filena
 				}
 				else if( local_index == 0 )
 				{
+					if( in_string.find("ID") == 0 )
+						axis = false ;
 					bind_id = in_string ;
 				}
 				else if( local_index == base_index )
 				{
-					binds.push_back( { bind_id, in_string } ) ;
-					bind_id = "";
+					binds.push_back( { bind_id, axis, in_string } ) ;
+					bind_id = "" ;
+					axis = true ; 
 				}
 				if( offset )
 				{
 					local_index = 0 ;
-					offset = false; 
+					offset = false ; 
 				}
 				else
 				{
