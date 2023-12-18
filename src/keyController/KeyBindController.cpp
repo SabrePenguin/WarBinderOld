@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <string>
+#include <tuple>
 #include "KeyBindController.h"
 #include "Control.h"
 #include "Key.h"
@@ -21,8 +23,8 @@ void helloWorld() {
 KeyBindController::KeyBindController(std::string _controlfile, std::string _bindfile, std::string _language) : 
 	language(_language) 
 {
-	auto total = get_control( _controlfile, _language ) ;
-	get_binds( _bindfile, _language ) ;
+	std::vector<std::tuple<std::string, char, std::string, bool>> controls = get_control( _controlfile, _language ) ;
+	std::vector<std::tuple<std::string, bool, std::string>> binds = get_binds( _bindfile, _language ) ;
 }
 
 KeyBindController::~KeyBindController() 
