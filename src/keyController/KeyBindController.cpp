@@ -21,7 +21,7 @@ void helloWorld() {
 KeyBindController::KeyBindController(std::string _controlfile, std::string _bindfile, std::string _language) : 
 	language(_language) 
 {
-	get_control( _controlfile, _language ) ;
+	auto total = get_control( _controlfile, _language ) ;
 	get_binds( _bindfile, _language ) ;
 }
 
