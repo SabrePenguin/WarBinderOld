@@ -4,7 +4,7 @@
 class Axis: public Bind
 {
 	public:
-		Axis();
+		Axis( std::string _internal_id, std::string _text_id );
 	private:
 		bool inverted;
 		bool relative;
