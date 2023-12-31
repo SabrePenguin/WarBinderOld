@@ -8,7 +8,7 @@ class Bind;
 class Key : public Control
 {
 	public:
-		Key(std::string k_id, std::string local, bool mod, char _gamemode);
+		Key(std::string k_id, std::string local, bool mod);
 		void add_bind(Bind* _bind);
 		//Sets the local key
 		bool set_local_key(std::string local_key);
