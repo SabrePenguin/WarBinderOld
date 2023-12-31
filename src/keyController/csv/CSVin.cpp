@@ -93,11 +93,11 @@ std::vector<std::tuple<std::string, char, std::string, bool>> get_control( std::
  * @brief A version of a csv parser that takes out only 2 pieces of information per row
  * @param _filename: The name of the file
  * @param _language: The language to use 
- * @return A vector of tuples with 2 parameters
+ * @return A vector of tuples with 4 parameters
 */
-std::vector<std::tuple<std::string, bool, std::string>> get_binds( std::string _filename, std::string _language )
+std::vector<std::tuple<std::string, char, std::string, bool>> get_binds( std::string _filename, std::string _language )
 {
-	std::vector<std::tuple<std::string, bool, std::string>> binds;
+	std::vector<std::tuple<std::string, char, std::string, bool>> binds;
 	{
 		std::ifstream in_file( _filename );
 		if( !in_file.is_open() )
@@ -112,6 +112,7 @@ std::vector<std::tuple<std::string, bool, std::string>> get_binds( std::string _
 		bool offset = false ;
 		bool header = true ;
 		bool axis = true ;
+		char mode ;
 
 		while( in_file.good() )
 		{
@@ -133,9 +134,13 @@ std::vector<std::tuple<std::string, bool, std::string>> get_binds( std::string _
 						axis = false ;
 					bind_id = in_string ;
 				}
+				else if( local_index == 1 )
+				{
+					mode = in_string[0] ;
+				}
 				else if( local_index == base_index )
 				{
-					binds.push_back( { bind_id, axis, in_string } ) ;
+					binds.push_back( { bind_id, mode, in_string, axis } ) ;
 					bind_id = "" ;
 					axis = true ; 
 				}
