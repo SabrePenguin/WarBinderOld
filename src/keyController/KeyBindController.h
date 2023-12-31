@@ -11,10 +11,9 @@ class KeyBindController
 	public:
 		KeyBindController(std::string _controlfile, std::string _bindfile, std::string _language);
 		~KeyBindController();
-		void add_key(std::string _key_id, std::string _local_key);
-		void add_modifier_key(std::string _key_id, std::string _local_key);
+		void add_key(std::string _key_id, std::string _local_key, bool _modifier, char _gamemode);
 		void add_new_control(std::string _key_id, std::string _local_key);
-		void add_new_bind(std::string _internal_id, std::string _local_id);
+		void add_new_bind(std::string _internal_id, std::string _local_id, bool _axis);
 		void set_language(std::string _language);
 		//bool add_keys_to_bind(std::string _bind_name, std::vector<Control*> _added_keys);
 	private:
