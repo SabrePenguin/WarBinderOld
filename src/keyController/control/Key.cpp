@@ -1,3 +1,6 @@
+/**
+* Key.cpp: Defines the basic key type.
+*/
 #include <string>
 #include <vector>
 #include "Key.h"
@@ -10,20 +13,8 @@
  * @param _local_key: Local key ("backspace", "a", "1")
  * @param _modifier: Modifier key, such as ctrl or alt
 */
-Key::Key(std::string _key_id, std::string _local_key, bool _modifier) : 
-	Control(), key_id( _key_id ), local_key( _local_key ), modifier_key( _modifier ) {
-
-}
-
-/**
- * @brief The non-modifier constructor
- * @param _key_id: Key id
- * @param _local_key: Local key ("backspace", "b", "2")
-*/
-Key::Key(std::string _key_id, std::string _local_key) :
-	Control(), key_id( _key_id ), local_key( _local_key ), modifier_key( false )
-{
-
+Key::Key(std::string _key_id, std::string _local_key, bool _modifier, char _gamemode) : 
+	Control(_gamemode), key_id( _key_id ), local_key( _local_key ), modifier_key( _modifier ) {
 }
 
 /**
