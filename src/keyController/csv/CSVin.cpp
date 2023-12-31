@@ -76,7 +76,7 @@ std::vector<std::tuple<std::string, char, std::string, bool>> get_control( std::
 				if( correct_column ) 
 				{
 					correct_column = !correct_column ;
-					bool modifier = ( c == 'f' ) ;
+					bool modifier = ( c == 't' ) ;
 					controls.push_back( { key_id, mode, holder, modifier } ) ;
 					key_id = "";
 					holder = "";
