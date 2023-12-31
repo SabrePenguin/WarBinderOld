@@ -3,7 +3,8 @@
 #include "Bind.h"
 #include "../control/Control.h"
 
-Bind::Bind(std::string _internal_id, std::string _text_id) : internal_id(_internal_id), text_id(_text_id)
+Bind::Bind(std::string _internal_id, std::string _text_id, char _mode) : 
+	internal_id(_internal_id), text_id(_text_id), mode(_mode)
 {
 
 }
