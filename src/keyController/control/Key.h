@@ -8,9 +8,7 @@ class Bind;
 class Key : public Control
 {
 	public:
-		Key(std::string k_id, std::string local, bool mod);
-		//Adds a bind to the key
-		Key(std::string _key_id, std::string _local_key);
+		Key(std::string k_id, std::string local, bool mod, char _gamemode);
 		void add_bind(Bind* _bind);
 		//Sets the local key
 		bool set_local_key(std::string local_key);
@@ -21,8 +19,6 @@ class Key : public Control
 	private:
 		//The internal key id of the file
 		std::string key_id;
-		//A list of the binds assigned to this key
-		std::vector<Bind*> binds;
 		//The local key
 		std::string local_key;
 		//Indicates a combination key, like shift, ctrl, alt. Can be assigned to regular keys
