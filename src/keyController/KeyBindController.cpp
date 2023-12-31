@@ -12,21 +12,21 @@
 
 /**
  * @brief Imports the files and converts them to objects
- * @param _controlfile: The file of the controls and their names
- * @param _bindfile: The file of all the keys and their local ids and counterparts
+ * @param _controlfile: The file of the controls and their local names
+ * @param _bindfile: The file of all the binds and their names
  * @param _language: The language in the file. Used to find local ids.
 */
 KeyBindController::KeyBindController(std::string _controlfile, std::string _bindfile, std::string _language) : 
 	language(_language) 
 {
 	std::vector<std::tuple<std::string, char, std::string, bool>> controls = get_control( _controlfile, _language ) ;
-	std::vector<std::tuple<std::string, bool, std::string>> binds = get_binds( _bindfile, _language ) ;
+	std::vector<std::tuple<std::string, char, std::string, bool>> binds = get_binds( _bindfile, _language ) ;
 	for( auto iterator = controls.begin() ; iterator != controls.end() ; ++iterator )
 	{
 		//Position zero has the internal name
 		//Position two has the local name
 		//Position three determines if it's a modifier
-		//Position one is the gamemode control
+		//Position one is the type control
 		this->add_key( 
 			std::get<0>( *iterator ), 
 			std::get<2>( *iterator ), 
@@ -43,6 +43,7 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 		this->add_new_bind(
 			std::get<0>( *iterator ),
 			std::get<2>( *iterator ),
+			std::get<3>( *iterator ),
 			std::get<1>( *iterator )
 		) ;
 	}
@@ -71,12 +72,12 @@ KeyBindController::~KeyBindController()
  * @param _key_id: The internal id. Can be anything, so long as it matches Gaijin's internal id. (ie: 1, button_1)
  * @param _local_key: The local name. Can be anything
  * @param _modifier: Whether the key is a modifier such as "ctrl" or "alt"
- * @param _gamemode 
+ * @param _type: The type of control (key, mouse, controller) 
 */
-void KeyBindController::add_key(std::string _key_id, std::string _local_key, bool _modifier, char _gamemode)
+void KeyBindController::add_key(std::string _key_id, std::string _local_key, bool _modifier, char _type)
 {
 	//Technically can be put in one line, but reduces readability
-	Key* new_key = new Key(_key_id, _local_key, _modifier, _gamemode);
+	Key* new_key = new Key(_key_id, _local_key, _modifier);
 	this->system_keys.insert({ _key_id, new_key });
 }
 
@@ -95,13 +96,13 @@ void KeyBindController::add_new_control(std::string _key_id, std::string _local_
  * @param _local_id: The local name of the bind. (ie. "Throttle Up")
  * @param _axis: Determines if the given bind needs to be an axis or regular button
 */
-void KeyBindController::add_new_bind(std::string _internal_id, std::string _local_id, bool _axis)
+void KeyBindController::add_new_bind(std::string _internal_id, std::string _local_id, bool _axis, char _mode)
 {
 	Bind* new_bind ;
 	if( !_axis )
-		new_bind = new Bind( _internal_id, _local_id ) ;
+		new_bind = new Bind( _internal_id, _local_id, _mode ) ;
 	else
-		new_bind = new Axis( _internal_id, _local_id ) ;
+		new_bind = new Axis( _internal_id, _local_id, _mode ) ;
 	this->p_binds.insert({ _local_id, new_bind }) ;
 }
 
