@@ -4,15 +4,17 @@ add_library(Keybind)
 add_subdirectory(control)
 add_subdirectory(bind)
 add_subdirectory(csv)
+add_subdirectory(file_handler)
 
 target_link_libraries(Keybind
 	PRIVATE
 	Control
 	Bind
 	CSV
+	FileHandler
 )
 
-target_include_directories(Keybind PRIVATE "control" "bind" "csv")
+target_include_directories(Keybind PRIVATE "control" "bind" "csv" "file_handler")
 ##End of library insertion
 
 target_sources(Keybind
