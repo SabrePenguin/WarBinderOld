@@ -12,7 +12,8 @@ void import_controls( std::string _filename )
 
 	char c ;
 	std::string in_string ;
-	std::string key_id ;
+	std::string bind_id ;
+	std::string control_id ;
 	std::string data ;
 	bool hotkeys = false ;
 	int braceLevel = 0 ;
@@ -23,9 +24,23 @@ void import_controls( std::string _filename )
 		switch( c )
 		{
 			case '\n':
-				if( hotkeys )
+				if( hotkeys && braceLevel == 3 )
 				{
-					data = in_string ;
+					//The controls are guaranteed to only use this as the separator
+					int pos = in_string.find( "=" ) ;
+					//Search for the different types
+					if( in_string.find( "keyboardKey" ) == 0 )
+					{
+						control_id = in_string.substr( pos + 1 ) ;
+					}
+					else if( in_string.find( "mouseButton" ) == 0 )
+					{
+						//TODO
+					}
+					else if( in_string.find( "joyButton" ) == 0 )
+					{
+						//TODO
+					}
 				}
 				in_string = "" ;
 				break ;
@@ -35,9 +50,9 @@ void import_controls( std::string _filename )
 				{
 					hotkeys = true ;
 				}
-				else if ( hotkeys )
+				else if ( hotkeys && braceLevel == 2 )
 				{
-					key_id = in_string ;
+					bind_id = in_string ;
 				}
 				in_string = "" ;
 				braceLevel++ ;
