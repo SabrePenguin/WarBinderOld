@@ -1,4 +1,4 @@
-﻿// WarBinder.cpp : Defines the entry point for the application.
+﻿// WarBinder.cpp : The entry point of the program.
 //
 
 #include "WarBinder.h"
@@ -12,7 +12,6 @@ int main()
 	KeyBindController key1("../../../../control_list.csv",
 		"../../../../wt_bind_list.csv",
 		"english");
-	//key1.add_new_bind("one_test", "One Test");
-	//key1.add_key("2", "hi");
+	key1.import( "../../../../controller_settings.blk" ) ;
 	return 0;
 }
