@@ -8,7 +8,7 @@
 #include "CSVin.h"
 
 /**
- * @brief Reads in the control_list.csv and selects the language, then returns a vector of binds
+ * @brief Reads in the control_list.csv and selects the language, then returns a vector of keys
  * @param _filename: The name of the file to import
  * @param _language: The language to import
  * @return A vector of tuples in the <id, local_name, modifier> format
@@ -93,11 +93,11 @@ std::vector<std::tuple<std::string, char, std::string, bool>> get_control( std::
  * @brief A version of a csv parser that takes out only 2 pieces of information per row
  * @param _filename: The name of the file
  * @param _language: The language to use 
- * @return A vector of tuples with 4 parameters
+ * @return A vector of tuples with 5 parameters
 */
-std::vector<std::tuple<std::string, char, std::string, bool>> get_binds( std::string _filename, std::string _language )
+std::vector<std::tuple<std::string, char, std::string, bool, bool>> get_binds( std::string _filename, std::string _language )
 {
-	std::vector<std::tuple<std::string, char, std::string, bool>> binds;
+	std::vector<std::tuple<std::string, char, std::string, bool, bool>> binds;
 	{
 		std::ifstream in_file( _filename );
 		if( !in_file.is_open() )
@@ -113,6 +113,7 @@ std::vector<std::tuple<std::string, char, std::string, bool>> get_binds( std::st
 		bool header = true ;
 		bool axis = true ;
 		char mode ;
+		bool required ;
 
 		while( in_file.good() )
 		{
@@ -138,9 +139,13 @@ std::vector<std::tuple<std::string, char, std::string, bool>> get_binds( std::st
 				{
 					mode = in_string[0] ;
 				}
+				else if( local_index == 2 )
+				{
+					required = 't' ==  in_string[0] ;
+				}
 				else if( local_index == base_index )
 				{
-					binds.push_back( { bind_id, mode, in_string, axis } ) ;
+					binds.push_back( { bind_id, mode, in_string, axis, required } ) ;
 					bind_id = "" ;
 					axis = true ; 
 				}
