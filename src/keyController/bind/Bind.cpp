@@ -11,7 +11,16 @@
  * @param _mode: The gamemode that this belongs to
 */
 Bind::Bind(std::string _internal_id, std::string _text_id, char _mode) : 
-	KeyBind( _mode ), internal_id(_internal_id), text_id(_text_id)
+	KeyBind( _mode, false ), internal_id(_internal_id), text_id(_text_id)
 {
 
+}
+
+/**
+ * @brief Adds a vector of keys to the current Bind.
+ * @param _control_combo : vector of implemented Control classes
+*/
+void Bind::add_control( std::vector<Control*> _control_combo, bool _up )
+{
+	this->control.push_back( _control_combo );
 }

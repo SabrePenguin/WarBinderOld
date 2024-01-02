@@ -7,11 +7,11 @@ class Control ;
 class KeyBind
 {
 	public:
-		KeyBind(char _mode) ;
-		void add_control( std::vector<Control*> _control_combo );
+		KeyBind(char _mode, bool _axis) ;
+		virtual void add_control( std::vector<Control*> _control_combo, bool _up ) { return ; };
 	protected:
-		//The collection of vectors that make up the controls
-		std::vector<std::vector<Control*>> control;
+		//Unfortunate type check
+		bool axis ;
 		//The gamemode character representation
 		char mode ;
 		//Whether the given control is required to play the game (ie. Fire guns)
