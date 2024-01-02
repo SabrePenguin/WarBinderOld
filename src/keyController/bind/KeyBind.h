@@ -8,7 +8,7 @@ class Control ;
 class KeyBind
 {
 	public:
-		KeyBind(char _mode, bool _axis) ;
+		KeyBind(char _mode, bool _axis, bool _required) ;
 		virtual void add_control( std::vector<Control*> _control_combo, bool _up ) { return ; };
 		virtual void add_second_bind( std::string _text_id, bool _up ) { return ; } ;
 	protected:

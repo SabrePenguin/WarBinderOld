@@ -5,7 +5,7 @@
 class Axis: public KeyBind
 {
 	public:
-		Axis( std::string _internal_id, std::string _text_id, char _mode, bool _increase );
+		Axis( std::string _internal_id, std::string _text_id, char _mode, bool _increase, bool _required);
 		void add_control( std::vector<Control*> _control_combo, bool _up );
 		void add_second_bind( std::string _text_id, bool _up ) ;
 	private:

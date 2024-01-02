@@ -10,8 +10,8 @@
  * @param _text_id: What will be displayed to the user
  * @param _mode: The gamemode that this belongs to
 */
-Bind::Bind(std::string _internal_id, std::string _text_id, char _mode) : 
-	KeyBind( _mode, false ), internal_id(_internal_id), text_id(_text_id)
+Bind::Bind(std::string _internal_id, std::string _text_id, char _mode, bool _required) : 
+	KeyBind( _mode, false, _required ), internal_id(_internal_id), text_id(_text_id)
 {
 
 }

@@ -3,8 +3,8 @@
 #include "../control/Control.h"
 #include "Axis.h"
 
-Axis::Axis( std::string _internal_id, std::string _text_id, char _mode, bool _increase ) :
-	KeyBind( _mode, true ), internal_id( _internal_id ), inverted( false ), relative( false ),
+Axis::Axis( std::string _internal_id, std::string _text_id, char _mode, bool _increase, bool _required ) :
+	KeyBind( _mode, true, _required ), internal_id( _internal_id ), inverted( false ), relative( false ),
 	keep_value_for_disabled( false ), dead_zone( 0.0f ), non_linearity( 0 ), multiplier( 0.0f ),
 	correction( 0.0f ), relative_control_sensivity( 0.0f ), relative_control_step( 0.0f )
 {

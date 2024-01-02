@@ -1,7 +1,7 @@
 #include "KeyBind.h"
 
-KeyBind::KeyBind( char _mode, bool _axis ) :
-	mode( _mode ), required( true ), axis( _axis ) 
+KeyBind::KeyBind( char _mode, bool _axis, bool _required) :
+	mode( _mode ), axis( _axis ), required( true )
 {
 
 }
