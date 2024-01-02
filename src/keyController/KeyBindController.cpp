@@ -8,6 +8,8 @@
 #include "Bind.h"
 #include "Axis.h"
 #include "CSVin.h"
+#include "reader.h"
+#include "KeyBind.h"
 
 
 /**
@@ -39,14 +41,16 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 	{
 		//Position zero has the internal name
 		//Position two has the local name
-		//Position one controls if it's an axis
+		//Position three controls if it's an axis
+		//Position one controls its mode
 		this->add_new_bind(
 			std::get<0>( *iterator ),
 			std::get<2>( *iterator ),
-			std::get<3>( *iterator ),
-			std::get<1>( *iterator )
+			std::get<1>( *iterator ),
+			std::get<3>( *iterator )
 		) ;
 	}
+	set_language( _language ) ;
 }
 
 
@@ -91,19 +95,37 @@ void KeyBindController::add_new_control(std::string _key_id, std::string _local_
 }
 
 /**
- * @brief Adds either an Axis or Bind pointer.
+ * @brief Adds a Bind pointer.
  * @param _internal_id: The internal id of the bind name.
  * @param _local_id: The local name of the bind. (ie. "Throttle Up")
  * @param _axis: Determines if the given bind needs to be an axis or regular button
 */
-void KeyBindController::add_new_bind(std::string _internal_id, std::string _local_id, bool _axis, char _mode)
+void KeyBindController::add_new_bind(std::string _internal_id, std::string _local_id, char _mode, bool _is_axis)
 {
-	Bind* new_bind ;
-	if( !_axis )
+	KeyBind* new_bind ;
+	if( !_is_axis ) {
 		new_bind = new Bind( _internal_id, _local_id, _mode ) ;
+		this->p_binds.insert( { _internal_id, new_bind } ) ;
+	}
 	else
-		new_bind = new Axis( _internal_id, _local_id, _mode ) ;
-	this->p_binds.insert({ _local_id, new_bind }) ;
+	{
+		bool up = false ;
+		size_t pos = _internal_id.find( "_rangeMax" ) ;
+		if( pos != std::string::npos )
+			up = true ;
+		size_t cutoff = _internal_id.find_last_of( "_" ) ;
+		_internal_id.erase( cutoff ) ;
+		int un = 1;
+		//this->p_binds.find() ;
+		new_bind = new Axis( _internal_id, _local_id, _mode, up ) ;
+		if( this->p_binds.find( _internal_id ) == this->p_binds.end())
+			this->p_binds.insert( { _internal_id, new_bind } ) ;
+		else
+		{
+			KeyBind* existing_bind = this->p_binds.find( _internal_id )->second ;
+			existing_bind->add_second_bind( _local_id, up ) ;
+		}
+	}
 }
 
 /**
@@ -113,4 +135,10 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 void KeyBindController::set_language(std::string _language)
 {
 	this->language = _language;
+}
+
+void KeyBindController::import( std::string _filename )
+{
+	return ;
+	//import_controls( _filename ) ;
 }
