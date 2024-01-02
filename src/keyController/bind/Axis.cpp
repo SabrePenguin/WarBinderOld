@@ -21,3 +21,11 @@ void Axis::add_control( std::vector<Control*> _control_combo, bool _up )
 	else
 		this->control_down.push_back( _control_combo );
 }
+
+void Axis::add_second_bind( std::string _text_id, bool _up )
+{
+	if( _up )
+		this->increase_local = _text_id ;
+	else
+		this->decrease_local = _text_id ;
+}
