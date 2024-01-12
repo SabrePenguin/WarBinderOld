@@ -143,7 +143,27 @@ void KeyBindController::set_language(std::string _language)
 	this->language = _language;
 }
 
+/**
+ * @brief Imports the file. Must be a .blk file and must follow Gaijin's format
+ * @param _filename 
+*/
 void KeyBindController::import( std::string _filename )
 {
-	import_controls( _filename ) ;
+	t_return data = import_controls( _filename ) ;
+	t_keys keys = std::get<0>( data ) ;
+	int i = 0 ;
+	for( t_keys::iterator iter = keys.begin() ; iter != keys.end() ; ++iter )
+	{
+		auto check = this->p_binds.find( std::get<0>( *iter ) ) ;
+		//This if statement is very annoying, but I need it for update protection (no nulls)
+		if( check != this->p_binds.end() )
+		{
+			KeyBind* existing_bind = check->second;
+			t_buttons bound_keys = std::get<1>( *iter ) ;
+			//Now time for conflict checking
+			i++ ;
+		}
+	}
+	t_import_axis temp2 = std::get<1>( data ) ;
+	return ;
 }
