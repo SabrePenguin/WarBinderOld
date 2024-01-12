@@ -2,19 +2,18 @@
 #define CONTROL_H
 #include <string>
 #include <vector>
-class Bind;
+class KeyBind;
 class Control
 {
 	public:
 		Control() {} ;
-		virtual void add_bind(Bind* _bind) {};
+		virtual void add_bind(KeyBind* _bind) {};
 		virtual bool set_local_key(std::string local_key) { return false; };
 		virtual bool set_modifer(bool enable) { return false; };
-		template <typename T>
-		T get_id() { return T(); };
 		virtual bool is_modifier() { return false; };
+		virtual bool check_conflict( KeyBind* _bind ) { return false; } ;
 	protected:
 		//A list of the binds assigned to this key
-		std::vector<Bind*> binds;
+		std::vector<KeyBind*> binds;
 };
 #endif // CONTROL_H
