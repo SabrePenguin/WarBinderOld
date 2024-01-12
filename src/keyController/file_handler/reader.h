@@ -21,7 +21,8 @@ struct Imported_Axis {
 
 typedef std::vector<std::tuple<Key_Type, std::string>> t_buttons ;
 typedef std::vector<std::tuple<std::string, t_buttons>> t_keys ;
-typedef std::tuple<t_keys, std::vector<Imported_Axis>> t_return ;
+typedef std::vector<Imported_Axis> t_import_axis ;
+typedef std::tuple<t_keys, t_import_axis> t_return ;
 
 t_return import_controls( std::string _filename ) ;
 
