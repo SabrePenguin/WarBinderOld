@@ -5,7 +5,7 @@
 #include <vector>
 #include "Key.h"
 #include "Control.h"
-#include "../bind/Bind.h"
+#include "../bind/KeyBind.h"
 
 /**
  * @brief Modifier key constructor
@@ -21,19 +21,26 @@ Key::Key(std::string _key_id, std::string _local_key, bool _modifier) :
  * @brief Adds a single Bind or Axis class to the internal vector
  * @param _bind : A single Bind that gets added to the vector
 */
-void Key::add_bind(Bind* _bind)
+void Key::add_bind( KeyBind* _bind )
 {
 	binds.push_back(_bind);
 }
 
 /**
- * @brief Sets the representative key to the actual key in the system (ie. A, enter, backspace)
- * @param local_key: The local key in terms of a string to allow other keys
- * @return Whether the addition was successful
+ * @brief A method to check if the given bind has any internal conflicts (mode to mode)
+ * @param _bind: The bind to check
+ * @return True if the bind is good to use
 */
-bool Key::set_local_key(std::string local_key)
+bool Key::check_conflict( KeyBind* _bind )
 {
-	return true;
+	for( std::vector<KeyBind*>::iterator it_bind = binds.begin() ; it_bind != binds.end() ; ++it_bind )
+	{
+		//Mode comparison. 'c' is common and should always be compared with
+		char cur_mode = _bind->get_mode() ;
+		if( cur_mode == (*it_bind)->get_mode() || cur_mode == 'c' )
+			return false ;
+	}
+	return true ;
 }
 
 /**
