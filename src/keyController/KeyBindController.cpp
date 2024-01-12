@@ -84,7 +84,7 @@ void KeyBindController::add_key(std::string _key_id, std::string _local_key, boo
 {
 	//Technically can be put in one line, but reduces readability
 	Key* new_key = new Key(_key_id, _local_key, _modifier);
-	this->system_keys.insert({ _key_id, new_key });
+	this->system_keys.insert({ "key"+_key_id, new_key});
 }
 
 /**
@@ -111,10 +111,14 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 	}
 	else
 	{
-		bool up = false ;
-		size_t pos = _internal_id.find( "_rangeMax" ) ;
-		if( pos != std::string::npos )
-			up = true ;
+		controller up ;
+		//size_t pos = _internal_id.find( "_rangeMax" ) ;
+		if( _internal_id.find( "_rangeMax" ) != std::string::npos )
+			up = controller::INCREASE ;
+		else if( _internal_id.find( "_rangeMin" ) != std::string::npos )
+			up = controller::DECREASE ;
+		else
+			up = controller::RESET ;
 		size_t cutoff = _internal_id.find_last_of( "_" ) ;
 		_internal_id.erase( cutoff ) ;
 		int un = 1;
@@ -141,6 +145,5 @@ void KeyBindController::set_language(std::string _language)
 
 void KeyBindController::import( std::string _filename )
 {
-	return ;
-	//import_controls( _filename ) ;
+	import_controls( _filename ) ;
 }
