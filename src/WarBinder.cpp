@@ -12,6 +12,7 @@ int main()
 	KeyBindController key1("../../../../control_list.csv",
 		"../../../../wt_bind_list.csv",
 		"english");
+	//TODO: Check proper file type
 	key1.import( "../../../../controller_settings.blk" ) ;
 	return 0;
 }
