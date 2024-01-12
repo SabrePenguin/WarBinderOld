@@ -4,25 +4,26 @@
 #include <tuple>
 #include "reader.h"
 
-typedef std::vector<std::tuple<std::string, std::vector<std::string>>> t_keys ;
-typedef std::tuple<t_keys, std::vector<Imported_Axis>> t_return ;
+
 /**
  * @brief A method to import a file given either by the user or on startup
  * @param _filename: The name of the file to import
  * @return A vector of tuples in the order of bind name (ie. fire_AAM) and the ids assigned (ie. 44)
 */
-t_keys import_controls( std::string _filename )
+t_return import_controls( std::string _filename )
 {
 	std::ifstream in_file( _filename ) ;
+	t_return return_values ;
 	t_keys pairs;
 	std::vector<Imported_Axis> axis_details ;
 
 	if( !in_file.is_open() )
-		return pairs;
+		return return_values;
 
 	//Import setup
 	char c ;
-	std::vector<std::string> key_holder ;
+	Key_Type key_type ;
+	t_buttons key_holder ;
 	std::string in_string ;
 	std::string bind_id ;
 	std::string control_id ;
@@ -31,7 +32,7 @@ t_keys import_controls( std::string _filename )
 	bool keys_added = false ;
 	int braceLevel = 0 ;
 	Imported_Axis empty = {
-		"", "", false, false, false, 0,0,0,0,0
+		Key_Type::CONTROLLER, "", "", false, false, false, 0,0,0,0,0
 	};
 	Imported_Axis t_axis = empty ;
 
@@ -49,17 +50,17 @@ t_keys import_controls( std::string _filename )
 					//Search for the different types
 					if( in_string.find( "keyboardKey" ) == 0 )
 					{
-						key_holder.push_back( control_id ) ;
+						key_holder.push_back( { Key_Type::KEYBOARD, control_id } ) ;
 						keys_added = true ;
 					}
 					else if( in_string.find( "mouseButton" ) == 0 )
 					{
-						//TODO
+						key_holder.push_back( { Key_Type::MOUSE, control_id } ) ;
 						keys_added = true ;
 					}
 					else if( in_string.find( "joyButton" ) == 0 )
 					{
-						//TODO
+						key_holder.push_back( { Key_Type::CONTROLLER, control_id } ) ;
 						keys_added = true ;
 					}
 						
@@ -71,10 +72,12 @@ t_keys import_controls( std::string _filename )
 					//Variable amount of information. Yay.
 					if( in_string.find( "axisId" ) == 0 )
 					{
+						t_axis.axis_type = Key_Type::CONTROLLER ;
 						t_axis.axis = control_id ;
 					}
 					else if( in_string.find( "mouseAxisId" ) == 0 )
 					{
+						t_axis.axis_type = Key_Type::MOUSE ;
 						t_axis.axis = control_id ;
 					}
 					else if( in_string.find( "innerDeadzone" ) == 0 )
@@ -152,5 +155,6 @@ t_keys import_controls( std::string _filename )
 		}
 	}
 	in_file.close() ;
-	return pairs ;
+	return_values = {pairs, axis_details} ;
+	return return_values ;
 }
