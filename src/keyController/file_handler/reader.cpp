@@ -4,7 +4,7 @@
 #include <tuple>
 #include "reader.h"
 
-
+//TODO: Limit maximum character size
 /**
  * @brief A method to import a file given either by the user or on startup
  * @param _filename: The name of the file to import
@@ -15,7 +15,7 @@ t_return import_controls( std::string _filename )
 	std::ifstream in_file( _filename ) ;
 	t_return return_values ;
 	t_keys pairs;
-	std::vector<Imported_Axis> axis_details ;
+	t_import_axis axis_details ;
 
 	if( !in_file.is_open() )
 		return return_values;
@@ -127,6 +127,10 @@ t_return import_controls( std::string _filename )
 			case '}':
 				if( hotkeys && braceLevel == 2 ) {
 					hotkeys = false ;
+				}
+				else if( axes && braceLevel == 2 )
+				{
+					axes = false ;
 				}
 				else if( axes && keys_added )
 				{
