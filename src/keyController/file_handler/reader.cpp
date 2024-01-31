@@ -16,6 +16,10 @@ t_return import_controls( std::string _filename )
 	t_return return_values ;
 	t_keys pairs;
 	t_import_axis axis_details ;
+	t_options params_list ;
+	t_options settings_list;
+	t_device device_list ;
+
 
 	if( !in_file.is_open() )
 		return return_values;
@@ -27,14 +31,22 @@ t_return import_controls( std::string _filename )
 	std::string in_string ;
 	std::string bind_id ;
 	std::string control_id ;
+	std::string opt_id ;
 	bool hotkeys = false ;
 	bool axes = false ;
 	bool keys_added = false ;
+	bool settings = false ;
+	bool params = false ;
+	bool device = false ;
 	int braceLevel = 0 ;
 	Imported_Axis empty = {
 		Key_Type::CONTROLLER, "", "", false, false, false, 0,0,0,0,0
 	};
 	Imported_Axis t_axis = empty ;
+	Device_Data empty_device = {
+		false, "", "", "", 0, 0, 0, 0
+	};
+	Device_Data st_device = empty_device ;
 
 	while( in_file.good() ) {
 		in_file.get( c ) ;
@@ -102,6 +114,55 @@ t_return import_controls( std::string _filename )
 					}
 					keys_added = true ;
 				}
+				else if( device && braceLevel == 3 )
+				{
+					size_t pos = in_string.find( "=" ) ;
+					control_id = in_string.substr( pos + 1 ) ;
+					//Variable amount of information. Yay.
+					if( in_string.find( "connected" ) == 0 )
+					{
+						st_device.connected = control_id[ 0 ] == 'n' ;
+					}
+					else if( in_string.find( "devId" ) == 0 )
+					{
+						st_device.device_id = control_id.substr( 1, control_id.size() -2 ) ;
+					}
+					else if( in_string.find( "name" ) == 0 )
+					{
+						st_device.name = control_id.substr( 1, control_id.size() - 2 ) ;
+					}
+					else if( in_string.find( "axesOffset" ) == 0 )
+					{
+						st_device.axes_offset = std::stoi( control_id ) ;
+					}
+					else if( in_string.find( "buttonsOffset" ) == 0 )
+					{
+						st_device.button_offset = std::stoi( control_id ) ;
+					}
+					else if( in_string.find( "buttonsCount" ) == 0 )
+					{
+						st_device.button_offset = std::stoi( control_id ) ;
+					}
+					else if( in_string.find( "axesCount" ) == 0 )
+					{
+						st_device.axes_count = std::stoi( control_id ) ;
+					}
+					keys_added = true ;
+				}
+				else if( params && braceLevel == 2 && in_string.size() > 0 )
+				{
+					size_t pos = in_string.find( ":" ) ;
+					control_id = in_string.substr( pos + 1 ) ;
+					opt_id = in_string.substr( 0, pos ) ;
+					params_list.push_back( {opt_id, control_id[0], control_id.substr( 2 )} ) ;
+				}
+				else if( settings && braceLevel == 1 && in_string.size() > 0 )
+				{
+					size_t pos = in_string.find( ":" ) ;
+					control_id = in_string.substr( pos + 1 ) ;
+					opt_id = in_string.substr( 0, pos ) ;
+					params_list.push_back( { opt_id, control_id[ 0 ], control_id.substr( 2 ) } ) ;
+				}
 				in_string = "" ;
 				break ;
 
@@ -114,11 +175,27 @@ t_return import_controls( std::string _filename )
 				{
 					axes = true ;
 				}
+				else if( !params && in_string.find( "params" ) == 0 )
+				{
+					params = true ;
+				}
+				else if( !settings && in_string.find( "settings" ) == 0 )
+				{
+					settings = true ;
+				}
+				else if( !device && in_string.find( "deviceMapping" ) == 0 )
+				{
+					device = true ;
+				}
 				else if( ( hotkeys || axes ) && braceLevel == 2 )
 				{
 					bind_id = in_string ;
 					if( axes )
 						t_axis.name = bind_id ;
+				}
+				else if( device && braceLevel == 3 )
+				{
+					bind_id = in_string ;
 				}
 				in_string = "" ;
 				braceLevel++ ;
@@ -132,14 +209,33 @@ t_return import_controls( std::string _filename )
 				{
 					axes = false ;
 				}
+				else if( params && braceLevel == 2 )
+				{
+					params = false ;
+				}
+				else if( settings && braceLevel == 1 )
+				{
+					settings = false ;
+				}
+				else if( device && braceLevel == 2 )
+				{
+					device = false ;
+				}
 				else if( axes && keys_added )
 				{
 					axis_details.push_back( t_axis ) ;
 					t_axis = empty ;
 					keys_added = false ;
 				}
+				else if( device && keys_added )
+				{
+					st_device.type = bind_id ;
+					device_list.push_back( st_device ) ;
+					st_device = empty_device ;
+					keys_added = false ;
+				}
 				//Else if to prevent excssive calculations
-				else if( keys_added == true )
+				else if( keys_added )
 				{
 					pairs.push_back( {bind_id, key_holder} ) ;
 					key_holder.clear() ;
@@ -151,6 +247,7 @@ t_return import_controls( std::string _filename )
 			//Clear whitespace
 			case '\t':
 			case ' ':
+				//Known bug source. Names of devices do not properly import due to space stripping
 				break;
 			
 			default:
@@ -159,6 +256,6 @@ t_return import_controls( std::string _filename )
 		}
 	}
 	in_file.close() ;
-	return_values = {pairs, axis_details} ;
+	return_values = {pairs, axis_details, params_list, device_list, settings_list} ;
 	return return_values ;
 }

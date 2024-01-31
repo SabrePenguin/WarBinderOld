@@ -19,10 +19,19 @@ struct Imported_Axis {
 	int non_linearity;
 };
 
+struct Device_Data
+{
+	bool connected ;
+	std::string name, device_id, type ;
+	int axes_offset, button_offset, axes_count, button_count ;
+};
+
+typedef std::vector<Device_Data> t_device ;
+typedef std::vector<std::tuple<std::string, char, std::string>> t_options ;
 typedef std::vector<std::tuple<Key_Type, std::string>> t_buttons ;
 typedef std::vector<std::tuple<std::string, t_buttons>> t_keys ;
 typedef std::vector<Imported_Axis> t_import_axis ;
-typedef std::tuple<t_keys, t_import_axis> t_return ;
+typedef std::tuple<t_keys, t_import_axis, t_options, t_device, t_options> t_return ;
 
 t_return import_controls( std::string _filename ) ;
 
