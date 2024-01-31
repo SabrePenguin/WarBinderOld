@@ -76,7 +76,11 @@ std::vector<std::tuple<std::string, char, std::string, bool>> get_control( std::
 				if( correct_column ) 
 				{
 					correct_column = !correct_column ;
+<<<<<<< HEAD
 					bool modifier = ( c == 't' ) ;
+=======
+					bool modifier = ( c == 'f' ) ;
+>>>>>>> cc30df4 (Added parser column for gamemode)
 					controls.push_back( { key_id, mode, holder, modifier } ) ;
 					key_id = "";
 					holder = "";
