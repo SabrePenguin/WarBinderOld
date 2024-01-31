@@ -24,3 +24,8 @@ void Bind::add_control( std::vector<Control*> _control_combo, bool _up )
 {
 	this->control.push_back( _control_combo );
 }
+
+void Bind::reset()
+{
+	this->control.clear() ;
+}

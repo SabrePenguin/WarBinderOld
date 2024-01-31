@@ -14,6 +14,7 @@ class KeyBind
 		virtual void add_second_bind( std::string _text_id, controller _up ) { return ; } ;
 		virtual void add_axis( Control* _axis ) { return ; } ;
 		virtual void add_data( Imported_Axis* _imported ) { return ; };
+		virtual void reset() { return ; } ;
 		char get_mode() ;
 		bool is_axis() ;
 	protected:
