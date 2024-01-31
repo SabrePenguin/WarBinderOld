@@ -172,3 +172,103 @@ std::vector<std::tuple<std::string, char, std::string, bool, bool>> get_binds( s
 	}
 	return binds ;
 }
+
+/**
+ * @brief A csv parser that generates a list of options in the system
+ * @param _filename: The name of the file
+ * @param _language: The language to use 
+ * @return A vector of tuple with data about each aspect
+*/
+std::vector<std::tuple<std::string, char, std::string, float, float, bool, std::list<std::string>>> 
+	get_options( std::string _filename, std::string _language )
+{
+	std::vector<std::tuple<std::string, char, std::string, float, float, bool, std::list<std::string>>> t_options ;
+	{
+		std::ifstream in_file( _filename ) ;
+		if( !in_file.is_open() )
+			return t_options ;
+		//Control variables
+		char c ;
+		bool header = true ;
+		std::string in_string ;
+		//Options information
+		std::string internal_name ;
+		char o_type ;
+		std::string local_name ;
+		float base_value ;
+		float max_value ;
+		bool parameter = false ;
+		std::list<std::string> options ;
+		//Location variables
+		int column = 0 ;
+		int option_col = 0 ;
+		int lang_col = 0 ;
+
+		while( in_file.good() )
+		{
+			c = in_file.get() ;
+			switch( c )
+			{
+			case '\n':
+				if( header )
+					header = false ;
+				else
+				{
+					parameter = in_string[ 0 ] == 't' ;
+					t_options.push_back( {internal_name, o_type, local_name, base_value, max_value, parameter, options} ) ;
+				}
+				column = 0 ;
+				option_col = 0 ;
+				in_string = "" ;
+				break ;
+			case ',':
+				if( header )
+				{
+					if( in_string.compare( _language ) == 0 )
+					{
+						lang_col = column ;
+					}
+				}
+				else if( column == 0 )
+				{
+					internal_name = in_string ;
+				}
+				else if( column == 1 )
+				{
+					o_type = in_string[ 0 ] ;
+				}
+				else if( column == 2 )
+				{
+					base_value = std::stof( in_string ) ;
+				}
+				else if( column == 3 )
+				{
+					max_value = std::stof( in_string ) ;
+				}
+				column++ ;
+				in_string = "";
+				break ;
+			case '/':
+				if( column == lang_col )
+				{
+					//Default language option (ie. "invert y axis" or "Mouse control mode")
+					if( option_col == 0 )
+					{
+						local_name = in_string ;
+					}
+					//Adds extra options to list
+					else
+					{
+						options.push_back( in_string ) ;
+					}
+					in_string = "" ;
+					option_col++ ;
+				}
+				break ;
+			default:
+				in_string += c ;
+			}
+		}
+	}
+	return t_options ;
+}
