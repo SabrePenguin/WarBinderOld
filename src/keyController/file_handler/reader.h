@@ -32,7 +32,12 @@ typedef std::vector<std::tuple<Key_Type, std::string>> t_buttons ;
 typedef std::vector<std::tuple<std::string, t_buttons>> t_keys ;
 typedef std::vector<Imported_Axis> t_import_axis ;
 typedef std::tuple<t_keys, t_import_axis, t_options, t_device, t_options> t_return ;
-
-t_return import_controls( std::string _filename ) ;
-
+class Reader
+{
+	public:
+		t_return import_controls( std::string _filename ) ;
+	private:
+		std::string version ;
+		std::string base_path ;
+};
 #endif // !READER_H

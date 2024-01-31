@@ -10,7 +10,7 @@
  * @param _filename: The name of the file to import
  * @return A vector of tuples in the order of bind name (ie. fire_AAM) and the ids assigned (ie. 44)
 */
-t_return import_controls( std::string _filename )
+t_return Reader::import_controls( std::string _filename )
 {
 	std::ifstream in_file( _filename ) ;
 	t_return return_values ;
@@ -26,7 +26,7 @@ t_return import_controls( std::string _filename )
 
 	//Import setup
 	char c ;
-	Key_Type key_type ;
+	Key_Type key_type = Key_Type::KEYBOARD ;
 	t_buttons key_holder ;
 	std::string in_string ;
 	std::string bind_id ;
@@ -141,7 +141,7 @@ t_return import_controls( std::string _filename )
 					}
 					else if( in_string.find( "buttonsCount" ) == 0 )
 					{
-						st_device.button_offset = std::stoi( control_id ) ;
+						st_device.button_count = std::stoi( control_id ) ;
 					}
 					else if( in_string.find( "axesCount" ) == 0 )
 					{
@@ -161,7 +161,15 @@ t_return import_controls( std::string _filename )
 					size_t pos = in_string.find( ":" ) ;
 					control_id = in_string.substr( pos + 1 ) ;
 					opt_id = in_string.substr( 0, pos ) ;
-					params_list.push_back( { opt_id, control_id[ 0 ], control_id.substr( 2 ) } ) ;
+					settings_list.push_back( { opt_id, control_id[ 0 ], control_id.substr( 2 ) } ) ;
+				}
+				else if( in_string.find( "version" ) == 0 )
+				{
+					version = in_string ;
+				}
+				else if( in_string.find( "default" ) == 0 )
+				{
+					base_path = in_string ;
 				}
 				in_string = "" ;
 				break ;
