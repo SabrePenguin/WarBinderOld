@@ -22,6 +22,8 @@ target_include_directories(Keybind PRIVATE "control" "bind" "csv" "file_handler"
 target_sources(Keybind
 	PRIVATE
 		"${CMAKE_CURRENT_LIST_DIR}/KeyBindController.cpp"
+		"${CMAKE_CURRENT_LIST_DIR}/Device.cpp"
+		"${CMAKE_CURRENT_LIST_DIR}/Device.h"
 	PUBLIC
 		"${CMAKE_CURRENT_LIST_DIR}/KeyBindController.h"
 		
