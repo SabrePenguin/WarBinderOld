@@ -115,9 +115,9 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 		controller up = this->check_string( _internal_id ) ;
 
 		size_t cutoff = _internal_id.find_last_of( "_" ) ;
-		_internal_id.erase( cutoff ) ;
-		int un = 1;
-		//this->p_binds.find() ;
+		//HERE
+		if( cutoff != std::string::npos )
+			_internal_id.erase( cutoff ) ;
 		new_bind = new Axis( _internal_id, _local_id, _mode, up, _required ) ;
 		if( this->p_binds.find( _internal_id ) == this->p_binds.end())
 			this->p_binds.insert( { _internal_id, new_bind } ) ;
@@ -138,16 +138,18 @@ void KeyBindController::set_language(std::string _language)
 	this->language = _language;
 }
 
+/**
+ * @brief A method to check whether the given axis control is an increase, decrease, or reset
+ * @param _name: The string to check
+ * @return A controller enum value
+*/
 controller KeyBindController::check_string( std::string _name )
 {
-	controller up ;
 	if( _name.find( "_rangeMax" ) != std::string::npos )
-		up = controller::INCREASE ;
+		return controller::INCREASE ;
 	else if( _name.find( "_rangeMin" ) != std::string::npos )
-		up = controller::DECREASE ;
-	else
-		up = controller::RESET ;
-	return up ;
+		return controller::DECREASE ;
+	return controller::RESET ;
 }
 
 /**
@@ -196,11 +198,21 @@ void KeyBindController::import( std::string _filename )
 			{
 				existing_bind->add_control( key_list, up ) ;
 			}
-			
-			//this->system_keys.find(bound_keys) ;
-			i++ ;
 		}
 	}
-	t_import_axis temp2 = std::get<1>( data ) ;
+
+	//Now run to get the axes
+	t_import_axis axes = std::get<1>( data ) ;
+	for( t_import_axis::iterator iter = axes.begin() ; iter != axes.end() ; ++iter )
+	{
+		auto check = this->p_binds.find( ((*iter).name) ) ;
+		if( check != this->p_binds.end() )
+		{
+			//Insert a pointer to the data by dereferencing the iterator and then getting the address of the struct
+			check->second->add_data( &*iter ) ;
+			i++ ;
+		}
+		i++ ;
+	}
 	return ;
 }
