@@ -16,6 +16,8 @@ class KeyBind
 		virtual void add_data( Imported_Axis* _imported ) { return ; };
 		virtual void reset() { return ; } ;
 		char get_mode() ;
+		virtual std::string get_local_name() { return std::string(); } ;
+		virtual std::vector<std::string> get_axis_names() { return std::vector<std::string>(); } ;
 		bool is_axis() ;
 	protected:
 		//Unfortunate type check
