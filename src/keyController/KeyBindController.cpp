@@ -282,17 +282,22 @@ void KeyBindController::import( std::string _filename )
 	t_import_axis axes = std::get<1>( data ) ;
 	for( t_import_axis::iterator iter = axes.begin() ; iter != axes.end() ; ++iter )
 	{
-		auto check = this->p_binds.find( ((*iter).name) ) ;
+		auto check = this->p_binds.find( (*iter).name ) ;
 		if( check != this->p_binds.end() )
 		{
 			//Insert a pointer to the data by dereferencing the iterator and then getting the address of the struct
 			check->second->add_data( &*iter ) ;
 			std::string control_type = check_type( (*iter).axis_type ) ;
+			if( (*iter).axis.length() > 0 )
+			{
+				control_type = control_type + "_axis" ;
+			}
 			auto existing_control = this->system_keys.find( control_type + (*iter).axis ) ;
 			if( existing_control != this->system_keys.end() )
 			{
-				//TO CHANGE
 				(*existing_control).second->add_bind( check->second ) ;
+				auto test = check->second ;
+				check->second->add_axis( (*existing_control).second ) ;
 			}
 			i++ ;
 		}
