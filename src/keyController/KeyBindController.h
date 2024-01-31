@@ -14,7 +14,7 @@ class Device ;
 class KeyBindController 
 {
 	public:
-		KeyBindController(std::string _controlfile, std::string _bindfile, std::string _language);
+		KeyBindController(std::string _controlfile, std::string _bindfile, std::string _optfile, std::string _language);
 		~KeyBindController();
 		void add_key(std::string _key_id, std::string _local_key, bool _modifier, char _gamemode);
 		void add_new_joystick(std::string _key_id, std::string _local_key);

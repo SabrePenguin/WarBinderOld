@@ -24,12 +24,13 @@
  * @param _bindfile: The file of all the binds and their names
  * @param _language: The language in the file. Used to find local ids.
 */
-KeyBindController::KeyBindController(std::string _controlfile, std::string _bindfile, std::string _language) : 
+KeyBindController::KeyBindController(std::string _controlfile, std::string _bindfile, std::string _optfile, std::string _language) : 
 	language(_language) 
 {
 	file_handler = std::make_unique<Reader>() ;
 	std::vector<std::tuple<std::string, char, std::string, bool>> controls = get_control( _controlfile, _language ) ;
 	std::vector<std::tuple<std::string, char, std::string, bool, bool>> binds = get_binds( _bindfile, _language ) ;
+	auto options = get_options( _optfile, _language ) ;
 	for( auto iterator = controls.begin() ; iterator != controls.end() ; ++iterator )
 	{
 		//Position zero has the internal name
