@@ -39,7 +39,7 @@ void Axis::add_second_bind( std::string _text_id, controller _direction )
 
 void Axis::add_axis( Control* _axis )
 {
-	axis = _axis ;
+	axes = _axis ;
 }
 
 void Axis::add_data( Imported_Axis* _data )
