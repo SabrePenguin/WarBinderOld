@@ -2,14 +2,17 @@
 #include <vector>
 #include <string>
 #include <tuple>
+#include <memory>
 #include "KeyBindController.h"
 #include "Control.h"
 #include "Key.h"
+#include "Joystick.h"
 #include "Bind.h"
 #include "Axis.h"
 #include "CSVin.h"
 #include "reader.h"
 #include "KeyBind.h"
+#include "Device.h"
 
 
 // The purpose of this file is to be the surface level file that users
@@ -24,6 +27,7 @@
 KeyBindController::KeyBindController(std::string _controlfile, std::string _bindfile, std::string _language) : 
 	language(_language) 
 {
+	file_handler = std::make_unique<Reader>() ;
 	std::vector<std::tuple<std::string, char, std::string, bool>> controls = get_control( _controlfile, _language ) ;
 	std::vector<std::tuple<std::string, char, std::string, bool, bool>> binds = get_binds( _bindfile, _language ) ;
 	for( auto iterator = controls.begin() ; iterator != controls.end() ; ++iterator )
@@ -91,12 +95,20 @@ void KeyBindController::add_key(std::string _key_id, std::string _local_key, boo
 }
 
 /**
- * @brief Adds a generic control type
+ * @brief Adds a controller button
  * @param _key_id: The internal id. Can be anything as long as it matches Gaijin's internal id.
  * @param _local_key 
 */
-void KeyBindController::add_new_control(std::string _key_id, std::string _local_key)
+void KeyBindController::add_new_joystick(std::string _key_id, std::string _local_key)
 {
+	Control* new_joystick = new Joystick( _key_id, _local_key, false ) ;
+	this->system_keys.insert( { "controller" + _key_id, new_joystick } ) ;
+}
+
+void KeyBindController::add_new_controller_axis( std::string _key_id, std::string _local_key )
+{
+	Control* new_con_axis = new Joystick( _key_id, _local_key, true ) ;
+	this->system_keys.insert( { "controller_axis" + _key_id, new_con_axis } ) ;
 }
 
 /**
@@ -161,16 +173,16 @@ std::string KeyBindController::check_type( Key_Type t_key )
 		return "key" ;
 	else if( t_key == Key_Type::MOUSE )
 		return "mouse" ;
-	return "joystick" ;
+	return "controller" ;
 }
 
 /**
- * @brief Imports the file. Must be a .blk file and must follow Gaijin's format
+ * @brief Imports the control file. Must be a .blk file and must follow Gaijin's format
  * @param _filename 
 */
 void KeyBindController::import( std::string _filename )
 {
-	t_return data = import_controls( _filename ) ;
+	t_return data = file_handler->import_controls( _filename ) ;
 	t_keys keys = std::get<0>( data ) ;
 	int i = 0 ;
 	for( t_keys::iterator iter = keys.begin() ; iter != keys.end() ; ++iter )
@@ -206,6 +218,66 @@ void KeyBindController::import( std::string _filename )
 		}
 	}
 	//Import the controllers before the axes
+	t_device devices = std::get<3>( data ) ;
+	int total_buttons = 1 ;
+	int total_axes = 1 ;
+	for( t_device::iterator iter = devices.begin() ; iter != devices.end() ; ++iter )
+	{
+		auto check = this->device_list.find( (*iter).name ) ;
+		bool enabled = ( *iter ).connected ;
+		//If it exists, remove everything of the device and replace so that it's easier
+		if( check != this->device_list.end() )
+		{
+			enabled = check->second->get_connected() ;
+			this->device_list.erase( check ) ;
+		}
+		this->device_list.insert( {( *iter ).name, std::make_shared<Device>(
+			enabled,
+			( *iter ).name,
+			( *iter ).device_id,
+			( *iter ).axes_offset,
+			( *iter ).button_offset,
+			( *iter ).button_count,
+			( *iter ).axes_count,
+			( *iter ).type
+		) } );
+		total_buttons += ( *iter ).button_count ;
+		total_axes += ( *iter ).axes_count ;
+		
+	}
+	//Add missing buttons.
+	for( int button_number = 1 ; button_number <= total_buttons ; button_number++ )
+	{
+		auto find_button = this->system_keys.find( "controller" + button_number ) ;
+		if( find_button == this->system_keys.end() )
+		{
+			add_new_joystick( std::to_string( button_number ), "button" + button_number ) ;
+		}
+	}
+	//Erase the extra stuff
+	auto find_button = this->system_keys.find( "controller" + ++total_buttons ) ;
+	while( find_button != this->system_keys.end() )
+	{
+		this->system_keys.erase( find_button ) ;
+		find_button = this->system_keys.find( "controller" + ++total_buttons ) ;
+	}
+	//Now time to add the missing axes
+	for( int axes_number = 1 ; axes_number <= total_axes ; axes_number++ )
+	{
+		auto find_axes = this->system_keys.find( "controller_axis" + axes_number ) ;
+		if( find_axes == this->system_keys.end() )
+		{
+			add_new_controller_axis( std::to_string( axes_number ), "controller_axis" + axes_number ) ;
+		}
+	}
+	//Erase the extra axes
+	auto find_axes = this->system_keys.find( "controller_axis" + ++total_axes ) ;
+	while( find_axes != this->system_keys.end() )
+	{
+		this->system_keys.erase( find_axes ) ;
+		find_axes = this->system_keys.find( "controller_axis" + ++total_axes ) ;
+	}
+
 	//Now run to get the axes
 	t_import_axis axes = std::get<1>( data ) ;
 	for( t_import_axis::iterator iter = axes.begin() ; iter != axes.end() ; ++iter )
