@@ -245,37 +245,39 @@ void KeyBindController::import( std::string _filename )
 		total_axes += ( *iter ).axes_count ;
 		
 	}
+	std::string front = "controller" ;
 	//Add missing buttons.
 	for( int button_number = 1 ; button_number <= total_buttons ; button_number++ )
 	{
-		auto find_button = this->system_keys.find( "controller" + button_number ) ;
+		auto find_button = this->system_keys.find( front + std::to_string( button_number ) ) ;
 		if( find_button == this->system_keys.end() )
 		{
-			add_new_joystick( std::to_string( button_number ), "button" + button_number ) ;
+			add_new_joystick( std::to_string( button_number ), front + std::to_string( button_number ) ) ;
 		}
 	}
 	//Erase the extra stuff
-	auto find_button = this->system_keys.find( "controller" + ++total_buttons ) ;
+	auto find_button = this->system_keys.find( front + std::to_string( ++total_buttons ) ) ;
 	while( find_button != this->system_keys.end() )
 	{
 		this->system_keys.erase( find_button ) ;
-		find_button = this->system_keys.find( "controller" + ++total_buttons ) ;
+		find_button = this->system_keys.find( front + std::to_string( ++total_buttons ) ) ;
 	}
+	front = "controller_axis" ;
 	//Now time to add the missing axes
 	for( int axes_number = 1 ; axes_number <= total_axes ; axes_number++ )
 	{
-		auto find_axes = this->system_keys.find( "controller_axis" + axes_number ) ;
+		auto find_axes = this->system_keys.find( front + std::to_string( axes_number ) ) ;
 		if( find_axes == this->system_keys.end() )
 		{
-			add_new_controller_axis( std::to_string( axes_number ), "controller_axis" + axes_number ) ;
+			add_new_controller_axis( std::to_string( axes_number ), front + std::to_string( axes_number ) ) ;
 		}
 	}
 	//Erase the extra axes
-	auto find_axes = this->system_keys.find( "controller_axis" + ++total_axes ) ;
+	auto find_axes = this->system_keys.find( front + std::to_string( ++total_axes ) ) ;
 	while( find_axes != this->system_keys.end() )
 	{
 		this->system_keys.erase( find_axes ) ;
-		find_axes = this->system_keys.find( "controller_axis" + ++total_axes ) ;
+		find_axes = this->system_keys.find( front + std::to_string( ++total_axes ) ) ;
 	}
 
 	//Now run to get the axes
@@ -296,11 +298,20 @@ void KeyBindController::import( std::string _filename )
 			if( existing_control != this->system_keys.end() )
 			{
 				(*existing_control).second->add_bind( check->second ) ;
-				auto test = check->second ;
 				check->second->add_axis( (*existing_control).second ) ;
 			}
 			i++ ;
 		}
 	}
 	return ;
+}
+
+std::vector<std::tuple<std::string, std::string>> KeyBindController::get_keys()
+{
+	std::vector<std::tuple<std::string, std::string>> key_strings ;
+	for( auto iter = this->system_keys.begin() ; iter != this->system_keys.end() ; iter++ )
+	{
+		key_strings.push_back( { (*iter).first, (*iter).second->get_local_name() } ) ;
+	}
+	return key_strings ;
 }
