@@ -12,6 +12,7 @@ class KeyBind
 		virtual void add_control( std::vector<Control*> _control_combo, controller _up ) { return ; };
 		virtual void add_second_bind( std::string _text_id, controller _up ) { return ; } ;
 		char get_mode() ;
+		bool is_axis() ;
 	protected:
 		//Unfortunate type check
 		bool axis ;
