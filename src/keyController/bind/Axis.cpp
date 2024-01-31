@@ -1,6 +1,7 @@
 #include "Axis.h"
 #include <vector>
 #include "../control/Control.h"
+#include "../file_handler/reader.h"
 #include "Axis.h"
 
 Axis::Axis( std::string _internal_id, std::string _text_id, char _mode, controller _increase, bool _required ) :
@@ -34,4 +35,22 @@ void Axis::add_second_bind( std::string _text_id, controller _direction )
 		this->decrease_local = _text_id ;
 	else
 		this->reset_local = _text_id ;
+}
+
+void Axis::add_axis( Control* _axis )
+{
+	return ;
+}
+
+void Axis::add_data( Imported_Axis* _data )
+{
+	inverted = _data->inverted ;
+	keep_value_for_disabled = _data->keep_value_for_disabled ;
+	dead_zone = _data->dead_zone ;
+	non_linearity = _data->non_linearity ;
+	multiplier = _data->multiplier ;
+	correction = _data->correction ;
+	relative = _data->relative ;
+	relative_control_sensivity = _data->relSens ;
+	relative_control_step = _data->relStep ;
 }
