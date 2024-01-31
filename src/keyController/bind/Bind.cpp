@@ -25,7 +25,19 @@ void Bind::add_control( std::vector<Control*> _control_combo, bool _up )
 	this->control.push_back( _control_combo );
 }
 
+/**
+ * @brief Clears the current control for a fresh keyboard
+*/
 void Bind::reset()
 {
 	this->control.clear() ;
+}
+
+/**
+ * @brief Get the text id of the Bind
+ * @return The text id
+*/
+std::string Bind::get_local_name()
+{
+	return this->text_id ;
 }
