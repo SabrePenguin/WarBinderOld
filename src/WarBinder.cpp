@@ -3,6 +3,10 @@
 
 #include "WarBinder.h"
 #include "KeyBindController.h"
+#include <iostream>
+#include <string>
+#include <tuple>
+#include <vector>
 
 using namespace std;
 
@@ -14,5 +18,10 @@ int main()
 		"english");
 	//TODO: Check proper file type
 	key1.import( "../../../../controller_settings.blk" ) ;
+	auto data = key1.get_keys() ;
+	for( auto element = data.begin() ; element != data.end() ; element++ )
+	{
+		std::cout << "Local name: " << std::get<0>( *element ) << ", internal id: " << std::get<1>( *element) << std::endl;
+	}
 	return 0;
 }
