@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 enum class controller ;
+enum class Key_Type ;
 class Control ;
 class KeyBind ;
 class KeyBindController 
@@ -18,6 +19,7 @@ class KeyBindController
 		void set_language(std::string _language);
 		void import(std::string _filename) ;
 		controller check_string( std::string _name ) ;
+		std::string check_type( Key_Type t_type ) ;
 		//bool add_keys_to_bind(std::string _bind_name, std::vector<Control*> _added_keys);
 	private:
 		//The language to be used. Will determine the csv column to use
