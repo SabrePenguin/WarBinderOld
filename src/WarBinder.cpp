@@ -15,6 +15,7 @@ int main()
 	cout << "Starting Program" << endl;
 	KeyBindController key1("../../../../control_list.csv",
 		"../../../../wt_bind_list.csv",
+		"../../../../options.csv",
 		"english");
 	//TODO: Check proper file type
 	key1.import( "../../../../controller_settings.blk" ) ;
