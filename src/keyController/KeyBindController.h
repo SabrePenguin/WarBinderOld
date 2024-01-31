@@ -22,7 +22,10 @@ class KeyBindController
 		void add_new_bind(std::string _internal_id, std::string _local_id, char _mode, bool _is_axis, bool _required);
 		void set_language(std::string _language);
 		void import(std::string _filename) ;
-		std::vector<std::tuple<std::string, std::string>> get_keys( ) ;
+		//Get all the key info
+		std::vector<std::tuple<std::string, std::string>> get_key_details( ) ;
+		//Get all the bind info
+		std::vector<std::tuple<std::string, std::string>> get_bind_details( ) ;
 	private:
 		controller check_string( std::string _name ) ;
 		std::string check_type( Key_Type t_type ) ;
