@@ -21,6 +21,8 @@ class Axis: public KeyBind
 		void add_axis( Control* _axis ) ;
 		void add_data( Imported_Axis* _data ) ;
 		void reset() ;
+		std::string get_local_name() ;
+		std::vector<std::string> get_axis_names() ;
 
 	private:
 		//The local name that represents the moving up of the axis
