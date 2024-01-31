@@ -9,6 +9,7 @@ enum class controller
 	DECREASE,
 	RESET
 };
+
 class Axis: public KeyBind
 {
 	public:

@@ -6,6 +6,12 @@ KeyBind::KeyBind( char _mode, bool _axis, bool _required) :
 
 }
 
-char KeyBind::get_mode() {
+char KeyBind::get_mode() 
+{
 	return this->mode ;
+}
+
+bool KeyBind::is_axis()
+{
+	return this->axis ;
 }
