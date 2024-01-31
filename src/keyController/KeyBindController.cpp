@@ -12,6 +12,9 @@
 #include "KeyBind.h"
 
 
+// The purpose of this file is to be the surface level file that users
+//
+
 /**
  * @brief Imports the files and converts them to objects
  * @param _controlfile: The file of the controls and their local names
@@ -152,6 +155,15 @@ controller KeyBindController::check_string( std::string _name )
 	return controller::RESET ;
 }
 
+std::string KeyBindController::check_type( Key_Type t_key )
+{
+	if( t_key == Key_Type::KEYBOARD )
+		return "key" ;
+	else if( t_key == Key_Type::MOUSE )
+		return "mouse" ;
+	return "joystick" ;
+}
+
 /**
  * @brief Imports the file. Must be a .blk file and must follow Gaijin's format
  * @param _filename 
@@ -179,20 +191,13 @@ void KeyBindController::import( std::string _filename )
 			for( t_buttons::iterator single = bound_keys.begin() ; single != bound_keys.end() ; ++single )
 			{
 				key_type = std::get<0>( *single ) ;
-				if( key_type == Key_Type::KEYBOARD )
-					control_type = "key" ;
-				else if( key_type == Key_Type::MOUSE )
-					control_type = "mouse" ;
-				else
-					control_type = "joystick" ;
+				control_type = check_type( std::get<0>( *single ) ) ;
 				auto find_key = this->system_keys.find( control_type + std::get<1>( *single ) ) ;
 				if( find_key != this->system_keys.end() )
 				{
 					(*find_key).second->add_bind( existing_bind ) ;
 					key_list.push_back( (*find_key).second ) ;
-					i++ ;
 				}
-				i++ ;
 			}
 			if( key_list.size() )
 			{
@@ -200,7 +205,7 @@ void KeyBindController::import( std::string _filename )
 			}
 		}
 	}
-
+	//Import the controllers before the axes
 	//Now run to get the axes
 	t_import_axis axes = std::get<1>( data ) ;
 	for( t_import_axis::iterator iter = axes.begin() ; iter != axes.end() ; ++iter )
@@ -210,9 +215,15 @@ void KeyBindController::import( std::string _filename )
 		{
 			//Insert a pointer to the data by dereferencing the iterator and then getting the address of the struct
 			check->second->add_data( &*iter ) ;
+			std::string control_type = check_type( (*iter).axis_type ) ;
+			auto existing_control = this->system_keys.find( control_type + (*iter).axis ) ;
+			if( existing_control != this->system_keys.end() )
+			{
+				//TO CHANGE
+				(*existing_control).second->add_bind( check->second ) ;
+			}
 			i++ ;
 		}
-		i++ ;
 	}
 	return ;
 }
