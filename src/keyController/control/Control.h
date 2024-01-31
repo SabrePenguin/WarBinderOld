@@ -12,6 +12,7 @@ class Control
 		virtual bool set_modifer(bool enable) { return false; };
 		virtual bool is_modifier() { return false; };
 		virtual bool check_conflict( KeyBind* _bind ) { return false; } ;
+		void reset() { binds.clear() ; } ;
 	protected:
 		//A list of the binds assigned to this key
 		std::vector<KeyBind*> binds;
