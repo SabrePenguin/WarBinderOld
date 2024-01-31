@@ -83,7 +83,7 @@ KeyBindController::~KeyBindController()
 void KeyBindController::add_key(std::string _key_id, std::string _local_key, bool _modifier, char _type)
 {
 	//Technically can be put in one line, but reduces readability
-	Key* new_key = new Key(_key_id, _local_key, _modifier);
+	Control* new_key = new Key(_key_id, _local_key, _modifier);
 	this->system_keys.insert({ "key"+_key_id, new_key});
 }
 
@@ -105,20 +105,15 @@ void KeyBindController::add_new_control(std::string _key_id, std::string _local_
 void KeyBindController::add_new_bind(std::string _internal_id, std::string _local_id, char _mode, bool _is_axis, bool _required)
 {
 	KeyBind* new_bind ;
-	if( !_is_axis ) {
+	if( !_is_axis )
+	{
 		new_bind = new Bind( _internal_id, _local_id, _mode, _required ) ;
 		this->p_binds.insert( { _internal_id, new_bind } ) ;
 	}
 	else
 	{
-		controller up ;
-		//size_t pos = _internal_id.find( "_rangeMax" ) ;
-		if( _internal_id.find( "_rangeMax" ) != std::string::npos )
-			up = controller::INCREASE ;
-		else if( _internal_id.find( "_rangeMin" ) != std::string::npos )
-			up = controller::DECREASE ;
-		else
-			up = controller::RESET ;
+		controller up = this->check_string( _internal_id ) ;
+
 		size_t cutoff = _internal_id.find_last_of( "_" ) ;
 		_internal_id.erase( cutoff ) ;
 		int un = 1;
@@ -143,6 +138,18 @@ void KeyBindController::set_language(std::string _language)
 	this->language = _language;
 }
 
+controller KeyBindController::check_string( std::string _name )
+{
+	controller up ;
+	if( _name.find( "_rangeMax" ) != std::string::npos )
+		up = controller::INCREASE ;
+	else if( _name.find( "_rangeMin" ) != std::string::npos )
+		up = controller::DECREASE ;
+	else
+		up = controller::RESET ;
+	return up ;
+}
+
 /**
  * @brief Imports the file. Must be a .blk file and must follow Gaijin's format
  * @param _filename 
@@ -154,13 +161,43 @@ void KeyBindController::import( std::string _filename )
 	int i = 0 ;
 	for( t_keys::iterator iter = keys.begin() ; iter != keys.end() ; ++iter )
 	{
-		auto check = this->p_binds.find( std::get<0>( *iter ) ) ;
+		std::string name = std::get<0>( *iter ) ;
+		controller up = this->check_string( name ) ;
+		name.erase( name.find_last_of( "_" ) ) ;
+		auto check = this->p_binds.find( name ) ;
 		//This if statement is very annoying, but I need it for update protection (no nulls)
 		if( check != this->p_binds.end() )
 		{
 			KeyBind* existing_bind = check->second;
 			t_buttons bound_keys = std::get<1>( *iter ) ;
-			//Now time for conflict checking
+			std::vector<Control*> key_list ;
+			std::string control_type ;
+			Key_Type key_type ;
+			//Import, then run a check. That way avoid unneeded calls
+			for( t_buttons::iterator single = bound_keys.begin() ; single != bound_keys.end() ; ++single )
+			{
+				key_type = std::get<0>( *single ) ;
+				if( key_type == Key_Type::KEYBOARD )
+					control_type = "key" ;
+				else if( key_type == Key_Type::MOUSE )
+					control_type = "mouse" ;
+				else
+					control_type = "joystick" ;
+				auto find_key = this->system_keys.find( control_type + std::get<1>( *single ) ) ;
+				if( find_key != this->system_keys.end() )
+				{
+					(*find_key).second->add_bind( existing_bind ) ;
+					key_list.push_back( (*find_key).second ) ;
+					i++ ;
+				}
+				i++ ;
+			}
+			if( key_list.size() )
+			{
+				existing_bind->add_control( key_list, up ) ;
+			}
+			
+			//this->system_keys.find(bound_keys) ;
 			i++ ;
 		}
 	}
