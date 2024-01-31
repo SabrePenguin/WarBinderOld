@@ -20,6 +20,7 @@ class Axis: public KeyBind
 		void add_second_bind( std::string _text_id, controller _direction ) ;
 		void add_axis( Control* _axis ) ;
 		void add_data( Imported_Axis* _data ) ;
+		void reset() ;
 
 	private:
 		//The local name that represents the moving up of the axis

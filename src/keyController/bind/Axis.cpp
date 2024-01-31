@@ -54,3 +54,11 @@ void Axis::add_data( Imported_Axis* _data )
 	relative_control_sensivity = _data->relSens ;
 	relative_control_step = _data->relStep ;
 }
+
+void Axis::reset()
+{
+	this->control_down.clear() ;
+	this->control_up.clear() ;
+	this->control_reset.clear() ;
+	this->axes = NULL ;
+}
