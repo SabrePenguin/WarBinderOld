@@ -8,10 +8,11 @@
  * @tparam T: Int, Boolean, or Float
  * @param _cur_val: The current value from the user
  * @param _max: The maximum value it can be. For booleans, this is true
+ * @param _option: Whether this option is a middle or lower file section (may be removed)
 */
 template<class T> 
-Options<T>::Options( T _cur_val, T _max )
-	: max( _max ), value( _cur_val )
+Options<T>::Options( T _cur_val, T _max, bool _option )
+	: max( _max ), value( _cur_val ), option( _option )
 {
 }
 
@@ -41,10 +42,11 @@ void Options<T>::set_value( T _value )
  * @brief The specialized option setting for lists of text
  * @param _cur_val: The current value
  * @param _max: The maximum amount of choices
+ * @param _option: If this option belongs in the upper or lower section of the file
  * @param _choices: A list of all the choices
 */
-Option_Integer::Option_Integer( int _cur_val, int _max, std::list<std::string> _choices )
-	: Options<int>( _cur_val, _max ), choices( _choices )
+Option_Integer::Option_Integer( int _cur_val, int _max, bool _option, std::list<std::string> _choices )
+	: Options<int>( _cur_val, _max, _option ), choices( _choices )
 {
 }
 
