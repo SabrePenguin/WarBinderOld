@@ -63,3 +63,8 @@ bool Key::is_modifier()
 {
 	return this->modifier_key;
 }
+
+std::string Key::get_local_name()
+{
+	return this->local_key ;
+}

@@ -15,6 +15,7 @@ class Key : public Control
 		std::string get_id( ) ;
 		bool is_modifier( ) ;
 		bool check_conflict( KeyBind* _bind ) ;
+		std::string get_local_name() ;
 	private:
 		//The internal key id of the file
 		std::string key_id ;

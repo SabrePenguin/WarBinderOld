@@ -12,6 +12,7 @@ class Control
 		virtual bool set_modifer(bool enable) { return false; };
 		virtual bool is_modifier() { return false; };
 		virtual bool check_conflict( KeyBind* _bind ) { return false; } ;
+		virtual std::string get_local_name() { return "" ; } ;
 		void reset() { binds.clear() ; } ;
 	protected:
 		//A list of the binds assigned to this key
