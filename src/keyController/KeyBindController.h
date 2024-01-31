@@ -4,8 +4,9 @@
 #include <vector>
 #include <unordered_map>
 
-class Control;
-class KeyBind;
+enum class controller ;
+class Control ;
+class KeyBind ;
 class KeyBindController 
 {
 	public:
@@ -16,6 +17,7 @@ class KeyBindController
 		void add_new_bind(std::string _internal_id, std::string _local_id, char _mode, bool _is_axis, bool _required);
 		void set_language(std::string _language);
 		void import(std::string _filename) ;
+		controller check_string( std::string _name ) ;
 		//bool add_keys_to_bind(std::string _bind_name, std::vector<Control*> _added_keys);
 	private:
 		//The language to be used. Will determine the csv column to use
