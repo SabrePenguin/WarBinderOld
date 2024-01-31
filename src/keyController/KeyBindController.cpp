@@ -285,21 +285,21 @@ void KeyBindController::import( std::string _filename )
 	t_import_axis axes = std::get<1>( data ) ;
 	for( t_import_axis::iterator iter = axes.begin() ; iter != axes.end() ; ++iter )
 	{
-		auto check = this->p_binds.find( (*iter).name ) ;
+		auto check = this->p_binds.find( ( *iter ).name ) ;
 		if( check != this->p_binds.end() )
 		{
 			//Insert a pointer to the data by dereferencing the iterator and then getting the address of the struct
 			check->second->add_data( &*iter ) ;
-			std::string control_type = check_type( (*iter).axis_type ) ;
-			if( (*iter).axis.length() > 0 )
+			std::string control_type = check_type( ( *iter ).axis_type ) ;
+			if( ( *iter ).axis.length() > 0 )
 			{
 				control_type = control_type + "_axis" ;
 			}
-			auto existing_control = this->system_keys.find( control_type + (*iter).axis ) ;
+			auto existing_control = this->system_keys.find( control_type + ( *iter ).axis ) ;
 			if( existing_control != this->system_keys.end() )
 			{
-				(*existing_control).second->add_bind( check->second ) ;
-				check->second->add_axis( (*existing_control).second ) ;
+				( *existing_control ).second->add_bind( check->second ) ;
+				check->second->add_axis( ( *existing_control ).second ) ;
 			}
 			i++ ;
 		}
@@ -307,12 +307,33 @@ void KeyBindController::import( std::string _filename )
 	return ;
 }
 
-std::vector<std::tuple<std::string, std::string>> KeyBindController::get_keys()
+std::vector<std::tuple<std::string, std::string>> KeyBindController::get_key_details()
 {
 	std::vector<std::tuple<std::string, std::string>> key_strings ;
 	for( auto iter = this->system_keys.begin() ; iter != this->system_keys.end() ; iter++ )
 	{
-		key_strings.push_back( { (*iter).first, (*iter).second->get_local_name() } ) ;
+		key_strings.push_back( { ( *iter ).first, ( *iter ).second->get_local_name() } ) ;
 	}
 	return key_strings ;
+}
+
+std::vector<std::tuple<std::string, std::string>> KeyBindController::get_bind_details()
+{
+	std::vector<std::tuple<std::string, std::string>> bind_strings ;
+	for( auto iter = this->p_binds.begin() ; iter != this->p_binds.end() ; iter++ )
+	{
+		if( ( *iter ).second->is_axis() )
+		{
+			std::vector<std::string> axis_names = ( *iter ).second->get_axis_names() ;
+			for( auto axis_iter = axis_names.begin() ; axis_iter != axis_names.end() ; axis_iter++ )
+			{
+				bind_strings.push_back( { ( *iter ).first, ( *axis_iter ) } ) ;
+			}
+		}
+		else
+		{
+			bind_strings.push_back( { ( *iter ).first, ( *iter ).second->get_local_name() } ) ;
+		}
+	}
+	return bind_strings ;
 }
