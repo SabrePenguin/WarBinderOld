@@ -25,7 +25,7 @@ class Axis: public KeyBind
 		//The local name that represents the moving up of the axis
 		std::string increase_local ;
 		//The physical axis that controls the game axis
-		std::vector<Control*> axes ;
+		Control* axes ;
 		//The collection of vectors that make up the increase control
 		std::vector<std::vector<Control*>> control_up;
 		//The local name that represents moving down the axis
