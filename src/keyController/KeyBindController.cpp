@@ -168,6 +168,11 @@ controller KeyBindController::check_string( std::string _name )
 	return controller::RESET ;
 }
 
+/**
+ * @brief A method to check whether the given button is on the keyboard, mouse, or a controller
+ * @param t_key: The enum to check
+ * @return A string
+*/
 std::string KeyBindController::check_type( Key_Type t_key )
 {
 	if( t_key == Key_Type::KEYBOARD )
@@ -208,8 +213,8 @@ void KeyBindController::import( std::string _filename )
 				auto find_key = this->system_keys.find( control_type + std::get<1>( *single ) ) ;
 				if( find_key != this->system_keys.end() )
 				{
-					(*find_key).second->add_bind( existing_bind ) ;
-					key_list.push_back( (*find_key).second ) ;
+					find_key->second->add_bind( existing_bind ) ;
+					key_list.push_back( find_key->second ) ;
 				}
 			}
 			if( key_list.size() )
@@ -225,25 +230,25 @@ void KeyBindController::import( std::string _filename )
 	for( t_device::iterator iter = devices.begin() ; iter != devices.end() ; ++iter )
 	{
 		auto check = this->device_list.find( (*iter).name ) ;
-		bool enabled = ( *iter ).connected ;
+		bool enabled = iter->connected ;
 		//If it exists, remove everything of the device and replace so that it's easier
 		if( check != this->device_list.end() )
 		{
 			enabled = check->second->get_connected() ;
 			this->device_list.erase( check ) ;
 		}
-		this->device_list.insert( {( *iter ).name, std::make_shared<Device>(
+		this->device_list.insert( { iter->name, std::make_shared<Device>(
 			enabled,
-			( *iter ).name,
-			( *iter ).device_id,
-			( *iter ).axes_offset,
-			( *iter ).button_offset,
-			( *iter ).button_count,
-			( *iter ).axes_count,
-			( *iter ).type
+			iter->name,
+			iter->device_id,
+			iter->axes_offset,
+			iter->button_offset,
+			iter->button_count,
+			iter->axes_count,
+			iter->type
 		) } );
-		total_buttons += ( *iter ).button_count ;
-		total_axes += ( *iter ).axes_count ;
+		total_buttons += iter->button_count ;
+		total_axes += iter->axes_count ;
 		
 	}
 	std::string front = "controller" ;
@@ -285,21 +290,21 @@ void KeyBindController::import( std::string _filename )
 	t_import_axis axes = std::get<1>( data ) ;
 	for( t_import_axis::iterator iter = axes.begin() ; iter != axes.end() ; ++iter )
 	{
-		auto check = this->p_binds.find( ( *iter ).name ) ;
+		auto check = this->p_binds.find( iter->name ) ;
 		if( check != this->p_binds.end() )
 		{
 			//Insert a pointer to the data by dereferencing the iterator and then getting the address of the struct
 			check->second->add_data( &*iter ) ;
-			std::string control_type = check_type( ( *iter ).axis_type ) ;
-			if( ( *iter ).axis.length() > 0 )
+			std::string control_type = check_type( iter->axis_type ) ;
+			if( iter->axis.length() > 0 )
 			{
 				control_type = control_type + "_axis" ;
 			}
-			auto existing_control = this->system_keys.find( control_type + ( *iter ).axis ) ;
+			auto existing_control = this->system_keys.find( control_type + iter->axis ) ;
 			if( existing_control != this->system_keys.end() )
 			{
-				( *existing_control ).second->add_bind( check->second ) ;
-				check->second->add_axis( ( *existing_control ).second ) ;
+				existing_control->second->add_bind( check->second ) ;
+				check->second->add_axis( existing_control->second ) ;
 			}
 			i++ ;
 		}
@@ -312,7 +317,7 @@ std::vector<std::tuple<std::string, std::string>> KeyBindController::get_key_det
 	std::vector<std::tuple<std::string, std::string>> key_strings ;
 	for( auto iter = this->system_keys.begin() ; iter != this->system_keys.end() ; iter++ )
 	{
-		key_strings.push_back( { ( *iter ).first, ( *iter ).second->get_local_name() } ) ;
+		key_strings.push_back( { iter->first, iter->second->get_local_name() } ) ;
 	}
 	return key_strings ;
 }
@@ -324,15 +329,15 @@ std::vector<std::tuple<std::string, std::string>> KeyBindController::get_bind_de
 	{
 		if( ( *iter ).second->is_axis() )
 		{
-			std::vector<std::string> axis_names = ( *iter ).second->get_axis_names() ;
+			std::vector<std::string> axis_names = iter->second->get_axis_names() ;
 			for( auto axis_iter = axis_names.begin() ; axis_iter != axis_names.end() ; axis_iter++ )
 			{
-				bind_strings.push_back( { ( *iter ).first, ( *axis_iter ) } ) ;
+				bind_strings.push_back( { iter->first, ( *axis_iter ) } ) ;
 			}
 		}
 		else
 		{
-			bind_strings.push_back( { ( *iter ).first, ( *iter ).second->get_local_name() } ) ;
+			bind_strings.push_back( { iter->first, iter->second->get_local_name() } ) ;
 		}
 	}
 	return bind_strings ;
