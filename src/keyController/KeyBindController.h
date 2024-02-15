@@ -26,6 +26,7 @@ class KeyBindController
 		std::vector<std::tuple<std::string, std::string>> get_key_details( ) ;
 		//Get all the bind info
 		std::vector<std::tuple<std::string, std::string>> get_bind_details( ) ;
+		void test() ;
 	private:
 		controller check_string( std::string _name ) ;
 		std::string check_type( Key_Type t_type ) ;
