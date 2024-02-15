@@ -11,8 +11,10 @@ target_sources(Devices
 target_include_directories(Devices
 	PUBLIC
 		"${CMAKE_CURRENT_LIST_DIR}"
+	PRIVATE
+		"${CMAKE_CURRENT_SOURCE_DIR}/../"
 )
 
 target_include_directories(Devices PRIVATE ${SDL2})
 
-target_link_libraries(Devices PRIVATE SDL2::SDL2)
+target_link_libraries(Devices PRIVATE SDL2::SDL2-static)
