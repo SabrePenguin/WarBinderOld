@@ -13,6 +13,7 @@
 #include "reader.h"
 #include "KeyBind.h"
 #include "Device.h"
+#include "DeviceImporter.h"
 
 
 // The purpose of this file is to be the surface level file that users
@@ -27,10 +28,18 @@
 KeyBindController::KeyBindController(std::string _controlfile, std::string _bindfile, std::string _optfile, std::string _language) : 
 	language(_language) 
 {
+	// SDL2 initialization. Run first to check for errors.
+	int error = startup() ;
+	if( error == 1 )
+		return ;
+
+	// Import all the files
 	file_handler = std::make_unique<Reader>() ;
 	std::vector<std::tuple<std::string, char, std::string, bool>> controls = get_control( _controlfile, _language ) ;
 	std::vector<std::tuple<std::string, char, std::string, bool, bool>> binds = get_binds( _bindfile, _language ) ;
 	auto options = get_options( _optfile, _language ) ;
+
+	// Add data to internal structures
 	for( auto iterator = controls.begin() ; iterator != controls.end() ; ++iterator )
 	{
 		//Position zero has the internal name
@@ -60,7 +69,8 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 			std::get<4>( *iterator )
 		) ;
 	}
-	set_language( _language ) ;
+	// Run a scan for any controllers
+	find_devices() ;
 }
 
 
@@ -79,6 +89,7 @@ KeyBindController::~KeyBindController()
 		delete(iterator->second);
 	}
 	this->p_binds.clear();
+	shutdown() ;
 }
 
 /**
@@ -322,12 +333,17 @@ std::vector<std::tuple<std::string, std::string>> KeyBindController::get_key_det
 	return key_strings ;
 }
 
+
+/**
+ * @brief Temp string output
+ * @return String vector data
+*/
 std::vector<std::tuple<std::string, std::string>> KeyBindController::get_bind_details()
 {
 	std::vector<std::tuple<std::string, std::string>> bind_strings ;
 	for( auto iter = this->p_binds.begin() ; iter != this->p_binds.end() ; iter++ )
 	{
-		if( ( *iter ).second->is_axis() )
+		if( iter->second->is_axis() )
 		{
 			std::vector<std::string> axis_names = iter->second->get_axis_names() ;
 			for( auto axis_iter = axis_names.begin() ; axis_iter != axis_names.end() ; axis_iter++ )
@@ -341,4 +357,9 @@ std::vector<std::tuple<std::string, std::string>> KeyBindController::get_bind_de
 		}
 	}
 	return bind_strings ;
+}
+
+void KeyBindController::test()
+{
+	
 }
