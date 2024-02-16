@@ -38,6 +38,7 @@ t_return Reader::import_controls( std::string _filename )
 	bool settings = false ;
 	bool params = false ;
 	bool device = false ;
+	bool quote_open = false ;
 	int braceLevel = 0 ;
 	Imported_Axis empty = {
 		Key_Type::CONTROLLER, "", "", false, false, false, 0,0,0,0,0
@@ -249,6 +250,7 @@ t_return Reader::import_controls( std::string _filename )
 					key_holder.clear() ;
 					keys_added = false ;
 				}
+				quote_open = false ;
 				braceLevel-- ;
 				break ;
 
@@ -256,8 +258,11 @@ t_return Reader::import_controls( std::string _filename )
 			case '\t':
 			case ' ':
 				//Known bug source. Names of devices do not properly import due to space stripping
+				if( quote_open )
+					in_string += c ;
 				break;
-			
+			case '"':
+				quote_open = !quote_open ;
 			default:
 				in_string += c ;
 				break;
