@@ -17,8 +17,8 @@ public:
 	void device_change( SDL_Event* con_event ) ;
 private:
 	/*The observer for the ui. Made a vector in case of wierd stuff.*/
-	std::vector<std::unique_ptr<UserInterface>> ui_observer ;
-	std::vector<std::unique_ptr<SDL_GameController>> game_controllers ;
+	std::vector<std::shared_ptr<UserInterface>> ui_observer ;
+	std::vector<SDL_GameController*> game_controllers ;
 };
 
 #endif // !DEVICE_HANDLER_H

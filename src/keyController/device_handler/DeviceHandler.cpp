@@ -39,7 +39,7 @@ std::vector<Device> DeviceHandler::find_devices()
 			if( SDL_IsGameController( iter ) )
 			{
 				SDL_GameController* controller = SDL_GameControllerOpen( iter ) ;
-				game_controllers.push_back( std::make_unique<SDL_GameController>( controller ) ) ;
+				game_controllers.push_back( controller ) ;
 			}
 		}
 	}
@@ -53,7 +53,7 @@ void DeviceHandler::shutdown()
 {
 	for( auto iter = this->game_controllers.begin() ; iter != this->game_controllers.end() ; iter++ )
 	{
-		SDL_GameControllerClose( iter->get() ) ;
+		SDL_GameControllerClose( ( *iter ) ) ;
 	}
 	SDL_Quit() ;
 }
@@ -64,7 +64,7 @@ void DeviceHandler::shutdown()
 */
 void DeviceHandler::add_ui_observer( UserInterface* _ui )
 {
-	this->ui_observer.push_back( std::make_unique<UserInterface>( _ui ) ) ;
+	this->ui_observer.push_back( std::shared_ptr<UserInterface>( _ui ) ) ;
 }
 
 /**
