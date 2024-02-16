@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include <memory>
+#include <SDL.h>
 
 enum class controller ;
 enum class Key_Type ;
@@ -11,6 +12,7 @@ class Control ;
 class KeyBind ;
 class Reader ;
 class Device ;
+class DeviceHandler ;
 class KeyBindController 
 {
 	public:
@@ -26,7 +28,7 @@ class KeyBindController
 		std::vector<std::tuple<std::string, std::string>> get_key_details( ) ;
 		//Get all the bind info
 		std::vector<std::tuple<std::string, std::string>> get_bind_details( ) ;
-		void test() ;
+		void notify_device( SDL_Event* cur_event ) ;
 	private:
 		controller check_string( std::string _name ) ;
 		std::string check_type( Key_Type t_type ) ;
@@ -37,6 +39,7 @@ class KeyBindController
 		//The map of binds. Uses the local string id as the key to allow for searching later
 		std::unordered_map<std::string, KeyBind*> p_binds ;
 		std::unique_ptr<Reader> file_handler ;
+		std::unique_ptr<DeviceHandler> device_handler ;
 		std::unordered_map<std::string,std::shared_ptr<Device>> device_list ;
 };
 #endif // KEYBINDCONTROL_H
