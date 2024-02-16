@@ -1,12 +1,13 @@
-﻿// WarBinder.cpp : The entry point of the program.
+﻿// WarBinder.cpp : The entry point of the program. Controls basic loop logic.
 //
-
+#define SDL_MAIN_HANDLED
 #include "WarBinder.h"
 #include "KeyBindController.h"
 #include <iostream>
 #include <string>
 #include <tuple>
 #include <vector>
+#include <SDL.h>
 
 void initialize()
 {
@@ -18,8 +19,17 @@ void program_loop(KeyBindController* key_controller)
 	bool active = true ;
 	char in ;
 	char data_type ;
+	SDL_Event cur_event ;
 	while( active )
 	{
+		while( SDL_PollEvent( &cur_event ) != 0 )
+		{
+			if( cur_event.type == SDL_JOYDEVICEADDED )
+			{
+				// Pass address directly
+				key_controller->notify_device( &cur_event ) ;
+			}
+		}
 		std::cout << "\nEnter one of the following choices:\nD(isplay)\nQ(uit)\n" << std::endl ;
 		std::cin >> in ;
 		switch( in )
