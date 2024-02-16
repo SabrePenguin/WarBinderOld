@@ -3,6 +3,7 @@
 #include <string>
 #include <tuple>
 #include <memory>
+#include <SDL.h>
 #include "KeyBindController.h"
 #include "Control.h"
 #include "Key.h"
@@ -13,7 +14,7 @@
 #include "reader.h"
 #include "KeyBind.h"
 #include "Device.h"
-#include "DeviceImporter.h"
+#include "DeviceHandler.h"
 
 
 // The purpose of this file is to be the surface level file that users
@@ -29,7 +30,8 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 	language(_language) 
 {
 	// SDL2 initialization. Run first to check for errors.
-	int error = startup() ;
+	device_handler = std::make_unique<DeviceHandler>() ;
+	int error = device_handler->startup() ;
 	if( error == 1 )
 		return ;
 
@@ -70,7 +72,7 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 		) ;
 	}
 	// Run a scan for any controllers
-	find_devices() ;
+	device_handler->find_devices() ;
 }
 
 
@@ -89,7 +91,7 @@ KeyBindController::~KeyBindController()
 		delete(iterator->second);
 	}
 	this->p_binds.clear();
-	shutdown() ;
+	device_handler->shutdown() ;
 }
 
 /**
@@ -359,7 +361,7 @@ std::vector<std::tuple<std::string, std::string>> KeyBindController::get_bind_de
 	return bind_strings ;
 }
 
-void KeyBindController::test()
+void KeyBindController::notify_device( SDL_Event* cur_event )
 {
-	
+	device_handler.get()->device_change( cur_event ) ;
 }
