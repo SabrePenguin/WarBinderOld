@@ -16,9 +16,19 @@ target_link_libraries(Keybind
 	FileHandler
 	Opts
 	Devices
+	SDL2::SDL2-static
 )
 
-target_include_directories(Keybind PRIVATE "control" "bind" "csv" "file_handler" "options" "device_handler")
+target_include_directories(Keybind 
+	PRIVATE 
+		"control" 
+		"bind" 
+		"csv" 
+		"file_handler" 
+		"options" 
+		"device_handler"
+		${SDL2}
+)
 ##End of library insertion
 
 target_sources(Keybind
