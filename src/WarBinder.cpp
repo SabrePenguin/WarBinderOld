@@ -8,28 +8,63 @@
 #include <tuple>
 #include <vector>
 #include <SDL.h>
+#include <thread>
 
 void initialize()
 {
 
 }
 
-void program_loop(KeyBindController* key_controller)
-{
+void sdl_loop(KeyBindController* key_controller)
+{ 
 	bool active = true ;
-	char in ;
-	char data_type ;
+
 	SDL_Event cur_event ;
 	while( active )
 	{
-		while( SDL_PollEvent( &cur_event ) != 0 )
+		if( SDL_WaitEvent( &cur_event ) )
+		{
+			switch( cur_event.type )
+			{
+			case SDL_JOYDEVICEADDED:
+			case SDL_CONTROLLERDEVICEADDED:
+				key_controller->notify_device( &cur_event ) ;
+				break ;
+			case SDL_JOYDEVICEREMOVED:
+			case SDL_CONTROLLERDEVICEREMOVED:
+				key_controller->notify_device( &cur_event ) ;
+				break ;
+			case SDL_USEREVENT:
+				std::cout << "Evented" ;
+				active = false ;
+				break ;
+			}
+			
+		}
+		/*while( SDL_PollEvent(&cur_event) != 0 )
 		{
 			if( cur_event.type == SDL_JOYDEVICEADDED )
 			{
-				// Pass address directly
+				key_controller->notify_device( &cur_event ) ;
+			}
+			else if( cur_event.type == SDL_JOYDEVICEREMOVED )
+			{
 				key_controller->notify_device( &cur_event ) ;
 			}
 		}
+		*/
+	}
+}
+
+void ui_loop( KeyBindController* key_controller )
+{
+	
+	bool active = true ;
+	char in ;
+	char data_type ;
+	uint32_t threadType = SDL_RegisterEvents( 1 ) ;
+	while( active )
+	{
 		std::cout << "\nEnter one of the following choices:\nD(isplay)\nQ(uit)\n" << std::endl ;
 		std::cin >> in ;
 		switch( in )
@@ -63,6 +98,17 @@ void program_loop(KeyBindController* key_controller)
 		//Quit the loop
 		case 'Q':
 		case 'q':
+			
+
+			if( threadType != ( ( uint32_t )-1 ) )
+			{
+				SDL_Event threadInterrupt ;
+				SDL_zero( threadInterrupt ) ;
+				threadInterrupt.type = threadType ;
+				threadInterrupt.user.data1 = nullptr ;
+				threadInterrupt.user.data2 = nullptr ;
+				SDL_PushEvent( &threadInterrupt ) ;
+			}
 			active = false ;
 			break ;
 
@@ -84,7 +130,15 @@ int main()
 	//TODO: Check proper file type
 	key1.import( "../../../../controller_settings.blk" ) ;
 	initialize() ;
-	program_loop( &key1 ) ;
+	std::cout << "Starting loop\n" ;
 	
+	
+
+	std::thread ui( ui_loop, &key1 ) ;
+	std::thread sdl( sdl_loop, &key1 ) ;
+	
+	ui.join() ;
+	sdl.join() ;
+
 	return 0;
 }
