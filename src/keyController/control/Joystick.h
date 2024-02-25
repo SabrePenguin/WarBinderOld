@@ -6,6 +6,7 @@ class Joystick : public Control
 {
 public:
 	Joystick( std::string _joystick_id, std::string _local_name, bool _is_axis ) ;
+	~Joystick() ;
 	void add_bind( KeyBind* _bind ) ;
 	std::string get_local_name() ;
 private:

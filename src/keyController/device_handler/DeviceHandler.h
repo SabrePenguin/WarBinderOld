@@ -10,10 +10,9 @@ class DeviceHandler
 {
 public:
 	DeviceHandler() ;
-	int startup() ;
 	std::vector<Device> find_devices() ;
 	void shutdown() ;
-	void add_ui_observer( UserInterface* _ui ) ;
+	void add_ui_observer( std::shared_ptr<UserInterface> _ui ) ;
 	void device_change( SDL_Event* con_event ) ;
 private:
 	void remove_device( SDL_JoystickID _controller ) ;

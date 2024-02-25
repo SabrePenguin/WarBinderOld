@@ -16,6 +16,16 @@ Bind::Bind(std::string _internal_id, std::string _text_id, char _mode, bool _req
 
 }
 
+Bind::~Bind()
+{
+	for( auto iter = control.begin() ; iter != control.end() ; iter++ )
+	{
+		//No need to delete, controls are deleted by hand
+		iter->clear() ;
+	}
+	control.clear() ;
+}
+
 /**
  * @brief Adds a vector of keys to the current Bind.
  * @param _control_combo : vector of implemented Control classes

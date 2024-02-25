@@ -66,6 +66,10 @@ void DeviceHandler::add_device( int device_index )
 	// Check if controller was created
 	if( !controller )
 		return ;
+
+	//const char* mapping = SDL_GameControllerMapping( controller ) ;
+	//if( !mapping )
+		//std::cout << mapping ;
 	game_controllers.push_back( controller ) ;
 }
 
@@ -99,15 +103,17 @@ void DeviceHandler::shutdown()
 		SDL_GameControllerClose( ( *iter ) ) ;
 	}
 	SDL_Quit() ;
+	//Shared pointer, automatic delete
+	ui_observer.clear() ;
 }
 
 /**
  * @brief Adds a ui observer to be notified
  * @param _ui: The ui to be added.
 */
-void DeviceHandler::add_ui_observer( UserInterface* _ui )
+void DeviceHandler::add_ui_observer( std::shared_ptr<UserInterface> _ui )
 {
-	this->ui_observer.push_back( std::shared_ptr<UserInterface>( _ui ) ) ;
+	this->ui_observer.push_back( _ui ) ;
 }
 
 

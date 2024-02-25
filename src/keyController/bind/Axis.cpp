@@ -24,6 +24,28 @@ Axis::Axis( std::string _internal_id, std::string _text_id, char _mode, controll
 		this->reset_local = _text_id ;
 }
 
+Axis::~Axis()
+{
+	for( auto iter = control_up.begin() ; iter != control_up.end() ; iter++ )
+	{
+		//No need to delete, controls are deleted by hand
+		iter->clear() ;
+	}
+	control_up.clear() ;
+	for( auto iter = control_down.begin() ; iter != control_down.end() ; iter++ )
+	{
+		//No need to delete, controls are deleted by hand
+		iter->clear() ; 
+	}
+	control_down.clear() ;
+	for( auto iter = control_reset.begin() ; iter != control_reset.end() ; iter++ )
+	{
+		//No need to delete, controls are deleted by hand
+		iter->clear() ; 
+	}
+	control_reset.clear() ;
+}
+
 /**
  * @brief Adds a control vector to the bind
  * @param _control_combo: A vector of Control pointers

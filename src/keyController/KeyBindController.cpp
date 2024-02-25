@@ -17,6 +17,8 @@
 #include "DeviceHandler.h"
 
 
+
+
 // The purpose of this file is to be the surface level file that users
 //
 
@@ -88,6 +90,8 @@ KeyBindController::~KeyBindController()
 		delete(iterator->second);
 	}
 	this->p_binds.clear();
+	//Pointers automatically clear, unlike above's circular relationship
+	device_list.clear() ;
 	device_handler->shutdown() ;
 }
 
@@ -361,4 +365,9 @@ std::vector<std::tuple<std::string, std::string>> KeyBindController::get_bind_de
 void KeyBindController::notify_device( SDL_Event* cur_event )
 {
 	device_handler.get()->device_change( cur_event ) ;
+}
+
+void KeyBindController::add_ui_observer( std::shared_ptr<UserInterface> _user_interface )
+{
+	device_handler.get()->add_ui_observer( _user_interface ) ;
 }

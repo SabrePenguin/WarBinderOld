@@ -16,6 +16,7 @@ class Axis: public KeyBind
 {
 	public:
 		Axis( std::string _internal_id, std::string _text_id, char _mode, controller _increase, bool _required);
+		~Axis() ;
 		void add_control( std::vector<Control*> _control_combo, controller _direction );
 		void add_second_bind( std::string _text_id, controller _direction ) ;
 		void add_axis( Control* _axis ) ;

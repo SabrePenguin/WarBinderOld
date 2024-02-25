@@ -7,6 +7,10 @@ Joystick::Joystick( std::string _joystick_id, std::string _local_name, bool _is_
 
 }
 
+Joystick::~Joystick()
+{
+}
+
 void Joystick::add_bind( KeyBind* _bind )
 {
 	this->binds.push_back( _bind ) ;

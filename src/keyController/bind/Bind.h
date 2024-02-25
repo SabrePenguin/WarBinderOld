@@ -9,6 +9,7 @@ class Bind : public KeyBind
 {
 	public:
 		Bind( std::string _internal_id, std::string _text_id, char _mode, bool _required );
+		~Bind() ;
 		void add_control( std::vector<Control*> _control_combo, bool _up );
 		void reset() ;
 		std::string get_local_name() ;

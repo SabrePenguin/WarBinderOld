@@ -50,6 +50,11 @@ Option_Integer::Option_Integer( int _cur_val, int _max, bool _option, std::list<
 {
 }
 
+Option_Integer::~Option_Integer()
+{
+	choices.clear() ;
+}
+
 /**
  * @brief The overloaded method for getting the list of options. Used for visually inspecting the options.
  * @return A tuple with the integer option and the associated string

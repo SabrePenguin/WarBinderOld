@@ -24,6 +24,7 @@ class Option_Integer : public Options<int>
 {
 	public:
 		Option_Integer( int _cur_val, int _max, bool _option, std::list<std::string> _choices ) ;
+		~Option_Integer() ;
 		std::tuple<int, std::string> get_value() ;
 	private:
 		//The list of choices, corresponding to the current value (hence why it's a list)

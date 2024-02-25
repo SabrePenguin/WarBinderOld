@@ -13,6 +13,8 @@ class KeyBind ;
 class Reader ;
 class Device ;
 class DeviceHandler ;
+class UserInterface ;
+
 class KeyBindController 
 {
 	public:
@@ -29,6 +31,7 @@ class KeyBindController
 		//Get all the bind info
 		std::vector<std::tuple<std::string, std::string>> get_bind_details( ) ;
 		void notify_device( SDL_Event* cur_event ) ;
+		void add_ui_observer( std::shared_ptr<UserInterface> _user_interface ) ;
 	private:
 		controller check_string( std::string _name ) ;
 		std::string check_type( Key_Type t_type ) ;
