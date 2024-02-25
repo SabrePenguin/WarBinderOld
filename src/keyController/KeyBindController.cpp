@@ -31,9 +31,6 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 {
 	// SDL2 initialization. Run first to check for errors.
 	device_handler = std::make_unique<DeviceHandler>() ;
-	int error = device_handler->startup() ;
-	if( error == 1 )
-		return ;
 
 	// Import all the files
 	file_handler = std::make_unique<Reader>() ;
