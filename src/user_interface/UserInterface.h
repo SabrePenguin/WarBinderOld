@@ -1,6 +1,8 @@
 #ifndef USER_INTERFACE_H
 #define USER_INTERFACE_H
 
+class KeyBindController ;
+
 class UserInterface
 {
 public:
@@ -12,7 +14,7 @@ public:
 
 	// Informs the UI that the controllers been added or removed
 	virtual void controller_change_notify() {} ;
-	virtual void main_loop() {} ;
+	virtual void main_loop( KeyBindController* _controller ) {} ;
 private:
 
 };
