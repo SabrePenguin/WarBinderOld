@@ -6,24 +6,9 @@
 #include "Device.h"
 #include "UserInterface.h"
 
-DeviceHandler::DeviceHandler()
+DeviceHandler::DeviceHandler() :
+	num_controllers( 0 )
 {
-}
-
-/**
- * @brief Initialize SDL's game controller and joystick subsystem
- * @return 0 if successful, 1 otherwise
-*/
-int DeviceHandler::startup()
-{
-	if( SDL_Init( SDL_INIT_EVENTS | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER ) < 0 )
-	{
-		std::cerr << "Failed to initialize SDL: " << SDL_GetError() << std::endl ;
-		return 1 ;
-	}
-	SDL_JoystickEventState( SDL_ENABLE ) ;
-	SDL_GameControllerEventState( SDL_ENABLE ) ;
-	return 0 ;
 }
 
 /**
@@ -33,19 +18,75 @@ int DeviceHandler::startup()
 std::vector<Device> DeviceHandler::find_devices()
 {
 	std::vector<Device> device_list ;
-	int joy_count = SDL_NumJoysticks() ;
-	if( joy_count > 0 )
+	for( int iter = 0 ; iter < SDL_NumJoysticks() ; iter++ )
 	{
-		for( int iter = 0 ; iter < joy_count ; iter++ )
+		if( SDL_IsGameController( iter ) )
 		{
-			if( SDL_IsGameController( iter ) )
-			{
-				SDL_GameController* controller = SDL_GameControllerOpen( iter ) ;
-				game_controllers.push_back( controller ) ;
-			}
+			add_device( iter ) ;
 		}
 	}
 	return device_list ;
+}
+
+/**
+ * @brief Converted version of SDL2's example find_device function
+ * @param _dev_id: The game controller's id
+ * @return The pointer of the item. Will return nullptr if it isn't in the list
+*/
+SDL_GameController* DeviceHandler::find_device( SDL_JoystickID _dev_id )
+{
+	//Loop through devices. Uses vector instead of array.
+	for( auto iter = game_controllers.begin() ; iter != game_controllers.end() ; iter++ )
+	{
+		if( _dev_id == SDL_JoystickInstanceID( SDL_GameControllerGetJoystick( *iter ) ) )
+		{
+			return *iter ;
+		}
+	}
+	return nullptr ;
+}
+
+/**
+ * @brief Adds a controller to the DeviceHandler vector.
+ * @param device_index: The index to add
+*/
+void DeviceHandler::add_device( int device_index )
+{
+	SDL_JoystickID controller_id = SDL_JoystickGetDeviceInstanceID( device_index ) ;
+	// Check if controller id exists
+	if( controller_id < 0 )
+		return ;
+
+	//Check if this exists in the list. If it does, quit this function as we don't need it.
+	if( find_device( controller_id ) )
+		return ;
+
+
+	SDL_GameController* controller = SDL_GameControllerOpen( device_index ) ;
+	// Check if controller was created
+	if( !controller )
+		return ;
+	game_controllers.push_back( controller ) ;
+}
+
+void DeviceHandler::remove_device( SDL_JoystickID _controller )
+{
+	SDL_GameController* control_p = find_device( _controller ) ;
+
+	// Check for nullptr
+	if( !control_p )
+		return ;
+
+	//Search through vector
+	for( auto iter = game_controllers.begin() ; iter != game_controllers.end() ; iter++ )
+	{
+		//Erase item
+		if( *iter == control_p )
+		{
+			game_controllers.erase( iter ) ;
+			return ;
+		}
+	}
 }
 
 /**
@@ -69,6 +110,7 @@ void DeviceHandler::add_ui_observer( UserInterface* _ui )
 	this->ui_observer.push_back( std::shared_ptr<UserInterface>( _ui ) ) ;
 }
 
+
 /**
  * @brief Informs this that a device change has occurred and that it must notify the UI
  * @param con_event: A detach or attach of a controller
@@ -86,29 +128,5 @@ void DeviceHandler::device_change( SDL_Event* con_event )
 	for( auto iter = this->ui_observer.begin() ; iter != this->ui_observer.end() ; iter++ )
 	{
 		iter->get()->controller_change_notify() ;
-	}
-}
-
-void DeviceHandler::add_device( int index )
-{
-	if( SDL_IsGameController( index ) )
-	{
-		SDL_GameController* controller = SDL_GameControllerOpen( index ) ;
-		if( controller )
-		{
-			this->game_controllers.push_back( controller ) ;
-		}
-	}
-}
-
-void DeviceHandler::remove_device( int index )
-{
-	for( auto iter = game_controllers.begin() ; iter != game_controllers.end() ; iter++ )
-	{
-		if( SDL_JoystickInstanceID( SDL_GameControllerGetJoystick( *iter ) ) == index )
-		{
-			SDL_GameControllerClose( *iter ) ;
-			iter = game_controllers.erase( iter ) ;
-		}
 	}
 }
