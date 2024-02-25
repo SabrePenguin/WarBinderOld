@@ -15,12 +15,14 @@ public:
 	void shutdown() ;
 	void add_ui_observer( UserInterface* _ui ) ;
 	void device_change( SDL_Event* con_event ) ;
-	void remove_device( int index ) ;
-	void add_device( int index ) ;
 private:
+	void remove_device( SDL_JoystickID _controller ) ;
+	void add_device( int index ) ;
+	SDL_GameController* find_device( SDL_JoystickID _joy_id ) ;
 	/*The observer for the ui. Made a vector in case of wierd stuff.*/
 	std::vector<std::shared_ptr<UserInterface>> ui_observer ;
 	std::vector<SDL_GameController*> game_controllers ;
+	int num_controllers ; 
 };
 
 #endif // !DEVICE_HANDLER_H
