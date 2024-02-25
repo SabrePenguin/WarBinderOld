@@ -11,6 +11,7 @@
 #include <thread>
 #include "UserInterface.h"
 #include "ptui.h"
+#include <memory>
 
 
 int initialize()
@@ -21,73 +22,6 @@ int initialize()
 		return 1 ;
 	}
 	return 0 ;
-}
-
-/**
- * @brief 
- * @param key_controller 
-*/
-void ui_loop( KeyBindController* key_controller )
-{
-	
-	bool active = true ;
-	char in ;
-	char data_type ;
-	uint32_t threadType = SDL_RegisterEvents( 1 ) ;
-	while( active )
-	{
-		std::cout << "\nEnter one of the following choices:\nD(isplay)\nQ(uit)\n" << std::endl ;
-		std::cin >> in ;
-		switch( in )
-		{
-			//Display information
-		case 'D':
-		case 'd':
-			std::cout << "\nEnter one of the following choices:\nK(eys)\nB(inds)\n" << std::endl ;
-			std::cin >> data_type ;
-			//Key information
-			if( data_type == 'k' )
-			{
-				auto data = key_controller->get_key_details() ;
-				for( auto element = data.begin() ; element != data.end() ; element++ )
-				{
-					std::cout << "Local name: " << std::get<0>( *element ) << ", internal id: " << std::get<1>( *element ) << std::endl ;
-				}
-				break ;
-			}
-			//Bind information
-			else if( data_type == 'b' )
-			{
-				auto data2 = key_controller->get_bind_details() ;
-				for( auto element = data2.begin() ; element != data2.end() ; element++ )
-				{
-					std::cout << "Local name: " << std::get<0>( *element ) << ", internal id: " << std::get<1>( *element ) << std::endl ;
-				}
-			}
-			break ;
-
-			//Quit the loop
-		case 'Q':
-		case 'q':
-
-			std::cout << "Qutting UI\n" ;
-			if( threadType != ( ( uint32_t )-1 ) )
-			{
-				SDL_Event threadInterrupt ;
-				SDL_zero( threadInterrupt ) ;
-				threadInterrupt.type = threadType ;
-				threadInterrupt.user.data1 = nullptr ;
-				threadInterrupt.user.data2 = nullptr ;
-				SDL_PushEvent( &threadInterrupt ) ;
-			}
-			active = false ;
-			break ;
-
-			//Repeat
-		default:
-			break ;
-		}
-	}
 }
 
 void sdl_loop( KeyBindController* key_controller )
@@ -123,13 +57,9 @@ void sdl_loop( KeyBindController* key_controller )
 
 int main()
 {
-	//Start testing
 	if( initialize() )
 		return 1 ;
-	//SDL_SetHint( SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1" );
 
-	//end testing
-	std::cout << "Starting Program" << std::endl;
 	KeyBindController key1("../../../../control_list.csv",
 		"../../../../wt_bind_list.csv",
 		"../../../../options.csv",
@@ -138,16 +68,14 @@ int main()
 	//TODO: Check proper file type
 	key1.import( "../../../../controller_settings.blk" ) ;
 
-	UserInterface* user_interface = new ptui();
-
+	std::shared_ptr<UserInterface> user_interface = std::make_shared<ptui>();
+	key1.add_ui_observer( user_interface ) ;
 	std::cout << "Starting loop\n" ;
 
-	std::thread ui( ui_loop, &key1 ) ;
-	//std::thread sdl( sdl_loop, &key1 ) ;
+	std::thread ui( &UserInterface::main_loop, user_interface, &key1 ) ;
 	sdl_loop( &key1 ) ;
 	ui.join() ;
-	//sdl.join() ;
-	//SDL_Quit() ;
-	delete user_interface ;
+	_CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG );
+	_CrtDumpMemoryLeaks();
 	return 0;
 }

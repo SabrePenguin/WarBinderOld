@@ -1,4 +1,4 @@
-add_executable(WarBinder "WarBinder.cpp")
+add_executable(WarBinder "WarBinder.cpp" )
 
 ##Library insertion
 add_subdirectory(keyController)
@@ -17,4 +17,5 @@ target_link_libraries(WarBinder
 	userInterface
 	SDL2::SDL2-static
 )
+
 ##End of library insertion
