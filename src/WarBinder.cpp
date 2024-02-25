@@ -9,53 +9,24 @@
 #include <vector>
 #include <SDL.h>
 #include <thread>
+#include "UserInterface.h"
+#include "ptui.h"
 
-void initialize()
+
+int initialize()
 {
-
-}
-
-void sdl_loop(KeyBindController* key_controller)
-{ 
-	bool active = true ;
-
-	SDL_Event cur_event ;
-	while( active )
+	if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER ) < 0 )
 	{
-		if( SDL_WaitEvent( &cur_event ) )
-		{
-			switch( cur_event.type )
-			{
-			case SDL_JOYDEVICEADDED:
-			case SDL_CONTROLLERDEVICEADDED:
-				key_controller->notify_device( &cur_event ) ;
-				break ;
-			case SDL_JOYDEVICEREMOVED:
-			case SDL_CONTROLLERDEVICEREMOVED:
-				key_controller->notify_device( &cur_event ) ;
-				break ;
-			case SDL_USEREVENT:
-				std::cout << "Evented" ;
-				active = false ;
-				break ;
-			}
-			
-		}
-		/*while( SDL_PollEvent(&cur_event) != 0 )
-		{
-			if( cur_event.type == SDL_JOYDEVICEADDED )
-			{
-				key_controller->notify_device( &cur_event ) ;
-			}
-			else if( cur_event.type == SDL_JOYDEVICEREMOVED )
-			{
-				key_controller->notify_device( &cur_event ) ;
-			}
-		}
-		*/
+		std::cerr << "Failed to initialize SDL: " << SDL_GetError() << std::endl ;
+		return 1 ;
 	}
+	return 0 ;
 }
 
+/**
+ * @brief 
+ * @param key_controller 
+*/
 void ui_loop( KeyBindController* key_controller )
 {
 	
@@ -69,7 +40,7 @@ void ui_loop( KeyBindController* key_controller )
 		std::cin >> in ;
 		switch( in )
 		{
-		//Display information
+			//Display information
 		case 'D':
 		case 'd':
 			std::cout << "\nEnter one of the following choices:\nK(eys)\nB(inds)\n" << std::endl ;
@@ -95,11 +66,11 @@ void ui_loop( KeyBindController* key_controller )
 			}
 			break ;
 
-		//Quit the loop
+			//Quit the loop
 		case 'Q':
 		case 'q':
-			
 
+			std::cout << "Qutting UI\n" ;
 			if( threadType != ( ( uint32_t )-1 ) )
 			{
 				SDL_Event threadInterrupt ;
@@ -112,33 +83,71 @@ void ui_loop( KeyBindController* key_controller )
 			active = false ;
 			break ;
 
-		//Repeat
+			//Repeat
 		default:
 			break ;
 		}
 	}
 }
 
+void sdl_loop( KeyBindController* key_controller )
+{
+	bool active = true ;
+
+	SDL_Event event ;
+
+	while( active )
+	{
+		if( SDL_WaitEvent( &event ) )
+		{
+			switch( event.type )
+			{
+			case SDL_CONTROLLERDEVICEADDED:
+				std::cout << "Added device" << std::endl ;
+				key_controller->notify_device( &event ) ;
+				break ;
+			case SDL_CONTROLLERDEVICEREMOVED:
+				std::cout << "Removed device" << std::endl ;
+				key_controller->notify_device( &event ) ;
+				break ;
+			case SDL_USEREVENT:
+				std::cout << "Quitting SDL\n" ;
+				active = false ;
+				break ;
+			}
+
+		}
+	}
+}
+
+
 int main()
 {
-	
+	//Start testing
+	if( initialize() )
+		return 1 ;
+	//SDL_SetHint( SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1" );
+
+	//end testing
 	std::cout << "Starting Program" << std::endl;
 	KeyBindController key1("../../../../control_list.csv",
 		"../../../../wt_bind_list.csv",
 		"../../../../options.csv",
 		"english");
+
 	//TODO: Check proper file type
 	key1.import( "../../../../controller_settings.blk" ) ;
-	initialize() ;
+
+	UserInterface* user_interface = new ptui();
+
 	std::cout << "Starting loop\n" ;
-	
-	
 
 	std::thread ui( ui_loop, &key1 ) ;
-	std::thread sdl( sdl_loop, &key1 ) ;
-	
+	//std::thread sdl( sdl_loop, &key1 ) ;
+	sdl_loop( &key1 ) ;
 	ui.join() ;
-	sdl.join() ;
-
+	//sdl.join() ;
+	//SDL_Quit() ;
+	delete user_interface ;
 	return 0;
 }
