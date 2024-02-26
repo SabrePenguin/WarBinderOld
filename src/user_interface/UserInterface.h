@@ -1,5 +1,6 @@
 #ifndef USER_INTERFACE_H
 #define USER_INTERFACE_H
+#include <memory>
 
 class KeyBindController ;
 
@@ -14,7 +15,7 @@ public:
 
 	// Informs the UI that the controllers been added or removed
 	virtual void controller_change_notify() {} ;
-	virtual void main_loop( KeyBindController* _controller ) {} ;
+	virtual void main_loop( std::shared_ptr<KeyBindController> _controller ) {} ;
 private:
 
 };
