@@ -18,6 +18,13 @@
 
 
 
+#define _CRTDBG_MAP_ALLOC
+#include<iostream>
+#include <crtdbg.h>
+#ifdef _DEBUG
+#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#define new DEBUG_NEW
+#endif
 
 // The purpose of this file is to be the surface level file that users
 //
@@ -47,14 +54,13 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 		//Position two has the local name
 		//Position three determines if it's a modifier
 		//Position one is the type control
-		this->add_key( 
-			std::get<0>( *iterator ), 
-			std::get<2>( *iterator ), 
-			std::get<3>( *iterator ), 
+		this->add_key(
+			std::get<0>( *iterator ),
+			std::get<2>( *iterator ),
+			std::get<3>( *iterator ),
 			std::get<1>( *iterator )
 		) ;
 	}
-
 	for( auto iterator = binds.begin() ; iterator != binds.end() ; ++iterator )
 	{
 		//Position zero has the internal name
@@ -82,12 +88,14 @@ KeyBindController::~KeyBindController()
 {
 	for (auto iterator = this->system_keys.begin(); iterator!= this->system_keys.end(); ++iterator) 
 	{
-		delete(iterator->second);
+		//std::cout << "Deleting " << iterator->first << std::endl ;
+		delete iterator->second ;
 	}
 	this->system_keys.clear();
 	for (auto iterator = this->p_binds.begin(); iterator != this->p_binds.end(); ++iterator)
 	{
-		delete(iterator->second);
+		//std::cout << "Deleting " << iterator->first << std::endl ;
+		delete iterator->second ;
 	}
 	this->p_binds.clear();
 	//Pointers automatically clear, unlike above's circular relationship
@@ -106,7 +114,8 @@ void KeyBindController::add_key(std::string _key_id, std::string _local_key, boo
 {
 	//Technically can be put in one line, but reduces readability
 	Control* new_key = new Key(_key_id, _local_key, _modifier);
-	this->system_keys.insert({ "key"+_key_id, new_key});
+	std::string key_id = "key" ;
+	this->system_keys.insert({ key_id+_key_id , new_key});
 }
 
 /**
@@ -117,13 +126,15 @@ void KeyBindController::add_key(std::string _key_id, std::string _local_key, boo
 void KeyBindController::add_new_joystick(std::string _key_id, std::string _local_key)
 {
 	Control* new_joystick = new Joystick( _key_id, _local_key, false ) ;
-	this->system_keys.insert( { "controller" + _key_id, new_joystick } ) ;
+	std::string key_id = "controller" ;
+	this->system_keys.insert( { key_id + _key_id, new_joystick } ) ;
 }
 
 void KeyBindController::add_new_controller_axis( std::string _key_id, std::string _local_key )
 {
 	Control* new_con_axis = new Joystick( _key_id, _local_key, true ) ;
-	this->system_keys.insert( { "controller_axis" + _key_id, new_con_axis } ) ;
+	std::string key_id = "controller_axis" ;
+	this->system_keys.insert( { key_id + _key_id, new_con_axis } ) ;
 }
 
 /**
@@ -149,7 +160,7 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 		if( cutoff != std::string::npos )
 			_internal_id.erase( cutoff ) ;
 		new_bind = new Axis( _internal_id, _local_id, _mode, up, _required ) ;
-		if( this->p_binds.find( _internal_id ) == this->p_binds.end())
+		if( this->p_binds.find( _internal_id ) == this->p_binds.end() )
 			this->p_binds.insert( { _internal_id, new_bind } ) ;
 		else
 		{
@@ -251,7 +262,7 @@ void KeyBindController::import( std::string _filename )
 			enabled = check->second->get_connected() ;
 			this->device_list.erase( check ) ;
 		}
-		this->device_list.insert( { iter->name, std::make_shared<Device>(
+		this->device_list.insert({iter->name, std::make_shared<Device>(
 			enabled,
 			iter->name,
 			iter->device_id,
@@ -260,7 +271,7 @@ void KeyBindController::import( std::string _filename )
 			iter->button_count,
 			iter->axes_count,
 			iter->type
-		) } );
+		) } );	
 		total_buttons += iter->button_count ;
 		total_axes += iter->axes_count ;
 		
@@ -362,9 +373,37 @@ std::vector<std::tuple<std::string, std::string>> KeyBindController::get_bind_de
 	return bind_strings ;
 }
 
+int KeyBindController::find_pos( std::string name, char ch )
+{
+	int pos = name.find_first_of( ch ) ;
+	return pos ;
+}
+
 void KeyBindController::notify_device( SDL_Event* cur_event )
 {
-	device_handler.get()->device_change( cur_event ) ;
+	std::string result = device_handler.get()->device_change( cur_event ) ;
+	int pos = 0 ;
+	std::string name ;
+	if( result.length() > 0 )
+	{
+		//Remove guid
+		pos = find_pos( result, ',' ) ;
+		result = result.substr(pos) ;
+		//Remove name
+		pos = find_pos( result, ',' ) ;
+		name = result.substr( 0, pos ) ;
+		result = result.substr( pos ) ;
+		std::string a ;
+		std::string b ;
+		//while( result.length() > 0 )
+		{
+			pos = find_pos( result, ',' ) ;
+
+			pos = find_pos( result, ',' ) ;
+
+			pos = find_pos( result, ',' ) ;
+		}
+	}
 }
 
 void KeyBindController::add_ui_observer( std::shared_ptr<UserInterface> _user_interface )
