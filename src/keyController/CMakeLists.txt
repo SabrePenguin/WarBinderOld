@@ -8,6 +8,7 @@ add_subdirectory(file_handler)
 add_subdirectory("options")
 add_subdirectory(device_handler)
 
+
 target_link_libraries(Keybind
 	PRIVATE
 	Control
@@ -17,6 +18,7 @@ target_link_libraries(Keybind
 	Opts
 	Devices
 	SDL2::SDL2-static
+
 )
 
 target_include_directories(Keybind 
