@@ -35,6 +35,7 @@ class KeyBindController
 	private:
 		controller check_string( std::string _name ) ;
 		std::string check_type( Key_Type t_type ) ;
+		int find_pos( std::string str, char ch ) ;
 		//The language to be used. Will determine the csv column to use
 		std::string language;
 		//The map of system keys. Uses the id as the key, as each is guaranteed to be unique (O(1) time)
