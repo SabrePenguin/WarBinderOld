@@ -1,17 +1,16 @@
 #include "ptui.h"
-#include "ptui.h"
 #include <iostream>
 #include <SDL.h>
+#include <iomanip>
 #include "KeyBindController.h"
 
 
-ptui::ptui()
-	: UserInterface()
+ptui::ptui( std::shared_ptr<KeyBindController> _controller )
+	: UserInterface(), controller( _controller )
 {
-
 }
 
-void ptui::main_loop( KeyBindController* key_controller )
+void ptui::main_loop( std::shared_ptr<KeyBindController> key_controller )
 {
 	bool active = true ;
 	char in ;
@@ -19,19 +18,25 @@ void ptui::main_loop( KeyBindController* key_controller )
 	uint32_t threadType = SDL_RegisterEvents( 1 ) ;
 	while( active )
 	{
-		std::cout << "\nEnter one of the following choices:\nD(isplay)\nQ(uit)\n" << std::endl ;
+		for( int i =0 ; i < 60 ; i++ )
+			std::cout << "\n" ;
+		std::cout << "Enter one of the following choices:" << line_one << std::endl ;
+		std::cout << "D(isplay)" << line_two << std::endl;
+		std::cout << "Q(uit)" << line_three << std::endl;
 		std::cin >> in ;
 		switch( in )
 		{
 			//Display information
 		case 'D':
 		case 'd':
-			std::cout << "\nEnter one of the following choices:\nK(eys)\nB(inds)\n" << std::endl ;
+			for( int i = 0 ; i < 60 ; i++ )
+				std::cout << "\n" ;
+			std::cout << "Enter one of the following choices:\nK(eys)\nB(inds)" << std::endl ;
 			std::cin >> data_type ;
 			//Key information
-			if( data_type == 'k' )
+			if( data_type == 'k' || data_type == 'K' )
 			{
-				auto data = key_controller->get_key_details() ;
+				auto data = key_controller.get()->get_key_details() ;
 				for( auto element = data.begin() ; element != data.end() ; element++ )
 				{
 					std::cout << "Local name: " << std::get<0>( *element ) << ", internal id: " << std::get<1>( *element ) << std::endl ;
@@ -39,9 +44,9 @@ void ptui::main_loop( KeyBindController* key_controller )
 				break ;
 			}
 			//Bind information
-			else if( data_type == 'b' )
+			else if( data_type == 'b' || data_type == 'B' )
 			{
-				auto data2 = key_controller->get_bind_details() ;
+				auto data2 = key_controller.get()->get_bind_details() ;
 				for( auto element = data2.begin() ; element != data2.end() ; element++ )
 				{
 					std::cout << "Local name: " << std::get<0>( *element ) << ", internal id: " << std::get<1>( *element ) << std::endl ;
@@ -52,8 +57,6 @@ void ptui::main_loop( KeyBindController* key_controller )
 			//Quit the loop
 		case 'Q':
 		case 'q':
-
-			std::cout << "Qutting UI\n" ;
 			if( threadType != ( ( uint32_t )-1 ) )
 			{
 				SDL_Event threadInterrupt ;
