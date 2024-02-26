@@ -1,21 +1,43 @@
-add_library(Keybind "KeyBindController.cpp")
+add_library(Keybind)
 
 ##Library insertion
 add_subdirectory(control)
-add_subdirectory(binds)
+add_subdirectory(bind)
+add_subdirectory(csv)
+add_subdirectory(file_handler)
+add_subdirectory("options")
+add_subdirectory(device_handler)
+
 
 target_link_libraries(Keybind
 	PRIVATE
 	Control
-	Binds
+	Bind
+	CSV
+	FileHandler
+	Opts
+	Devices
+	SDL2::SDL2-static
+
 )
 
-target_include_directories(Keybind PRIVATE "control")
+target_include_directories(Keybind 
+	PRIVATE 
+		"control" 
+		"bind" 
+		"csv" 
+		"file_handler" 
+		"options" 
+		"device_handler"
+		${SDL2}
+)
 ##End of library insertion
 
 target_sources(Keybind
 	PRIVATE
 		"${CMAKE_CURRENT_LIST_DIR}/KeyBindController.cpp"
+		"${CMAKE_CURRENT_LIST_DIR}/Device.cpp"
+		"${CMAKE_CURRENT_LIST_DIR}/Device.h"
 	PUBLIC
 		"${CMAKE_CURRENT_LIST_DIR}/KeyBindController.h"
 		

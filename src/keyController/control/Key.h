@@ -2,24 +2,26 @@
 #define KEY_H
 
 #include <vector>
-class Key
+#include <string>
+#include "Control.h"
+class KeyBind;
+class Key : public Control
 {
 	public:
-		Key(int param_key_id, char param_local_key, bool param_modifier);
-		//Adds a bind to the key
-		int add_bind();
-		//Sets the local key
-		bool set_local_key(char local_key);
+		Key( std::string k_id, std::string local, bool mod ) ;
+		void add_bind( KeyBind* _bind ) ;
 		//Enables the key to be used in a combination
-		bool set_modifier(bool enable);
+		bool set_modifier( bool enable ) ;
+		std::string get_id( ) ;
+		bool is_modifier( ) ;
+		bool check_conflict( KeyBind* _bind ) ;
+		std::string get_local_name() ;
 	private:
 		//The internal key id of the file
-		int key_id;
-		//A list of the binds assigned to this key
-		std::vector<int> binds;
+		std::string key_id ;
 		//The local key
-		char local_key;
+		std::string local_key ;
 		//Indicates a combination key, like shift, ctrl, alt. Can be assigned to regular keys
-		bool modifier_key;
+		bool modifier_key ;
 };
 #endif
