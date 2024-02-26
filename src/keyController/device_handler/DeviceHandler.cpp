@@ -50,27 +50,27 @@ SDL_GameController* DeviceHandler::find_device( SDL_JoystickID _dev_id )
  * @brief Adds a controller to the DeviceHandler vector.
  * @param device_index: The index to add
 */
-void DeviceHandler::add_device( int device_index )
+std::string DeviceHandler::add_device( int device_index )
 {
+	std::string mapping ;
 	SDL_JoystickID controller_id = SDL_JoystickGetDeviceInstanceID( device_index ) ;
 	// Check if controller id exists
 	if( controller_id < 0 )
-		return ;
+		return mapping ;
 
 	//Check if this exists in the list. If it does, quit this function as we don't need it.
 	if( find_device( controller_id ) )
-		return ;
+		return mapping ;
 
 
 	SDL_GameController* controller = SDL_GameControllerOpen( device_index ) ;
 	// Check if controller was created
 	if( !controller )
-		return ;
+		return mapping ;
 
-	//const char* mapping = SDL_GameControllerMapping( controller ) ;
-	//if( !mapping )
-		//std::cout << mapping ;
+	mapping = SDL_GameControllerMapping( controller ) ;
 	game_controllers.push_back( controller ) ;
+	return mapping ;
 }
 
 void DeviceHandler::remove_device( SDL_JoystickID _controller )
@@ -121,11 +121,12 @@ void DeviceHandler::add_ui_observer( std::shared_ptr<UserInterface> _ui )
  * @brief Informs this that a device change has occurred and that it must notify the UI
  * @param con_event: A detach or attach of a controller
 */
-void DeviceHandler::device_change( SDL_Event* con_event )
+std::string DeviceHandler::device_change( SDL_Event* con_event )
 {
+	std::string result ;
 	if( con_event->type == SDL_CONTROLLERDEVICEADDED || con_event->type == SDL_JOYDEVICEADDED )
 	{
-		this->add_device( con_event->cdevice.which ) ;
+		result = this->add_device( con_event->cdevice.which ) ;
 	}
 	else if( con_event->type == SDL_CONTROLLERDEVICEREMOVED || con_event->type == SDL_JOYDEVICEREMOVED )
 	{
@@ -135,4 +136,6 @@ void DeviceHandler::device_change( SDL_Event* con_event )
 	{
 		iter->get()->controller_change_notify() ;
 	}
+
+	return result ;
 }
