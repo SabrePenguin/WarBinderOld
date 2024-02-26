@@ -3,6 +3,7 @@
 #include <vector>
 #include <SDL.h>
 #include <memory>
+#include <string>
 class Device ;
 class UserInterface ;
 
@@ -13,10 +14,10 @@ public:
 	std::vector<Device> find_devices() ;
 	void shutdown() ;
 	void add_ui_observer( std::shared_ptr<UserInterface> _ui ) ;
-	void device_change( SDL_Event* con_event ) ;
+	std::string device_change( SDL_Event* con_event ) ;
 private:
 	void remove_device( SDL_JoystickID _controller ) ;
-	void add_device( int index ) ;
+	std::string add_device( int index ) ;
 	SDL_GameController* find_device( SDL_JoystickID _joy_id ) ;
 	/*The observer for the ui. Made a vector in case of wierd stuff.*/
 	std::vector<std::shared_ptr<UserInterface>> ui_observer ;
