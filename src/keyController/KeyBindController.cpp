@@ -48,6 +48,7 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 	auto options = get_options( _optfile, _language ) ;
 
 	// Add data to internal structures
+	
 	for( auto iterator = controls.begin() ; iterator != controls.end() ; ++iterator )
 	{
 		//Position zero has the internal name
@@ -61,6 +62,8 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 			std::get<1>( *iterator )
 		) ;
 	}
+	
+	
 	for( auto iterator = binds.begin() ; iterator != binds.end() ; ++iterator )
 	{
 		//Position zero has the internal name
@@ -86,7 +89,7 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 */
 KeyBindController::~KeyBindController() 
 {
-	for (auto iterator = this->system_keys.begin(); iterator!= this->system_keys.end(); ++iterator) 
+	for (auto iterator = this->system_keys.begin(); iterator != this->system_keys.end(); ++iterator) 
 	{
 		//std::cout << "Deleting " << iterator->first << std::endl ;
 		delete iterator->second ;
@@ -112,9 +115,14 @@ KeyBindController::~KeyBindController()
 */
 void KeyBindController::add_key(std::string _key_id, std::string _local_key, bool _modifier, char _type)
 {
-	//Technically can be put in one line, but reduces readability
-	Control* new_key = new Key(_key_id, _local_key, _modifier);
+	// Prevent memory leak from overwriting the previous value with this key
 	std::string key_id = "key" ;
+	if( this->system_keys.find( key_id+_key_id ) != this->system_keys.end() )
+	{
+		return ;
+	}
+	Control* new_key = new Key(_key_id, _local_key, _modifier);
+	//delete new_key ;
 	this->system_keys.insert({ key_id+_key_id , new_key});
 }
 
@@ -125,15 +133,25 @@ void KeyBindController::add_key(std::string _key_id, std::string _local_key, boo
 */
 void KeyBindController::add_new_joystick(std::string _key_id, std::string _local_key)
 {
-	Control* new_joystick = new Joystick( _key_id, _local_key, false ) ;
 	std::string key_id = "controller" ;
+	if( this->system_keys.find( key_id + _key_id ) != this->system_keys.end() )
+	{
+		return ;
+	}
+	Control* new_joystick = new Joystick( _key_id, _local_key, false ) ;
+	//delete new_joystick ;
 	this->system_keys.insert( { key_id + _key_id, new_joystick } ) ;
 }
 
 void KeyBindController::add_new_controller_axis( std::string _key_id, std::string _local_key )
 {
-	Control* new_con_axis = new Joystick( _key_id, _local_key, true ) ;
 	std::string key_id = "controller_axis" ;
+	if( this->system_keys.find( key_id + _key_id ) != this->system_keys.end() )
+	{
+		return ;
+	}
+	Control* new_con_axis = new Joystick( _key_id, _local_key, true ) ;
+	//delete new_con_axis ;
 	this->system_keys.insert( { key_id + _key_id, new_con_axis } ) ;
 }
 
@@ -148,7 +166,13 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 	KeyBind* new_bind ;
 	if( !_is_axis )
 	{
+		//Memory leak protection
+		if( this->p_binds.find( _internal_id ) != this->p_binds.end() )
+		{
+			return ;
+		}
 		new_bind = new Bind( _internal_id, _local_id, _mode, _required ) ;
+		//delete new_bind ;
 		this->p_binds.insert( { _internal_id, new_bind } ) ;
 	}
 	else
@@ -156,14 +180,19 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 		controller up = this->check_string( _internal_id ) ;
 
 		size_t cutoff = _internal_id.find_last_of( "_" ) ;
-		//HERE
 		if( cutoff != std::string::npos )
 			_internal_id.erase( cutoff ) ;
-		new_bind = new Axis( _internal_id, _local_id, _mode, up, _required ) ;
+		// If it doesn't exist, it's fine
+		// This has the side effect of protecting the memory
 		if( this->p_binds.find( _internal_id ) == this->p_binds.end() )
+		{
+			new_bind = new Axis( _internal_id, _local_id, _mode, up, _required ) ;
+			//delete new_bind ;
 			this->p_binds.insert( { _internal_id, new_bind } ) ;
+		}
 		else
 		{
+			// Don't delete this one. It's simply a reference, and is fine to lose.
 			KeyBind* existing_bind = this->p_binds.find( _internal_id )->second ;
 			existing_bind->add_second_bind( _local_id, up ) ;
 		}
@@ -230,7 +259,6 @@ void KeyBindController::import( std::string _filename )
 			std::vector<Control*> key_list ;
 			std::string control_type ;
 			Key_Type key_type ;
-			//Import, then run a check. That way avoid unneeded calls
 			for( t_buttons::iterator single = bound_keys.begin() ; single != bound_keys.end() ; ++single )
 			{
 				key_type = std::get<0>( *single ) ;
@@ -248,6 +276,8 @@ void KeyBindController::import( std::string _filename )
 			}
 		}
 	}
+
+
 	//Import the controllers before the axes
 	t_device devices = std::get<3>( data ) ;
 	int total_buttons = 1 ;
@@ -276,7 +306,10 @@ void KeyBindController::import( std::string _filename )
 		total_axes += iter->axes_count ;
 		
 	}
+
+
 	std::string front = "controller" ;
+
 	//Add missing buttons.
 	for( int button_number = 1 ; button_number <= total_buttons ; button_number++ )
 	{
@@ -293,7 +326,10 @@ void KeyBindController::import( std::string _filename )
 		this->system_keys.erase( find_button ) ;
 		find_button = this->system_keys.find( front + std::to_string( ++total_buttons ) ) ;
 	}
+
+
 	front = "controller_axis" ;
+
 	//Now time to add the missing axes
 	for( int axes_number = 1 ; axes_number <= total_axes ; axes_number++ )
 	{
@@ -409,4 +445,9 @@ void KeyBindController::notify_device( SDL_Event* cur_event )
 void KeyBindController::add_ui_observer( std::shared_ptr<UserInterface> _user_interface )
 {
 	device_handler.get()->add_ui_observer( _user_interface ) ;
+}
+
+void KeyBindController::clear_ui_observers()
+{
+	device_handler.get()->clear_ui_observers() ;
 }

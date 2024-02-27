@@ -80,8 +80,9 @@ int main()
 		std::thread ui( &UserInterface::main_loop, user_interface, key1 ) ;
 		sdl_loop( key1 ) ;
 		ui.join() ;
+		key1.get()->clear_ui_observers() ;
 	}
-	//_CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG );
-	//_CrtDumpMemoryLeaks();
+	_CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG );
+	_CrtDumpMemoryLeaks();
 	return 0;
 }

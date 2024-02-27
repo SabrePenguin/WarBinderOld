@@ -103,8 +103,6 @@ void DeviceHandler::shutdown()
 		SDL_GameControllerClose( ( *iter ) ) ;
 	}
 	SDL_Quit() ;
-	//Shared pointer, automatic delete
-	ui_observer.clear() ;
 }
 
 /**
@@ -138,4 +136,9 @@ std::string DeviceHandler::device_change( SDL_Event* con_event )
 	}
 
 	return result ;
+}
+
+void DeviceHandler::clear_ui_observers()
+{
+	ui_observer.clear() ;
 }

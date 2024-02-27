@@ -10,6 +10,7 @@ class KeyBind
 {
 	public:
 		KeyBind(char _mode, bool _axis, bool _required) ;
+		virtual ~KeyBind() ;
 		virtual void add_control( std::vector<Control*> _control_combo, controller _up ) { return ; };
 		virtual void add_second_bind( std::string _text_id, controller _up ) { return ; } ;
 		virtual void add_axis( Control* _axis ) { return ; } ;

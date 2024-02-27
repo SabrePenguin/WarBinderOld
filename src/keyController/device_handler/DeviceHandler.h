@@ -15,6 +15,7 @@ public:
 	void shutdown() ;
 	void add_ui_observer( std::shared_ptr<UserInterface> _ui ) ;
 	std::string device_change( SDL_Event* con_event ) ;
+	void clear_ui_observers() ;
 private:
 	void remove_device( SDL_JoystickID _controller ) ;
 	std::string add_device( int index ) ;

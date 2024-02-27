@@ -14,7 +14,8 @@
  * @param _modifier: Modifier key, such as ctrl or alt
 */
 Key::Key(std::string _key_id, std::string _local_key, bool _modifier) : 
-	Control(), key_id( _key_id ), local_key( _local_key ), modifier_key( _modifier ) {
+	Control(), key_id( _key_id ), local_key( _local_key ), modifier_key( _modifier )
+{
 }
 
 /**

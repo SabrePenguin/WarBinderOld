@@ -7,10 +7,10 @@ class Control
 {
 	public:
 		Control() {} ;
-		~Control() 
+		virtual ~Control() 
 		{
 			//Keybinds will get deleted on their own
-			binds.clear() ;
+			reset() ;
 		};
 		virtual void add_bind(KeyBind* _bind) {};
 		virtual bool set_local_key(std::string local_key) { return false; };

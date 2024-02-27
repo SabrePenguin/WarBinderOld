@@ -44,6 +44,7 @@ Axis::~Axis()
 		iter->clear() ; 
 	}
 	control_reset.clear() ;
+	game_axis = nullptr ;
 }
 
 /**
@@ -83,7 +84,7 @@ void Axis::add_second_bind( std::string _text_id, controller _direction )
 void Axis::add_axis( Control* _axis )
 {
 	//TODO: Rename axes to be more descriptive as single "axis" exists in the superclas
-	axes = _axis ;
+	game_axis = _axis ;
 }
 
 /**
@@ -111,7 +112,7 @@ void Axis::reset()
 	this->control_down.clear() ;
 	this->control_up.clear() ;
 	this->control_reset.clear() ;
-	this->axes = NULL ;
+	this->game_axis = nullptr ;
 }
 
 /**
