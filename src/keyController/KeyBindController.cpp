@@ -48,6 +48,7 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 	auto options = get_options( _optfile, _language ) ;
 
 	// Add data to internal structures
+	
 	for( auto iterator = controls.begin() ; iterator != controls.end() ; ++iterator )
 	{
 		//Position zero has the internal name
@@ -61,6 +62,8 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 			std::get<1>( *iterator )
 		) ;
 	}
+	
+	
 	for( auto iterator = binds.begin() ; iterator != binds.end() ; ++iterator )
 	{
 		//Position zero has the internal name
@@ -86,7 +89,7 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 */
 KeyBindController::~KeyBindController() 
 {
-	for (auto iterator = this->system_keys.begin(); iterator!= this->system_keys.end(); ++iterator) 
+	for (auto iterator = this->system_keys.begin(); iterator != this->system_keys.end(); ++iterator) 
 	{
 		//std::cout << "Deleting " << iterator->first << std::endl ;
 		delete iterator->second ;
@@ -156,12 +159,13 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 		controller up = this->check_string( _internal_id ) ;
 
 		size_t cutoff = _internal_id.find_last_of( "_" ) ;
-		//HERE
 		if( cutoff != std::string::npos )
 			_internal_id.erase( cutoff ) ;
-		new_bind = new Axis( _internal_id, _local_id, _mode, up, _required ) ;
 		if( this->p_binds.find( _internal_id ) == this->p_binds.end() )
+		{
+			new_bind = new Axis( _internal_id, _local_id, _mode, up, _required ) ;
 			this->p_binds.insert( { _internal_id, new_bind } ) ;
+		}
 		else
 		{
 			KeyBind* existing_bind = this->p_binds.find( _internal_id )->second ;
@@ -230,7 +234,6 @@ void KeyBindController::import( std::string _filename )
 			std::vector<Control*> key_list ;
 			std::string control_type ;
 			Key_Type key_type ;
-			//Import, then run a check. That way avoid unneeded calls
 			for( t_buttons::iterator single = bound_keys.begin() ; single != bound_keys.end() ; ++single )
 			{
 				key_type = std::get<0>( *single ) ;
@@ -248,6 +251,8 @@ void KeyBindController::import( std::string _filename )
 			}
 		}
 	}
+
+
 	//Import the controllers before the axes
 	t_device devices = std::get<3>( data ) ;
 	int total_buttons = 1 ;
@@ -276,7 +281,10 @@ void KeyBindController::import( std::string _filename )
 		total_axes += iter->axes_count ;
 		
 	}
+
+
 	std::string front = "controller" ;
+
 	//Add missing buttons.
 	for( int button_number = 1 ; button_number <= total_buttons ; button_number++ )
 	{
@@ -293,7 +301,10 @@ void KeyBindController::import( std::string _filename )
 		this->system_keys.erase( find_button ) ;
 		find_button = this->system_keys.find( front + std::to_string( ++total_buttons ) ) ;
 	}
+
+
 	front = "controller_axis" ;
+
 	//Now time to add the missing axes
 	for( int axes_number = 1 ; axes_number <= total_axes ; axes_number++ )
 	{
