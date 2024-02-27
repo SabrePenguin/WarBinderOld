@@ -446,3 +446,8 @@ void KeyBindController::add_ui_observer( std::shared_ptr<UserInterface> _user_in
 {
 	device_handler.get()->add_ui_observer( _user_interface ) ;
 }
+
+void KeyBindController::clear_ui_observers()
+{
+	device_handler.get()->clear_ui_observers() ;
+}

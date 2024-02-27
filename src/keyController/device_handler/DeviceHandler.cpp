@@ -139,3 +139,8 @@ std::string DeviceHandler::device_change( SDL_Event* con_event )
 
 	return result ;
 }
+
+void DeviceHandler::clear_ui_observers()
+{
+	ui_observer.clear() ;
+}

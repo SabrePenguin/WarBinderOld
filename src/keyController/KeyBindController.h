@@ -32,6 +32,7 @@ class KeyBindController
 		std::vector<std::tuple<std::string, std::string>> get_bind_details( ) ;
 		void notify_device( SDL_Event* cur_event ) ;
 		void add_ui_observer( std::shared_ptr<UserInterface> _user_interface ) ;
+		void clear_ui_observers() ;
 	private:
 		controller check_string( std::string _name ) ;
 		std::string check_type( Key_Type t_type ) ;
