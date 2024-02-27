@@ -103,8 +103,6 @@ void DeviceHandler::shutdown()
 		SDL_GameControllerClose( ( *iter ) ) ;
 	}
 	SDL_Quit() ;
-	//Shared pointer, automatic delete
-	ui_observer.clear() ;
 }
 
 /**
