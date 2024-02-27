@@ -115,9 +115,14 @@ KeyBindController::~KeyBindController()
 */
 void KeyBindController::add_key(std::string _key_id, std::string _local_key, bool _modifier, char _type)
 {
-	//Technically can be put in one line, but reduces readability
-	Control* new_key = new Key(_key_id, _local_key, _modifier);
+	// Prevent memory leak from overwriting the previous value with this key
 	std::string key_id = "key" ;
+	if( this->system_keys.find( key_id+_key_id ) != this->system_keys.end() )
+	{
+		return ;
+	}
+	Control* new_key = new Key(_key_id, _local_key, _modifier);
+	//delete new_key ;
 	this->system_keys.insert({ key_id+_key_id , new_key});
 }
 
@@ -128,15 +133,25 @@ void KeyBindController::add_key(std::string _key_id, std::string _local_key, boo
 */
 void KeyBindController::add_new_joystick(std::string _key_id, std::string _local_key)
 {
-	Control* new_joystick = new Joystick( _key_id, _local_key, false ) ;
 	std::string key_id = "controller" ;
+	if( this->system_keys.find( key_id + _key_id ) != this->system_keys.end() )
+	{
+		return ;
+	}
+	Control* new_joystick = new Joystick( _key_id, _local_key, false ) ;
+	//delete new_joystick ;
 	this->system_keys.insert( { key_id + _key_id, new_joystick } ) ;
 }
 
 void KeyBindController::add_new_controller_axis( std::string _key_id, std::string _local_key )
 {
-	Control* new_con_axis = new Joystick( _key_id, _local_key, true ) ;
 	std::string key_id = "controller_axis" ;
+	if( this->system_keys.find( key_id + _key_id ) != this->system_keys.end() )
+	{
+		return ;
+	}
+	Control* new_con_axis = new Joystick( _key_id, _local_key, true ) ;
+	//delete new_con_axis ;
 	this->system_keys.insert( { key_id + _key_id, new_con_axis } ) ;
 }
 
@@ -151,7 +166,13 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 	KeyBind* new_bind ;
 	if( !_is_axis )
 	{
+		//Memory leak protection
+		if( this->p_binds.find( _internal_id ) != this->p_binds.end() )
+		{
+			return ;
+		}
 		new_bind = new Bind( _internal_id, _local_id, _mode, _required ) ;
+		//delete new_bind ;
 		this->p_binds.insert( { _internal_id, new_bind } ) ;
 	}
 	else
@@ -161,13 +182,17 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 		size_t cutoff = _internal_id.find_last_of( "_" ) ;
 		if( cutoff != std::string::npos )
 			_internal_id.erase( cutoff ) ;
+		// If it doesn't exist, it's fine
+		// This has the side effect of protecting the memory
 		if( this->p_binds.find( _internal_id ) == this->p_binds.end() )
 		{
 			new_bind = new Axis( _internal_id, _local_id, _mode, up, _required ) ;
+			//delete new_bind ;
 			this->p_binds.insert( { _internal_id, new_bind } ) ;
 		}
 		else
 		{
+			// Don't delete this one. It's simply a reference, and is fine to lose.
 			KeyBind* existing_bind = this->p_binds.find( _internal_id )->second ;
 			existing_bind->add_second_bind( _local_id, up ) ;
 		}
