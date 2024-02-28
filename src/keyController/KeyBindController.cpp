@@ -95,12 +95,12 @@ KeyBindController::~KeyBindController()
 		delete iterator->second ;
 	}
 	this->system_keys.clear();
-	for (auto iterator = this->p_binds.begin(); iterator != this->p_binds.end(); ++iterator)
+	for (auto iterator = this->system_binds.begin(); iterator != this->system_binds.end(); ++iterator)
 	{
 		//std::cout << "Deleting " << iterator->first << std::endl ;
 		delete iterator->second ;
 	}
-	this->p_binds.clear();
+	this->system_binds.clear();
 	//Pointers automatically clear, unlike above's circular relationship
 	device_list.clear() ;
 	device_handler->shutdown() ;
@@ -167,13 +167,13 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 	if( !_is_axis )
 	{
 		//Memory leak protection
-		if( this->p_binds.find( _internal_id ) != this->p_binds.end() )
+		if( this->system_binds.find( _internal_id ) != this->system_binds.end() )
 		{
 			return ;
 		}
 		new_bind = new Bind( _internal_id, _local_id, _mode, _required ) ;
 		//delete new_bind ;
-		this->p_binds.insert( { _internal_id, new_bind } ) ;
+		this->system_binds.insert( { _internal_id, new_bind } ) ;
 	}
 	else
 	{
@@ -184,16 +184,16 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 			_internal_id.erase( cutoff ) ;
 		// If it doesn't exist, it's fine
 		// This has the side effect of protecting the memory
-		if( this->p_binds.find( _internal_id ) == this->p_binds.end() )
+		if( this->system_binds.find( _internal_id ) == this->system_binds.end() )
 		{
 			new_bind = new Axis( _internal_id, _local_id, _mode, up, _required ) ;
 			//delete new_bind ;
-			this->p_binds.insert( { _internal_id, new_bind } ) ;
+			this->system_binds.insert( { _internal_id, new_bind } ) ;
 		}
 		else
 		{
 			// Don't delete this one. It's simply a reference, and is fine to lose.
-			KeyBind* existing_bind = this->p_binds.find( _internal_id )->second ;
+			KeyBind* existing_bind = this->system_binds.find( _internal_id )->second ;
 			existing_bind->add_second_bind( _local_id, up ) ;
 		}
 	}
@@ -250,9 +250,9 @@ void KeyBindController::import( std::string _filename )
 		std::string name = std::get<0>( *iter ) ;
 		controller up = this->check_string( name ) ;
 		name.erase( name.find_last_of( "_" ) ) ;
-		auto check = this->p_binds.find( name ) ;
+		auto check = this->system_binds.find( name ) ;
 		//This if statement is very annoying, but I need it for update protection (no nulls)
-		if( check != this->p_binds.end() )
+		if( check != this->system_binds.end() )
 		{
 			KeyBind* existing_bind = check->second;
 			t_buttons bound_keys = std::get<1>( *iter ) ;
@@ -351,8 +351,8 @@ void KeyBindController::import( std::string _filename )
 	t_import_axis axes = std::get<1>( data ) ;
 	for( t_import_axis::iterator iter = axes.begin() ; iter != axes.end() ; ++iter )
 	{
-		auto check = this->p_binds.find( iter->name ) ;
-		if( check != this->p_binds.end() )
+		auto check = this->system_binds.find( iter->name ) ;
+		if( check != this->system_binds.end() )
 		{
 			//Insert a pointer to the data by dereferencing the iterator and then getting the address of the struct
 			check->second->add_data( &*iter ) ;
@@ -391,7 +391,7 @@ std::vector<std::tuple<std::string, std::string>> KeyBindController::get_key_det
 std::vector<std::tuple<std::string, std::string>> KeyBindController::get_bind_details()
 {
 	std::vector<std::tuple<std::string, std::string>> bind_strings ;
-	for( auto iter = this->p_binds.begin() ; iter != this->p_binds.end() ; iter++ )
+	for( auto iter = this->system_binds.begin() ; iter != this->system_binds.end() ; iter++ )
 	{
 		if( iter->second->is_axis() )
 		{
@@ -442,12 +442,87 @@ void KeyBindController::notify_device( SDL_Event* cur_event )
 	}
 }
 
+/**
+ * @brief Adds a ui observer to the device handler
+ * @param _user_interface: The User Interface to add as an observer
+*/
 void KeyBindController::add_ui_observer( std::shared_ptr<UserInterface> _user_interface )
 {
 	device_handler.get()->add_ui_observer( _user_interface ) ;
 }
 
+/**
+ * @brief Clears the observer to allow the release of the circular references
+*/
 void KeyBindController::clear_ui_observers()
 {
 	device_handler.get()->clear_ui_observers() ;
+}
+
+/**
+ * @brief Checks if the given key exists
+ * @param _key_id: The key to search for
+ * @return True if the key exists
+*/
+bool KeyBindController::check_key_exists( std::string _key_id )
+{
+	if( this->system_keys.find( _key_id ) != this->system_keys.end() )
+		return true ;
+	return false ;
+}
+
+/**
+ * @brief Checks if the given boolean exists
+ * @param _bind_id: The bind to search for
+ * @return True if the bind exists
+*/
+bool KeyBindController::check_bind_exists( std::string _bind_id )
+{
+	if( this->system_binds.find( _bind_id ) != this->system_binds.end() )
+		return true ;
+	return false ;
+}
+
+/**
+ * @brief Checks if the requested key is an axis key to determine the output to give to the user
+ * @param _key_id: The key to check
+ * @return True if it is an axis
+*/
+bool KeyBindController::check_bind_is_axis( std::string _bind_id )
+{
+	return this->system_binds.find( _bind_id )->second->is_axis() ;
+}
+
+/**
+ * @brief Assigns the given key to a bind
+ * @param _key_id: The key to assign
+ * @param _bind_id: The bind to assign to
+ * @return True if the bind assignment successful
+*/
+void KeyBindController::assign_key_to_bind( std::string _key_id, std::string _bind_id )
+{
+	//Track key pointer for ease
+	auto key = this->system_keys.find( _key_id )->second ;
+	std::vector<Control*> control_list ;
+	control_list.push_back( key ) ;
+	//Insert the key into the bind
+	auto bind = this->system_binds.find( _bind_id )->second ;
+	bind->add_control( control_list, controller::RESET ) ;
+	//Insert the bind into the key
+	key->add_bind( bind ) ;
+}
+
+void KeyBindController::assign_key_to_axis( std::string _key_id, std::string _axis_id, controller _which )
+{
+	auto key = this->system_keys.find( _key_id )->second ;
+	this->system_binds.find( _key_id )->second->add_control( { key }, _which ) ;
+}
+
+/**
+ * @brief Assigns the given bind to a key.
+ * @return True if the assignment was successful
+*/
+bool KeyBindController::assign_bind_to_key()
+{
+	return false ;
 }
