@@ -15,6 +15,7 @@ public:
 
 	// Informs the UI that the controllers been added or removed
 	virtual void controller_change_notify() {} ;
+	// Runs the main logic
 	virtual void main_loop( std::shared_ptr<KeyBindController> _controller ) {} ;
 private:
 
