@@ -472,7 +472,7 @@ bool KeyBindController::check_key_exists( std::string _key_id )
 }
 
 /**
- * @brief Checks if the given boolean exists
+ * @brief Checks if the given bind exists
  * @param _bind_id: The bind to search for
  * @return True if the bind exists
 */
@@ -484,7 +484,7 @@ bool KeyBindController::check_bind_exists( std::string _bind_id )
 }
 
 /**
- * @brief Checks if the requested key is an axis key to determine the output to give to the user
+ * @brief Checks if the requested bind is an axis bind
  * @param _key_id: The key to check
  * @return True if it is an axis
 */
@@ -493,9 +493,11 @@ bool KeyBindController::check_bind_is_axis( std::string _bind_id )
 	return this->system_binds.find( _bind_id )->second->is_axis() ;
 }
 
+//TODO. Multi-key additions
+
 /**
- * @brief Assigns the given key to a bind
- * @param _key_id: The key to assign
+ * @brief Assigns the given key to a bind based on the input strings
+ * @param _key_id: The key to assign to
  * @param _bind_id: The bind to assign to
  * @return True if the bind assignment successful
 */
@@ -512,6 +514,12 @@ void KeyBindController::assign_key_to_bind( std::string _key_id, std::string _bi
 	key->add_bind( bind ) ;
 }
 
+/**
+ * @brief Assigns the given key to the specified axis.
+ * @param _key_id: The string key id to add
+ * @param _axis_id: The string axis id to add to
+ * @param _which: The direction (reset, increase, decrease)
+ */
 void KeyBindController::assign_key_to_axis( std::string _key_id, std::string _axis_id, controller _which )
 {
 	auto key = this->system_keys.find( _key_id )->second ;
