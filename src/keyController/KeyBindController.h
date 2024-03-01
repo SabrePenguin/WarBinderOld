@@ -49,8 +49,8 @@ class KeyBindController
 		bool check_key_exists( std::string _key_id ) ;
 		bool check_bind_exists( std::string _bind_id ) ;
 		bool check_bind_is_axis( std::string _key_id ) ;
-		void assign_key_to_bind( std::string _key_id, std::string _bind_id ) ;
-		void assign_key_to_axis( std::string _key_id, std::string _axis_id, controller _which ) ;
+		void assign_key_to_bind( std::vector<std::string> _key_id_list, std::string _bind_id ) ;
+		void assign_key_to_axis( std::vector<std::string> _key_id_list, std::string _axis_id, controller _which ) ;
 		bool assign_bind_to_key() ;
 	private:
 		//Checks the given string for one of a set of beginnings
