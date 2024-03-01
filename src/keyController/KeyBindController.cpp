@@ -515,7 +515,9 @@ void KeyBindController::assign_key_to_bind( std::string _key_id, std::string _bi
 void KeyBindController::assign_key_to_axis( std::string _key_id, std::string _axis_id, controller _which )
 {
 	auto key = this->system_keys.find( _key_id )->second ;
-	this->system_binds.find( _key_id )->second->add_control( { key }, _which ) ;
+	auto bind = this->system_binds.find( _axis_id )->second ;
+	bind->add_control( { key }, _which ) ;
+	key->add_bind( bind ) ;
 }
 
 /**
