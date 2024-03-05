@@ -7,7 +7,7 @@
 
 
 ptui::ptui( std::shared_ptr<KeyBindController> _controller )
-	: UserInterface(), controller( _controller )
+	: UserInterface( _controller )
 {
 }
 

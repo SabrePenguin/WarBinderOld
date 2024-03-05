@@ -6,6 +6,7 @@ target_sources(userInterface
 	PRIVATE
 		"${CMAKE_CURRENT_LIST_DIR}/ptui.cpp"
 		"${CMAKE_CURRENT_LIST_DIR}/ptui.h"
+		"${CMAKE_CURRENT_LIST_DIR}/UserInterface.cpp"
 )
 
 target_include_directories(userInterface

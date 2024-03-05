@@ -14,7 +14,6 @@ public:
 
 private:
 	void assign_key_to_bind( ) ;
-	std::shared_ptr<KeyBindController> controller ;
 };
 
 #endif // !PTUI_H
