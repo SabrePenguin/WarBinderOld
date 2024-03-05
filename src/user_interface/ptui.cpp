@@ -11,7 +11,7 @@ ptui::ptui( std::shared_ptr<KeyBindController> _controller )
 {
 }
 
-void ptui::main_loop( std::shared_ptr<KeyBindController> key_controller )
+void ptui::main_loop(  )
 {
 	bool active = true ;
 	char in ;
@@ -31,7 +31,7 @@ void ptui::main_loop( std::shared_ptr<KeyBindController> key_controller )
 		case 'A':
 		case 'a':
 			
-			this->assign_key_to_bind( key_controller ) ;
+			this->assign_key_to_bind( ) ;
 			break ;
 
 		case 'D':
@@ -41,7 +41,7 @@ void ptui::main_loop( std::shared_ptr<KeyBindController> key_controller )
 			//Key information
 			if( data_type == 'k' || data_type == 'K' )
 			{
-				auto data = key_controller.get()->get_key_details() ;
+				auto data = this->controller.get()->get_key_details() ;
 				for( auto element = data.begin() ; element != data.end() ; element++ )
 				{
 					std::cout << "Local name: " << std::get<0>( *element ) << ", internal id: " << std::get<1>( *element ) << std::endl ;
@@ -51,7 +51,7 @@ void ptui::main_loop( std::shared_ptr<KeyBindController> key_controller )
 			//Bind information
 			else if( data_type == 'b' || data_type == 'B' )
 			{
-				auto data2 = key_controller.get()->get_bind_details() ;
+				auto data2 = this->controller.get()->get_bind_details() ;
 				for( auto element = data2.begin() ; element != data2.end() ; element++ )
 				{
 					std::cout << "Local name: " << std::get<0>( *element ) << ", internal id: " << std::get<1>( *element ) << std::endl ;
@@ -86,7 +86,7 @@ void ptui::controller_change_notify()
 
 }
 
-void ptui::assign_key_to_bind( std::shared_ptr<KeyBindController> _controller )
+void ptui::assign_key_to_bind( )
 {
 	std::string input_key ;
 	std::string input_bind ;
@@ -104,19 +104,19 @@ void ptui::assign_key_to_bind( std::shared_ptr<KeyBindController> _controller )
 			std::cout << "Quitting" << std::endl ;
 			return ;
 		}
-		if( _controller.get()->check_key_exists( input_key ) )
+		if( this->controller.get()->check_key_exists( input_key ) )
 			key_list.push_back( input_key ) ;
 		else
 			std::cout << "Key does not exist" << std::endl ;
 	}
 	std::cout << "Enter the bind name to assign:" << std::endl ;
 	std::cin >> input_bind ;
-	if( key_list.size() > 0 && _controller.get()->check_bind_exists(input_bind) )
+	if( key_list.size() > 0 && this->controller.get()->check_bind_exists(input_bind) )
 	{
-		if( !_controller.get()->check_bind_is_axis( input_bind ) )
+		if( !this->controller.get()->check_bind_is_axis( input_bind ) )
 		{
 			//The controller is not axis, no further details required
-			_controller.get()->assign_key_to_bind( key_list, input_bind ) ;
+			this->controller.get()->assign_key_to_bind( key_list, input_bind ) ;
 		}
 		else
 		{
@@ -143,7 +143,7 @@ void ptui::assign_key_to_bind( std::shared_ptr<KeyBindController> _controller )
 				direction = controller::RESET ;
 				break ;
 			}
-			_controller.get()->assign_key_to_axis( key_list, input_bind, direction ) ;
+			this->controller.get()->assign_key_to_axis( key_list, input_bind, direction ) ;
 		}
 	}
 }
