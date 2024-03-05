@@ -215,7 +215,7 @@ void ptui::display_keys_from_bind()
 		else
 		{
 			const auto keys = iter->second->get_main_control() ;
-			for( auto sub_iter = keys->begin() ; sub_iter != keys->end() ; sub_iter )
+			for( auto sub_iter = keys->begin() ; sub_iter != keys->end() ; sub_iter++ )
 			{
 				for( auto sub2_iter = sub_iter->begin() ; sub2_iter != sub_iter->end() ; sub2_iter++ )
 				{
