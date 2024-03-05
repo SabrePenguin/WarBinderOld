@@ -19,6 +19,7 @@ public:
 	// Runs the main logic
 	virtual void main_loop( ) {} ;
 protected:
+	// The primary controllers
 	std::shared_ptr<KeyBindController> controller ;
 };
 
