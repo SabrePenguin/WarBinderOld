@@ -16,8 +16,6 @@ void ptui::main_loop( std::shared_ptr<KeyBindController> key_controller )
 	bool active = true ;
 	char in ;
 	char data_type ;
-	std::string bind_name ;
-	std::string key_name ;
 	uint32_t threadType = SDL_RegisterEvents( 1 ) ;
 	while( active )
 	{
@@ -32,11 +30,8 @@ void ptui::main_loop( std::shared_ptr<KeyBindController> key_controller )
 
 		case 'A':
 		case 'a':
-			std::cout << "Enter the key name to assign:" << std::endl ;
-			std::cin >> key_name ;
-			std::cout << "Enter the bind name to assign:" << std::endl ;
-			std::cin >> bind_name ;
-			this->assign_key_to_bind( key_controller, key_name, bind_name ) ;
+			
+			this->assign_key_to_bind( key_controller ) ;
 			break ;
 
 		case 'D':
@@ -91,14 +86,35 @@ void ptui::controller_change_notify()
 
 }
 
-void ptui::assign_key_to_bind( std::shared_ptr<KeyBindController> _controller, std::string _input_key, std::string _input_bind )
+void ptui::assign_key_to_bind( std::shared_ptr<KeyBindController> _controller )
 {
-	if( _controller.get()->check_key_exists( _input_key ) && _controller.get()->check_bind_exists( _input_bind ) )
+	std::string input_key ;
+	std::string input_bind ;
+	std::vector<std::string> key_list ;
+	while( true )
 	{
-		if( !_controller.get()->check_bind_is_axis( _input_bind ) )
+		std::cout << "Enter the key name to assign or hit one of the following\n(E)nd\n(Q)uit" << std::endl ;
+		std::cin >> input_key ;
+		if( input_key[ 0 ] == 'e' || input_key[ 0 ] == 'E' )
+		{
+			break ;
+		}
+		else if( input_key [0] == 'q' || input_key[ 0 ] == 'Q' )
+		{
+			std::cout << "Quitting" << std::endl ;
+			return ;
+		}
+		if( _controller.get()->check_key_exists( input_key ) )
+			key_list.push_back( input_key ) ;
+	}
+	std::cout << "Enter the bind name to assign:" << std::endl ;
+	std::cin >> input_bind ;
+	if( key_list.size() > 0 && _controller.get()->check_bind_exists(input_bind) )
+	{
+		if( !_controller.get()->check_bind_is_axis( input_bind ) )
 		{
 			//The controller is not axis, no further details required
-			_controller.get()->assign_key_to_bind( _input_key, _input_bind ) ;
+			_controller.get()->assign_key_to_bind( key_list, input_bind ) ;
 		}
 		else
 		{
@@ -125,7 +141,7 @@ void ptui::assign_key_to_bind( std::shared_ptr<KeyBindController> _controller, s
 				direction = controller::RESET ;
 				break ;
 			}
-			_controller.get()->assign_key_to_axis( _input_key, _input_bind, direction ) ;
+			_controller.get()->assign_key_to_axis( key_list, input_bind, direction ) ;
 		}
 	}
 }
