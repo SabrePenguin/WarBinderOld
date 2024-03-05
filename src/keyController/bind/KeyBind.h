@@ -16,6 +16,9 @@ class KeyBind
 		virtual void add_axis( Control* _axis ) { return ; } ;
 		virtual void add_data( Imported_Axis* _imported ) { return ; };
 		virtual void reset() { return ; } ;
+		virtual std::vector<std::vector<Control*>>* get_main_control() { return nullptr ; } ;
+		virtual std::vector<std::vector<Control*>>* get_low_control() { return nullptr ; } ;
+		virtual std::vector<std::vector<Control*>>* get_upper_control() { return nullptr ; } ;
 		char get_mode() ;
 		virtual std::string get_local_name() { return std::string(); } ;
 		virtual std::vector<std::string> get_axis_names() { return std::vector<std::string>(); } ;

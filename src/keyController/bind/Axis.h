@@ -22,6 +22,9 @@ class Axis: public KeyBind
 		void add_axis( Control* _axis ) ;
 		void add_data( Imported_Axis* _data ) ;
 		void reset() ;
+		std::vector<std::vector<Control*>>* get_main_control() ;
+		std::vector<std::vector<Control*>>* get_low_control() ;
+		std::vector<std::vector<Control*>>* get_upper_control() ;
 		std::string get_local_name() ;
 		std::vector<std::string> get_axis_names() ;
 

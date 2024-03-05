@@ -52,3 +52,8 @@ std::string Bind::get_local_name()
 {
 	return this->text_id ;
 }
+
+std::vector<std::vector<Control*>>* Bind::get_main_control()
+{
+	return &( this->control ) ;
+}

@@ -139,3 +139,18 @@ std::vector<std::string> Axis::get_axis_names()
 		names.push_back( this->reset_local ) ;
 	return names ;
 }
+
+std::vector<std::vector<Control*>>* Axis::get_upper_control()
+{
+	return &( this->control_up ) ;
+}
+
+std::vector<std::vector<Control*>>* Axis::get_low_control()
+{
+	return &( this->control_down ) ;
+}
+
+std::vector<std::vector<Control*>>* Axis::get_main_control()
+{
+	return &( this->control_reset ) ;
+}
