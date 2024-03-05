@@ -13,8 +13,10 @@ target_include_directories(userInterface
 	PUBLIC
 		"${CMAKE_CURRENT_LIST_DIR}"
 	PRIVATE
+		"${CMAKE_CURRENT_LIST_DIR}/../keyController/"
+		"${CMAKE_CURRENT_LIST_DIR}/../keyController/control/"
+		"${CMAKE_CURRENT_LIST_DIR}/../keyController/bind/"
 		"${SDL2}"
-		"${CMAKE_CURRENT_LIST_DIR}/../keyController"
 )
 
 target_link_libraries(userInterface
