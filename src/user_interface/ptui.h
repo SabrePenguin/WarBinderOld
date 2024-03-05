@@ -13,7 +13,7 @@ public:
 	void controller_change_notify() ;
 
 private:
-	void assign_key_to_bind( std::shared_ptr<KeyBindController> _controller, std::string _input_key, std::string _bind_key ) ;
+	void assign_key_to_bind( std::shared_ptr<KeyBindController> _controller ) ;
 	std::shared_ptr<KeyBindController> controller ;
 };
 
