@@ -106,6 +106,8 @@ void ptui::assign_key_to_bind( std::shared_ptr<KeyBindController> _controller )
 		}
 		if( _controller.get()->check_key_exists( input_key ) )
 			key_list.push_back( input_key ) ;
+		else
+			std::cout << "Key does not exist" << std::endl ;
 	}
 	std::cout << "Enter the bind name to assign:" << std::endl ;
 	std::cin >> input_bind ;
