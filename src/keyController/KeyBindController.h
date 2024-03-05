@@ -33,10 +33,14 @@ class KeyBindController
 		//Adds a new bind type
 		void add_new_bind(std::string _internal_id, std::string _local_id, char _mode, bool _is_axis, bool _required);
 
+		//Get the key and bind information
+
 		//Get all the key info
 		std::vector<std::tuple<std::string, std::string>> get_key_details( ) ;
 		//Get all the bind info
 		std::vector<std::tuple<std::string, std::string>> get_bind_details( ) ;
+		std::unordered_map<std::string, KeyBind*>* get_binds_map() ;
+		std::unordered_map<std::string, Control*>* get_controls_map() ;
 
 		//Observer pattern
 		void notify_device( SDL_Event* cur_event ) ;

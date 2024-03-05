@@ -409,6 +409,24 @@ std::vector<std::tuple<std::string, std::string>> KeyBindController::get_bind_de
 	return bind_strings ;
 }
 
+/**
+ * @brief Gets the internal map with all the binds
+ * @return A pointer to the map. Returns reference due to size.
+ */
+std::unordered_map<std::string, KeyBind*>* KeyBindController::get_binds_map()
+{
+	return &( this->system_binds ) ;
+}
+
+/**
+ * @brief Gets the internal map with all the controls
+ * @return A pointer to the map. Returns reference due to size.
+ */
+std::unordered_map<std::string, Control*>* KeyBindController::get_controls_map()
+{
+	return &( this->system_keys ) ;
+}
+
 int KeyBindController::find_pos( std::string name, char ch )
 {
 	int pos = name.find_first_of( ch ) ;
