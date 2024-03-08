@@ -18,7 +18,13 @@ class Control
 		virtual bool is_modifier() { return false; };
 		virtual bool check_conflict( KeyBind* _bind ) { return false; } ;
 		virtual std::string get_local_name() { return "" ; } ;
-		std::vector<KeyBind*>* get_binds() { return &binds ; } ;
+
+		std::vector<KeyBind*>* get_binds() ;
+
+		//Key clearing
+		void clear_key_from_binds() ;
+		//Bind clearing
+		void remove_bind( KeyBind* _bind ) ;
 		void reset() { binds.clear() ; } ;
 	protected:
 		//A list of the binds assigned to this key
