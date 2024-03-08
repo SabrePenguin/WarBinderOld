@@ -373,42 +373,6 @@ void KeyBindController::import( std::string _filename )
 	return ;
 }
 
-std::vector<std::tuple<std::string, std::string>> KeyBindController::get_key_details()
-{
-	std::vector<std::tuple<std::string, std::string>> key_strings ;
-	for( auto iter = this->system_keys.begin() ; iter != this->system_keys.end() ; iter++ )
-	{
-		key_strings.push_back( { iter->first, iter->second->get_local_name() } ) ;
-	}
-	return key_strings ;
-}
-
-
-/**
- * @brief Temp string output
- * @return String vector data
-*/
-std::vector<std::tuple<std::string, std::string>> KeyBindController::get_bind_details()
-{
-	std::vector<std::tuple<std::string, std::string>> bind_strings ;
-	for( auto iter = this->system_binds.begin() ; iter != this->system_binds.end() ; iter++ )
-	{
-		if( iter->second->is_axis() )
-		{
-			std::vector<std::string> axis_names = iter->second->get_axis_names() ;
-			for( auto axis_iter = axis_names.begin() ; axis_iter != axis_names.end() ; axis_iter++ )
-			{
-				bind_strings.push_back( { iter->first, ( *axis_iter ) } ) ;
-			}
-		}
-		else
-		{
-			bind_strings.push_back( { iter->first, iter->second->get_local_name() } ) ;
-		}
-	}
-	return bind_strings ;
-}
-
 /**
  * @brief Gets the internal map with all the binds
  * @return A pointer to the map. Returns reference due to size.
