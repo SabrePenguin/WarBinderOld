@@ -28,6 +28,8 @@ class Axis: public KeyBind
 		std::string get_local_name() ;
 		std::vector<std::string> get_axis_names() ;
 
+		void remove_key( Control* _key, controller _up ) ;
+
 	private:
 		//The local name that represents the moving up of the axis
 		std::string increase_local ;

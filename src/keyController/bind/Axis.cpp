@@ -116,6 +116,42 @@ void Axis::reset()
 }
 
 /**
+ * @brief Removes the given pointer from the vectors
+ * @param _key: The Control pointer to search for
+ * @param _up: The direction/vector to search
+ */
+void Axis::remove_key( Control* _key, controller _up )
+{
+	//Use this to do all the things the same, since they are the same internally
+	std::vector<std::vector<Control*>>* temp ;
+	if( _up == controller::INCREASE )
+	{
+		temp = &control_up ;
+	}
+	else if( _up == controller::DECREASE )
+	{
+		temp = &control_down ;
+	}
+	else
+	{
+		temp = &control_reset ;
+	}
+	//Loop through each vector
+	//Find all mentions of the _key
+	//Erase all mentions of _key
+	for( auto inner_vector = temp->begin() ; inner_vector != temp->end() ; inner_vector++ )
+	{
+		for( auto comp_control = inner_vector->begin() ; comp_control != inner_vector->end() ; comp_control++ )
+		{
+			if( *comp_control == _key )
+			{
+				inner_vector->erase( comp_control ) ;
+			}
+		}
+	}
+}
+
+/**
  * @brief Gets the local name
  * @return A string of the local name
 */
