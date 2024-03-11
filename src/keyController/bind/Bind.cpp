@@ -45,6 +45,29 @@ void Bind::reset()
 }
 
 /**
+ * @brief Searches through the control vector and removes all references to the key given
+ * @param _key: The Control pointer to compare to
+ * @param _up: Used to allow holding with Axis
+ */
+void Bind::remove_key( Control* _key, controller _up )
+{
+	for( auto inner_vector = control.begin() ; inner_vector != control.end() ; inner_vector++ )
+	{
+		for( auto comp_control = inner_vector->begin() ; comp_control != inner_vector->end() ; comp_control++ )
+		{
+			if( *comp_control == _key )
+			{
+				inner_vector->erase( comp_control ) ;
+			}
+		}
+		if( inner_vector->size() == 0 )
+		{
+			control.erase( inner_vector ) ;
+		}
+	}
+}
+
+/**
  * @brief Get the text id of the Bind
  * @return The text id
 */

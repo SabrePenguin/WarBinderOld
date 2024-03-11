@@ -19,6 +19,13 @@ class KeyBind
 		virtual std::vector<std::vector<Control*>>* get_main_control() { return nullptr ; } ;
 		virtual std::vector<std::vector<Control*>>* get_low_control() { return nullptr ; } ;
 		virtual std::vector<std::vector<Control*>>* get_upper_control() { return nullptr ; } ;
+		/**
+		 * @brief Removes the given Control pointer from all key combinations in the dedicated control
+		 * @param _key: The pointer to remove
+		 * @param _up: The direction to apply to. Non-axis binds do not care what this is
+		 */
+		virtual void remove_key( Control* _key, controller _up ) {} ;
+
 		char get_mode() ;
 		virtual std::string get_local_name() { return std::string(); } ;
 		virtual std::vector<std::string> get_axis_names() { return std::vector<std::string>(); } ;

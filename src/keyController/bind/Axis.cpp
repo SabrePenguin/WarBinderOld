@@ -122,7 +122,7 @@ void Axis::reset()
  */
 void Axis::remove_key( Control* _key, controller _up )
 {
-	//Use this to do all the things the same, since they are the same internally
+	//Use this to do all the things the same, since they are the same internally. Use pointer to avoid copying memory
 	std::vector<std::vector<Control*>>* temp ;
 	if( _up == controller::INCREASE )
 	{
@@ -147,6 +147,10 @@ void Axis::remove_key( Control* _key, controller _up )
 			{
 				inner_vector->erase( comp_control ) ;
 			}
+		}
+		if( inner_vector->size() == 0 )
+		{
+			temp->erase( inner_vector ) ;
 		}
 	}
 }
