@@ -38,7 +38,7 @@ void KeyBind::reset()
  * @param _key: The Control pointer to compare to
  * @param _up: Used to allow holding with Axis
  */
-void KeyBind::remove_key( Control* _key, controller _up )
+void KeyBind::remove_key( Control* _key )
 {
 	for( auto inner_vector = control.begin() ; inner_vector != control.end() ; inner_vector++ )
 	{
@@ -63,6 +63,11 @@ void KeyBind::remove_key( Control* _key, controller _up )
 std::string KeyBind::get_local_name()
 {
 	return this->local_id ;
+}
+
+void KeyBind::set_local_name( std::string _name )
+{
+	this->local_id = _name ;
 }
 
 char KeyBind::get_mode() 
