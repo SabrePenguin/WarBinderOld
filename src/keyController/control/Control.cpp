@@ -48,7 +48,7 @@ void Control::remove_bind( KeyBind* _bind, controller _direction )
 	{
 		if( *iter == _bind )
 		{
-			( *iter )->remove_key( this, _direction ) ;
+			( *iter )->remove_key( this ) ;
 			binds.erase( iter ) ;
 		}
 	}
