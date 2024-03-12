@@ -8,7 +8,6 @@
 #include "Control.h"
 #include "Key.h"
 #include "Joystick.h"
-#include "Bind.h"
 #include "Axis.h"
 #include "CSVin.h"
 #include "reader.h"
@@ -171,7 +170,7 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 		{
 			return ;
 		}
-		new_bind = new Bind( _internal_id, _local_id, _mode, _required ) ;
+		new_bind = new KeyBind( _mode, _is_axis, _required, _local_id, _internal_id ) ;
 		//delete new_bind ;
 		this->system_binds.insert( { _internal_id, new_bind } ) ;
 	}
@@ -179,22 +178,55 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 	{
 		controller up = this->check_string( _internal_id ) ;
 
-		size_t cutoff = _internal_id.find_last_of( "_" ) ;
-		if( cutoff != std::string::npos )
-			_internal_id.erase( cutoff ) ;
 		// If it doesn't exist, it's fine
 		// This has the side effect of protecting the memory
-		if( this->system_binds.find( _internal_id ) == this->system_binds.end() )
+		auto temp = this->system_binds.find( _internal_id ) ;
+		if( temp == this->system_binds.end() )
 		{
-			new_bind = new Axis( _internal_id, _local_id, _mode, up, _required ) ;
-			//delete new_bind ;
-			this->system_binds.insert( { _internal_id, new_bind } ) ;
+			KeyBind* bind_one ;
+			KeyBind* bind_two ;
+			//This ugly section is for the new Axis type of three objects
+			if( _internal_id.find( "_rangeSet" ) != std::string::npos )
+			{
+				new_bind = new AxisReset( _internal_id, _local_id, _mode, _required ) ;
+				size_t cutoff = _internal_id.find_last_of( "_" ) ;
+				if( cutoff != std::string::npos )
+					_internal_id.erase( cutoff ) ;
+				bind_one = new AxisChange( _internal_id + "_rangeMin", _local_id, _mode, _required) ;
+				bind_two = new AxisChange( _internal_id + "_rangeMax", _local_id, _mode, _required) ;
+			}
+			else if( _internal_id.find( "_rangeMin" ) != std::string::npos )
+			{
+				bind_one = new AxisChange( _internal_id, _local_id, _mode, _required ) ;
+				size_t cutoff = _internal_id.find_last_of( "_" ) ;
+				if( cutoff != std::string::npos )
+					_internal_id.erase( cutoff ) ;
+				new_bind = new AxisReset( _internal_id + "_rangeSet", _local_id, _mode, _required ) ;
+				bind_two = new AxisChange( _internal_id + "_rangeMax", _local_id, _mode, _required ) ;
+			}
+			else
+			{
+				bind_two = new AxisChange( _internal_id, _local_id, _mode, _required ) ;
+				size_t cutoff = _internal_id.find_last_of( "_" ) ;
+				if( cutoff != std::string::npos )
+					_internal_id.erase( cutoff ) ;
+				new_bind = new AxisReset( _internal_id + "_rangeSet", _local_id, _mode, _required ) ;
+				bind_one = new AxisChange( _internal_id + "_rangeMin", _local_id, _mode, _required ) ;
+			}
+			//Circular reference to allow for easy comm
+			bind_one->add_other_controls( new_bind, bind_two ) ;
+			bind_two->add_other_controls( new_bind, bind_one ) ;
+			new_bind->add_other_controls( bind_one, bind_two ) ;
+			//insert them all
+			this->system_binds.insert( { _internal_id + "_rangeSet", new_bind } ) ;
+			this->system_binds.insert( { _internal_id + "_rangeMin", bind_one } ) ;
+			this->system_binds.insert( { _internal_id + "_rangeMax", bind_two } ) ;
 		}
 		else
 		{
-			// Don't delete this one. It's simply a reference, and is fine to lose.
-			KeyBind* existing_bind = this->system_binds.find( _internal_id )->second ;
-			existing_bind->add_second_bind( _local_id, up ) ;
+			//This will only sometimes set the local right. If the local name is missing from the .csv,
+			//this will fail to set the local name
+			temp->second->set_local_name( _local_id ) ;
 		}
 	}
 }
@@ -249,7 +281,6 @@ void KeyBindController::import( std::string _filename )
 	{
 		std::string name = std::get<0>( *iter ) ;
 		controller up = this->check_string( name ) ;
-		name.erase( name.find_last_of( "_" ) ) ;
 		auto check = this->system_binds.find( name ) ;
 		//This if statement is very annoying, but I need it for update protection (no nulls)
 		if( check != this->system_binds.end() )
@@ -272,7 +303,7 @@ void KeyBindController::import( std::string _filename )
 			}
 			if( key_list.size() )
 			{
-				existing_bind->add_control( key_list, up ) ;
+				existing_bind->add_control( key_list ) ;
 			}
 		}
 	}
@@ -494,7 +525,7 @@ void KeyBindController::assign_key_to_bind( std::vector<std::string> _key_id_lis
 	}
 	auto bind = this->system_binds.find( _bind_id )->second ;
 	//Insert the keys into the bind
-	bind->add_control( control_list, controller::RESET ) ;
+	bind->add_control( control_list ) ;
 	//Insert the bind into the keys
 	for( auto iter = control_list.begin() ; iter != control_list.end() ; iter++ )
 	{
@@ -516,7 +547,7 @@ void KeyBindController::assign_key_to_axis( std::vector<std::string> _key_id_lis
 		control_list.push_back( this->system_keys.find( *iter )->second ) ;
 	}
 	auto bind = this->system_binds.find( _axis_id )->second ;
-	bind->add_control( control_list, _which ) ;
+	bind->add_control( control_list ) ;
 	for( auto iter = control_list.begin() ; iter != control_list.end() ; iter++ )
 	{
 		( *iter )->add_bind( bind ) ;

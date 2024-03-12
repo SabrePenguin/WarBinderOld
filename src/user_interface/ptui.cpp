@@ -180,7 +180,8 @@ void ptui::display_keys_from_bind()
 		bool axis = iter->second->is_axis() ;
 		if( axis )
 		{
-			const auto keys = iter->second->get_main_control() ;
+			/*
+			const auto keys = iter->second->get_control() ;
 			for( auto sub_iter = keys->begin() ; sub_iter != keys->end() ; sub_iter )
 			{
 				for( auto sub2_iter = sub_iter->begin() ; sub2_iter != sub_iter->end() ; sub2_iter++ )
@@ -191,7 +192,7 @@ void ptui::display_keys_from_bind()
 			}
 
 
-			const auto key_down = iter->second->get_low_control() ;
+			const auto key_down = iter->second->get_control() ;
 			for( auto sub_iter = key_down->begin() ; sub_iter != key_down->end() ; sub_iter )
 			{
 				for( auto sub2_iter = sub_iter->begin() ; sub2_iter != sub_iter->end() ; sub2_iter++ )
@@ -201,7 +202,7 @@ void ptui::display_keys_from_bind()
 				std::cout << "\n------" << std::endl ;
 			}
 
-			const auto key_up = iter->second->get_upper_control() ;
+			const auto key_up = iter->second->get_control() ;
 			for( auto sub_iter = key_up->begin() ; sub_iter != key_up->end() ; sub_iter )
 			{
 				for( auto sub2_iter = sub_iter->begin() ; sub2_iter != sub_iter->end() ; sub2_iter++ )
@@ -210,10 +211,11 @@ void ptui::display_keys_from_bind()
 				}
 				std::cout << "\n------" << std::endl ;
 			}
+			*/
 		}
 		else
 		{
-			const auto keys = iter->second->get_main_control() ;
+			const auto keys = iter->second->get_control() ;
 			for( auto sub_iter = keys->begin() ; sub_iter != keys->end() ; sub_iter++ )
 			{
 				for( auto sub2_iter = sub_iter->begin() ; sub2_iter != sub_iter->end() ; sub2_iter++ )
