@@ -4,7 +4,6 @@
 #include <string>
 #include "KeyBind.h"
 class Control;
-enum class controller ;
 
 class Bind : public KeyBind
 {

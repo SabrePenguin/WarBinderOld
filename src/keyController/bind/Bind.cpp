@@ -1,9 +1,8 @@
 #include <vector>
 #include <string>
 #include "Bind.h"
-#include "Axis.h"
 #include "KeyBind.h"
-#include "../control/Control.h"
+#include "Control.h"
 
 /**
  * @brief The constructor
