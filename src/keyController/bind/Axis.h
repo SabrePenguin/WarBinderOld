@@ -3,13 +3,6 @@
 #include <string>
 #include "KeyBind.h"
 
-enum class controller
-{
-	INCREASE,
-	DECREASE,
-	RESET
-};
-
 struct Imported_Axis ;
 
 class Axis: public KeyBind
