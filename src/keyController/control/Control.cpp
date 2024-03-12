@@ -12,15 +12,18 @@ std::vector<KeyBind*>* Control::get_binds()
  */
 void Control::clear_key_from_binds() 
 {
-	for( auto iter = binds.begin() ; iter != binds.end() ; iter++ )
-		( *iter )->remove_key( this ) ;
+	for( auto iter = binds.begin() ; iter != binds.end() ; iter++ ) ;
+		//( *iter )->remove_key( this ) ;
 }
 
 /**
- * @brief Find and remove the given _bind pointer from the list
+ * @brief Find and remove the given _bind pointer from the list. Only removes one as
+ * the pointers in the vector don't know which combo they're part of, only that they
+ * are part of that bind set. This method is only used when called by the KeyBind
+ * class.
  * @param _bind: The pointer to remove
  */
-void Control::remove_bind(KeyBind* _bind)
+void Control::call_remove_bind( KeyBind* _bind )
 {
 	for( auto iter = binds.begin() ; iter != binds.end() ; iter++ )
 	{
@@ -28,6 +31,25 @@ void Control::remove_bind(KeyBind* _bind)
 		{
 			binds.erase( iter ) ;
 			break ;
+		}
+	}
+}
+
+/**
+ * @brief Remove all references of the given _bind pointer. Removes all pointers because
+ * the Control doesn't know which combo you'd be deleting otherwise, and the logic wouldn't
+ * be fun to make.
+ * @param _bind: The pointer to remove all references of.
+ * @param _direction: The direction. Used for Axis pointers.
+ */
+void Control::remove_bind( KeyBind* _bind, controller _direction )
+{
+	for( auto iter = binds.begin() ; iter != binds.end() ; iter++ )
+	{
+		if( *iter == _bind )
+		{
+			( *iter )->remove_key( this, _direction ) ;
+			binds.erase( iter ) ;
 		}
 	}
 }
