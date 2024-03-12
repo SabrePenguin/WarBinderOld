@@ -262,7 +262,7 @@ void KeyBindController::import( std::string _filename )
 			for( t_buttons::iterator single = bound_keys.begin() ; single != bound_keys.end() ; ++single )
 			{
 				key_type = std::get<0>( *single ) ;
-				control_type = check_type( std::get<0>( *single ) ) ;
+				control_type = check_type( key_type ) ;
 				auto find_key = this->system_keys.find( control_type + std::get<1>( *single ) ) ;
 				if( find_key != this->system_keys.end() )
 				{

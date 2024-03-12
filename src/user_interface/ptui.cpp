@@ -8,7 +8,6 @@
 #include "KeyBind.h"
 #include "ptui.h"
 #include "KeyBindController.h"
-#include "Axis.h"
 
 
 ptui::ptui( std::shared_ptr<KeyBindController> _controller )

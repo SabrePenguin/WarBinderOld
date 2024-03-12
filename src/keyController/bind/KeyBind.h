@@ -3,8 +3,14 @@
 #include <vector>
 #include <string>
 
+enum class controller
+{
+	INCREASE,
+	DECREASE,
+	RESET
+};
+
 class Control ;
-enum class controller ;
 struct Imported_Axis ;
 class KeyBind
 {
