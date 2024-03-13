@@ -176,7 +176,6 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 	}
 	else
 	{
-		controller up = this->check_string( _internal_id ) ;
 
 		// If it doesn't exist, it's fine
 		// This has the side effect of protecting the memory
@@ -241,20 +240,6 @@ void KeyBindController::set_language(std::string _language)
 }
 
 /**
- * @brief A method to check whether the given axis control is an increase, decrease, or reset
- * @param _name: The string to check
- * @return A controller enum value
-*/
-controller KeyBindController::check_string( std::string _name )
-{
-	if( _name.find( "_rangeMax" ) != std::string::npos )
-		return controller::INCREASE ;
-	else if( _name.find( "_rangeMin" ) != std::string::npos )
-		return controller::DECREASE ;
-	return controller::RESET ;
-}
-
-/**
  * @brief A method to check whether the given button is on the keyboard, mouse, or a controller
  * @param t_key: The enum to check
  * @return A string
@@ -280,7 +265,6 @@ void KeyBindController::import( std::string _filename )
 	for( t_keys::iterator iter = keys.begin() ; iter != keys.end() ; ++iter )
 	{
 		std::string name = std::get<0>( *iter ) ;
-		controller up = this->check_string( name ) ;
 		auto check = this->system_binds.find( name ) ;
 		//This if statement is very annoying, but I need it for update protection (no nulls)
 		if( check != this->system_binds.end() )
@@ -539,7 +523,7 @@ void KeyBindController::assign_key_to_bind( std::vector<std::string> _key_id_lis
  * @param _axis_id: The string axis id to add to
  * @param _which: The direction (reset, increase, decrease)
  */
-void KeyBindController::assign_key_to_axis( std::vector<std::string> _key_id_list, std::string _axis_id, controller _which )
+void KeyBindController::assign_key_to_axis( std::vector<std::string> _key_id_list, std::string _axis_id )
 {
 	std::vector<Control*> control_list ;
 	for( auto iter = _key_id_list.begin() ; iter != _key_id_list.end() ; iter++ )

@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 class KeyBind;
-enum class controller ;
 class Control
 {
 	public:
@@ -26,7 +25,7 @@ class Control
 		void clear_key_from_binds() ;
 		//Bind clearing
 		void call_remove_bind( KeyBind* _bind ) ;
-		void remove_bind( KeyBind* _bind, controller _direction ) ;
+		void remove_bind( KeyBind* _bind ) ;
 		void reset() { binds.clear() ; } ;
 	protected:
 		//A list of the binds assigned to this key

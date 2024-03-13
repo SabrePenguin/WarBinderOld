@@ -40,9 +40,8 @@ void Control::call_remove_bind( KeyBind* _bind )
  * the Control doesn't know which combo you'd be deleting otherwise, and the logic wouldn't
  * be fun to make.
  * @param _bind: The pointer to remove all references of.
- * @param _direction: The direction. Used for Axis pointers.
  */
-void Control::remove_bind( KeyBind* _bind, controller _direction )
+void Control::remove_bind( KeyBind* _bind )
 {
 	for( auto iter = binds.begin() ; iter != binds.end() ; iter++ )
 	{

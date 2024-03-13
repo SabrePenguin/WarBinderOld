@@ -126,30 +126,8 @@ void ptui::assign_key_to_bind( )
 		}
 		else
 		{
-			char c ;
-			enum controller direction ;
-			std::cout << "This control is an axis. Please enter one of the following:" << std::endl ;
-			std::cout << "I(ncrease)" << std::endl ;
-			std::cout << "D(ecrease)" << std::endl ;
-			std::cout << "R(eset)" << std::endl ;
-			std::cin >> c ;
-			switch( c )
-			{
-			case 'i':
-			case 'I':
-				direction = controller::INCREASE ;
-				break ;
-			case 'd':
-			case 'D':
-				direction = controller::DECREASE ;
-				break ;
-			case 'r':
-			case 'R':
-			default:
-				direction = controller::RESET ;
-				break ;
-			}
-			this->controller.get()->assign_key_to_axis( key_list, input_bind, direction ) ;
+			//Is this even needed anymore?
+			this->controller.get()->assign_key_to_axis( key_list, input_bind ) ;
 		}
 	}
 }

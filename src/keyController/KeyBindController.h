@@ -6,7 +6,6 @@
 #include <memory>
 #include <SDL.h>
 
-enum class controller ;
 enum class Key_Type ;
 class Control ;
 class KeyBind ;
@@ -50,11 +49,9 @@ class KeyBindController
 		bool check_bind_exists( std::string _bind_id ) ;
 		bool check_bind_is_axis( std::string _key_id ) ;
 		void assign_key_to_bind( std::vector<std::string> _key_id_list, std::string _bind_id ) ;
-		void assign_key_to_axis( std::vector<std::string> _key_id_list, std::string _axis_id, controller _which ) ;
+		void assign_key_to_axis( std::vector<std::string> _key_id_list, std::string _axis_id ) ;
 		bool assign_bind_to_key() ;
-	private:
-		//Checks the given string for one of a set of beginnings
-		controller check_string( std::string _name ) ;
+	private:;
 		//Checks the Key_Type given
 		std::string check_type( Key_Type t_type ) ;
 		//Find the position of the character in the string
