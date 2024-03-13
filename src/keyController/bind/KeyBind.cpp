@@ -1,7 +1,7 @@
 #include "KeyBind.h"
 
 KeyBind::KeyBind( char _mode, bool _axis, bool _required, std::string _local_name, std::string _internal_id) :
-	mode( _mode ), axis( _axis ), required( true ), local_id( _local_name ), internal_id( _internal_id )
+	mode( _mode ), axis( _axis ), required( _required ), local_id( _local_name ), internal_id( _internal_id ), is_reset( false )
 {
 
 }
@@ -40,18 +40,27 @@ void KeyBind::reset()
  */
 void KeyBind::remove_key( Control* _key )
 {
-	for( auto inner_vector = control.begin() ; inner_vector != control.end() ; inner_vector++ )
+	for( auto inner_vector = control.begin() ; inner_vector != control.end() ; )
 	{
-		for( auto comp_control = inner_vector->begin() ; comp_control != inner_vector->end() ; comp_control++ )
+		for( auto control_pointer = inner_vector->begin() ; control_pointer != inner_vector->end() ; )
 		{
-			if( *comp_control == _key )
+			if( *control_pointer == _key )
 			{
-				inner_vector->erase( comp_control ) ;
+				control_pointer = inner_vector->erase( control_pointer ) ;
+			}
+			else
+			{
+				control_pointer++ ;
 			}
 		}
+
 		if( inner_vector->size() == 0 )
 		{
-			control.erase( inner_vector ) ;
+			inner_vector = control.erase( inner_vector ) ;
+		}
+		else
+		{
+			inner_vector++ ;
 		}
 	}
 }
