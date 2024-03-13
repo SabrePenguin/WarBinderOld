@@ -33,6 +33,12 @@ class KeyBind
 		 * @param _up: The direction to apply to. Non-axis binds do not care what this is
 		 */
 		void remove_key( Control* _key ) ;
+		/**
+		 * @brief Removes the given vector from the list
+		 * @param _key_combo: The pointer to the vector to remove
+		 */
+		void remove_key_combo( std::vector<Control*>* _key_combo ) ;
+		void remove_all_keys() ;
 
 		char get_mode() ;
 		std::string get_local_name() ;

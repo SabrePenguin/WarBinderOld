@@ -169,10 +169,20 @@ void ptui::display_keys_from_bind()
 
 void ptui::tester()
 {
-	const auto binds = this->controller.get()->get_controls_map() ;
-	auto temp = binds->find("key1") ;
-	if( temp != binds->end() )
+	const auto controls = this->controller.get()->get_controls_map() ;
+	const auto binds = this->controller.get()->get_binds_map() ;
+	auto temp = controls->find("key1") ;
+	auto bind_temp = binds->find( "throttle_rangeMin" ) ;
+	//if( temp != controls->end() )
+	if( bind_temp != binds->end() )
 	{
-		temp->second->remove_all_binds() ;
+		auto key_list = bind_temp->second->get_control() ;
+		for( auto iter = key_list->begin() ; iter != key_list->end() ; iter++ )
+		{
+			bind_temp->second->remove_key_combo( &*iter ) ;
+			break ;
+		}
+	//	temp->second->remove_bind( bind_temp ) ;
+	//	temp->second->remove_all_binds() ;
 	}
 }

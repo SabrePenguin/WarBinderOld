@@ -15,4 +15,6 @@ target_sources ( Bind
 target_include_directories(Bind
 	PUBLIC
 		"${CMAKE_CURRENT_LIST_DIR}"
+	PRIVATE
+		"${CMAKE_CURRENT_LIST_DIR}/../control"
 )
