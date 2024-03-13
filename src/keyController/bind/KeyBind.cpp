@@ -89,6 +89,14 @@ void KeyBind::remove_key_combo( std::vector<Control*>* _key_combo )
 
 void KeyBind::remove_all_keys()
 {
+	for( auto iter = control.begin() ; iter != control.end() ; )
+	{
+		for( auto remove_control = iter->begin() ; remove_control != iter->end() ; ++remove_control )
+		{
+			( *remove_control )->call_remove_bind( this ) ;
+		}
+		iter = control.erase( iter ) ;
+	}
 }
 
 /**

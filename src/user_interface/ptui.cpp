@@ -166,13 +166,18 @@ void ptui::tester()
 	//if( temp != controls->end() )
 	if( bind_temp != binds->end() )
 	{
+		bind_temp->second->remove_all_keys() ;
+		/*
 		auto key_list = bind_temp->second->get_control() ;
 		for( auto iter = key_list->begin() ; iter != key_list->end() ; ++iter )
 		{
 			bind_temp->second->remove_key_combo( &*iter ) ;
 			break ;
 		}
-	//	temp->second->remove_bind( bind_temp ) ;
-	//	temp->second->remove_all_binds() ;
+		*/
+		/*
+		temp->second->remove_bind( bind_temp ) ;
+		temp->second->remove_all_binds() ;
+		*/
 	}
 }
