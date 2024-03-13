@@ -16,6 +16,7 @@ private:
 	void assign_key_to_bind( ) ;
 	void display_keys_from_bind() ;
 	void display_binds_from_key() ;
+	void tester() ;
 };
 
 #endif // !PTUI_H

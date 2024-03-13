@@ -27,6 +27,7 @@ void ptui::main_loop(  )
 		std::cout << "D(isplay)" << std::endl;
 		std::cout << "A(ssign)" << std::endl ;
 		std::cout << "Q(uit)" << std::endl;
+		std::cout << "R(emove)" << std::endl ;
 		std::cin >> in ;
 		switch( in )
 		{
@@ -63,6 +64,11 @@ void ptui::main_loop(  )
 				//	std::cout << "Local name: " << std::get<0>( *element ) << ", internal id: " << std::get<1>( *element ) << std::endl ;
 				//}
 			}
+			break ;
+
+		case 'r':
+		case 'R':
+			tester() ;
 			break ;
 
 			//Quit the loop
@@ -158,5 +164,15 @@ void ptui::display_keys_from_bind()
 			
 		}
 		std::cout << iter->second->get_local_name() << std::endl;
+	}
+}
+
+void ptui::tester()
+{
+	const auto binds = this->controller.get()->get_controls_map() ;
+	auto temp = binds->find("key1") ;
+	if( temp != binds->end() )
+	{
+		temp->second->remove_all_binds() ;
 	}
 }
