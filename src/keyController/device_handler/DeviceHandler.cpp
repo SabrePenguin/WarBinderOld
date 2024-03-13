@@ -18,7 +18,7 @@ DeviceHandler::DeviceHandler() :
 std::vector<Device> DeviceHandler::find_devices()
 {
 	std::vector<Device> device_list ;
-	for( int iter = 0 ; iter < SDL_NumJoysticks() ; iter++ )
+	for( int iter = 0 ; iter < SDL_NumJoysticks() ; ++iter )
 	{
 		if( SDL_IsGameController( iter ) )
 		{
@@ -36,7 +36,7 @@ std::vector<Device> DeviceHandler::find_devices()
 SDL_GameController* DeviceHandler::find_device( SDL_JoystickID _dev_id )
 {
 	//Loop through devices. Uses vector instead of array.
-	for( auto iter = game_controllers.begin() ; iter != game_controllers.end() ; iter++ )
+	for( auto iter = game_controllers.begin() ; iter != game_controllers.end() ; ++iter )
 	{
 		if( _dev_id == SDL_JoystickInstanceID( SDL_GameControllerGetJoystick( *iter ) ) )
 		{
@@ -82,7 +82,7 @@ void DeviceHandler::remove_device( SDL_JoystickID _controller )
 		return ;
 
 	//Search through vector
-	for( auto iter = game_controllers.begin() ; iter != game_controllers.end() ; iter++ )
+	for( auto iter = game_controllers.begin() ; iter != game_controllers.end() ; ++iter )
 	{
 		//Erase item
 		if( *iter == control_p )
@@ -98,7 +98,7 @@ void DeviceHandler::remove_device( SDL_JoystickID _controller )
 */
 void DeviceHandler::shutdown()
 {
-	for( auto iter = this->game_controllers.begin() ; iter != this->game_controllers.end() ; iter++ )
+	for( auto iter = this->game_controllers.begin() ; iter != this->game_controllers.end() ; ++iter )
 	{
 		SDL_GameControllerClose( ( *iter ) ) ;
 	}
@@ -130,7 +130,7 @@ std::string DeviceHandler::device_change( SDL_Event* con_event )
 	{
 		this->remove_device( con_event->cdevice.which ) ;
 	}
-	for( auto iter = this->ui_observer.begin() ; iter != this->ui_observer.end() ; iter++ )
+	for( auto iter = this->ui_observer.begin() ; iter != this->ui_observer.end() ; ++iter )
 	{
 		iter->get()->controller_change_notify() ;
 	}

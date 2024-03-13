@@ -207,7 +207,7 @@ t_return Reader::import_controls( std::string _filename )
 					bind_id = in_string ;
 				}
 				in_string = "" ;
-				braceLevel++ ;
+				++braceLevel ;
 				break ;
 				
 			case '}':

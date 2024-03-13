@@ -47,22 +47,12 @@ void ptui::main_loop(  )
 			if( data_type == 'k' || data_type == 'K' )
 			{
 				this->display_binds_from_key() ;
-				//auto data = this->controller.get()->get_key_details() ;
-				//for( auto element = data.begin() ; element != data.end() ; element++ )
-				//{
-				//	std::cout << "Local name: " << std::get<0>( *element ) << ", internal id: " << std::get<1>( *element ) << std::endl ;
-				//}
 				break ;
 			}
 			//Bind information
 			else if( data_type == 'b' || data_type == 'B' )
 			{
 				this->display_keys_from_bind() ;
-				//auto data2 = this->controller.get()->get_bind_details() ;
-				//for( auto element = data2.begin() ; element != data2.end() ; element++ )
-				//{
-				//	std::cout << "Local name: " << std::get<0>( *element ) << ", internal id: " << std::get<1>( *element ) << std::endl ;
-				//}
 			}
 			break ;
 
@@ -133,11 +123,11 @@ void ptui::display_binds_from_key()
 {
 	const auto keys = this->controller.get()->get_controls_map() ;
 	std::cout << "Total key count: " << keys->size() << std::endl ;
-	for( auto iter = keys->begin() ; iter != keys->end() ; iter++ )
+	for( auto iter = keys->begin() ; iter != keys->end() ; ++iter )
 	{
 		std::cout << "----------------------------------------" << std::endl ;
 		const auto binds = iter->second->get_binds() ;
-		for( auto sub_iter = binds->begin() ; sub_iter != binds->end() ; sub_iter++ )
+		for( auto sub_iter = binds->begin() ; sub_iter != binds->end() ; ++sub_iter )
 		{
 			std::cout << "\n" << ( *sub_iter )->get_local_name() << " - ";
 		}
@@ -149,14 +139,14 @@ void ptui::display_keys_from_bind()
 {
 	const auto binds = this->controller.get()->get_binds_map() ;
 	std::cout << "Total bind count: " << binds->size() << std::endl ;
-	for( auto iter = binds->begin() ; iter != binds->end() ; iter++ )
+	for( auto iter = binds->begin() ; iter != binds->end() ; ++iter )
 	{
 		std::cout << "----------------------------------------" << std::endl ;
 
 		const auto keys = iter->second->get_control() ;
-		for( auto sub_iter = keys->begin() ; sub_iter != keys->end() ; sub_iter++ )
+		for( auto sub_iter = keys->begin() ; sub_iter != keys->end() ; ++sub_iter )
 		{
-			for( auto sub2_iter = sub_iter->begin() ; sub2_iter != sub_iter->end() ; sub2_iter++ )
+			for( auto sub2_iter = sub_iter->begin() ; sub2_iter != sub_iter->end() ; ++sub2_iter )
 			{
 				std::cout << ( *sub2_iter )->get_local_name() << ", " ;
 			}
@@ -177,7 +167,7 @@ void ptui::tester()
 	if( bind_temp != binds->end() )
 	{
 		auto key_list = bind_temp->second->get_control() ;
-		for( auto iter = key_list->begin() ; iter != key_list->end() ; iter++ )
+		for( auto iter = key_list->begin() ; iter != key_list->end() ; ++iter )
 		{
 			bind_temp->second->remove_key_combo( &*iter ) ;
 			break ;

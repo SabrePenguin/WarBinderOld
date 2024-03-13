@@ -34,7 +34,7 @@ void Control::call_remove_bind( KeyBind* _bind )
 		}
 		else
 		{
-			iter++ ;
+			++iter ;
 		}
 	}
 }
@@ -56,7 +56,7 @@ void Control::remove_bind( KeyBind* _bind )
 		}
 		else
 		{
-			iter++ ;
+			++iter ;
 		}
 	}
 }
@@ -66,7 +66,7 @@ void Control::remove_bind( KeyBind* _bind )
  */
 void Control::remove_all_binds()
 {
-	for( auto iter = binds.begin() ; iter != binds.end() ; iter++ )
+	for( auto iter = binds.begin() ; iter != binds.end() ; ++iter )
 	{
 		( *iter )->remove_key( this ) ;
 	}

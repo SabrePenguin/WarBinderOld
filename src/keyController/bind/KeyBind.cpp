@@ -9,7 +9,7 @@ KeyBind::KeyBind( char _mode, bool _axis, bool _required, std::string _local_nam
 
 KeyBind::~KeyBind()
 {
-	for( auto iter = control.begin() ; iter != control.end() ; iter++ )
+	for( auto iter = control.begin() ; iter != control.end() ; ++iter )
 	{
 		//No need to delete, controls are deleted by hand
 		iter->clear() ;
@@ -51,7 +51,7 @@ void KeyBind::remove_key( Control* _key )
 			}
 			else
 			{
-				control_pointer++ ;
+				++control_pointer ;
 			}
 		}
 
@@ -61,7 +61,7 @@ void KeyBind::remove_key( Control* _key )
 		}
 		else
 		{
-			inner_vector++ ;
+			++inner_vector ;
 		}
 	}
 }
@@ -72,12 +72,12 @@ void KeyBind::remove_key( Control* _key )
  */
 void KeyBind::remove_key_combo( std::vector<Control*>* _key_combo )
 {
-	for( auto iter = control.begin() ; iter != control.end() ; iter++ )
+	for( auto iter = control.begin() ; iter != control.end() ; ++iter )
 	{
 		if( *iter == *_key_combo )
 		{
 			// Call each Control individually and remove this KeyBind from it
-			for( auto remove_control = iter->begin() ; remove_control != iter->end() ; remove_control++ )
+			for( auto remove_control = iter->begin() ; remove_control != iter->end() ; ++remove_control )
 			{
 				( *remove_control )->call_remove_bind( this ) ;
 			}

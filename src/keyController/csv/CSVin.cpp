@@ -45,7 +45,7 @@ std::vector<std::tuple<std::string, char, std::string, bool>> get_control( std::
 					{
 						header = !header ;
 					}
-					base_index++ ;
+					++base_index ;
 				}
 				else if( local_index == 0 )
 				{
@@ -63,7 +63,7 @@ std::vector<std::tuple<std::string, char, std::string, bool>> get_control( std::
 				}
 
 				in_string = "" ;
-				local_index++ ;
+				++local_index ;
 				break ;
 
 			case '\n':
@@ -127,7 +127,7 @@ std::vector<std::tuple<std::string, char, std::string, bool, bool>> get_binds( s
 				{
 					if( in_string.compare( _language ) == 0 )
 						header = !header ;
-					base_index++;
+					++base_index ;
 				}
 				else if( local_index == 0 )
 				{
@@ -156,7 +156,7 @@ std::vector<std::tuple<std::string, char, std::string, bool, bool>> get_binds( s
 				}
 				else
 				{
-					local_index++ ;
+					++local_index ;
 				}
 				in_string = "" ;
 				break ;
@@ -241,7 +241,7 @@ std::vector<std::tuple<std::string, char, std::string, float, float, bool, std::
 				{
 					max_value = std::stof( in_string ) ;
 				}
-				column++ ;
+				++column ;
 				in_string = "";
 				break ;
 			case '/':
@@ -258,7 +258,7 @@ std::vector<std::tuple<std::string, char, std::string, float, float, bool, std::
 						options.push_back( in_string ) ;
 					}
 					in_string = "" ;
-					option_col++ ;
+					++option_col ;
 				}
 				break ;
 			default:

@@ -261,7 +261,6 @@ void KeyBindController::import( std::string _filename )
 {
 	t_return data = file_handler->import_controls( _filename ) ;
 	t_keys keys = std::get<0>( data ) ;
-	int i = 0 ;
 	for( t_keys::iterator iter = keys.begin() ; iter != keys.end() ; ++iter )
 	{
 		std::string name = std::get<0>( *iter ) ;
@@ -326,7 +325,7 @@ void KeyBindController::import( std::string _filename )
 	std::string front = "controller" ;
 
 	//Add missing buttons.
-	for( int button_number = 1 ; button_number <= total_buttons ; button_number++ )
+	for( int button_number = 1 ; button_number <= total_buttons ; ++button_number )
 	{
 		auto find_button = this->system_keys.find( front + std::to_string( button_number ) ) ;
 		if( find_button == this->system_keys.end() )
@@ -346,7 +345,7 @@ void KeyBindController::import( std::string _filename )
 	front = "controller_axis" ;
 
 	//Now time to add the missing axes
-	for( int axes_number = 1 ; axes_number <= total_axes ; axes_number++ )
+	for( int axes_number = 1 ; axes_number <= total_axes ; ++axes_number )
 	{
 		auto find_axes = this->system_keys.find( front + std::to_string( axes_number ) ) ;
 		if( find_axes == this->system_keys.end() )
@@ -382,7 +381,6 @@ void KeyBindController::import( std::string _filename )
 				existing_control->second->add_bind( check->second ) ;
 				check->second->add_axis( existing_control->second ) ;
 			}
-			i++ ;
 		}
 	}
 	return ;
@@ -503,7 +501,7 @@ void KeyBindController::assign_key_to_bind( std::vector<std::string> _key_id_lis
 	//Create a list for storage
 	std::vector<Control*> control_list ;
 	//Loop through and add all the controls
-	for( auto iter = _key_id_list.begin() ; iter != _key_id_list.end() ; iter++ )
+	for( auto iter = _key_id_list.begin() ; iter != _key_id_list.end() ; ++iter )
 	{
 		control_list.push_back( this->system_keys.find( *iter )->second ) ;
 	}
@@ -511,7 +509,7 @@ void KeyBindController::assign_key_to_bind( std::vector<std::string> _key_id_lis
 	//Insert the keys into the bind
 	bind->add_control( control_list ) ;
 	//Insert the bind into the keys
-	for( auto iter = control_list.begin() ; iter != control_list.end() ; iter++ )
+	for( auto iter = control_list.begin() ; iter != control_list.end() ; ++iter )
 	{
 		(*iter)->add_bind( bind ) ;
 	}
