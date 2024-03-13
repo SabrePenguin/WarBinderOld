@@ -518,27 +518,6 @@ void KeyBindController::assign_key_to_bind( std::vector<std::string> _key_id_lis
 }
 
 /**
- * @brief Assigns the given key to the specified axis.
- * @param _key_id_list: The string key id to add
- * @param _axis_id: The string axis id to add to
- * @param _which: The direction (reset, increase, decrease)
- */
-void KeyBindController::assign_key_to_axis( std::vector<std::string> _key_id_list, std::string _axis_id )
-{
-	std::vector<Control*> control_list ;
-	for( auto iter = _key_id_list.begin() ; iter != _key_id_list.end() ; iter++ )
-	{
-		control_list.push_back( this->system_keys.find( *iter )->second ) ;
-	}
-	auto bind = this->system_binds.find( _axis_id )->second ;
-	bind->add_control( control_list ) ;
-	for( auto iter = control_list.begin() ; iter != control_list.end() ; iter++ )
-	{
-		( *iter )->add_bind( bind ) ;
-	}
-}
-
-/**
  * @brief Assigns the given bind to a key.
  * @return True if the assignment was successful
 */

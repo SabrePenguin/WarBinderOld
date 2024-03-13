@@ -119,16 +119,7 @@ void ptui::assign_key_to_bind( )
 	std::cin >> input_bind ;
 	if( key_list.size() > 0 && this->controller.get()->check_bind_exists(input_bind) )
 	{
-		if( !this->controller.get()->check_bind_is_axis( input_bind ) )
-		{
-			//The controller is not axis, no further details required
-			this->controller.get()->assign_key_to_bind( key_list, input_bind ) ;
-		}
-		else
-		{
-			//Is this even needed anymore?
-			this->controller.get()->assign_key_to_axis( key_list, input_bind ) ;
-		}
+		this->controller.get()->assign_key_to_bind( key_list, input_bind ) ;
 	}
 }
 
@@ -155,53 +146,15 @@ void ptui::display_keys_from_bind()
 	for( auto iter = binds->begin() ; iter != binds->end() ; iter++ )
 	{
 		std::cout << "----------------------------------------" << std::endl ;
-		bool axis = iter->second->is_axis() ;
-		if( axis )
+
+		const auto keys = iter->second->get_control() ;
+		for( auto sub_iter = keys->begin() ; sub_iter != keys->end() ; sub_iter++ )
 		{
-			/*
-			const auto keys = iter->second->get_control() ;
-			for( auto sub_iter = keys->begin() ; sub_iter != keys->end() ; sub_iter )
+			for( auto sub2_iter = sub_iter->begin() ; sub2_iter != sub_iter->end() ; sub2_iter++ )
 			{
-				for( auto sub2_iter = sub_iter->begin() ; sub2_iter != sub_iter->end() ; sub2_iter++ )
-				{
-					std::cout << ( *sub2_iter )->get_local_name() << ", " ;
-				}
-				std::cout << "\n------" << std::endl ;
+				std::cout << ( *sub2_iter )->get_local_name() << ", " ;
 			}
-
-
-			const auto key_down = iter->second->get_control() ;
-			for( auto sub_iter = key_down->begin() ; sub_iter != key_down->end() ; sub_iter )
-			{
-				for( auto sub2_iter = sub_iter->begin() ; sub2_iter != sub_iter->end() ; sub2_iter++ )
-				{
-					std::cout << ( *sub2_iter )->get_local_name() << ", " ;
-				}
-				std::cout << "\n------" << std::endl ;
-			}
-
-			const auto key_up = iter->second->get_control() ;
-			for( auto sub_iter = key_up->begin() ; sub_iter != key_up->end() ; sub_iter )
-			{
-				for( auto sub2_iter = sub_iter->begin() ; sub2_iter != sub_iter->end() ; sub2_iter++ )
-				{
-					std::cout << ( *sub2_iter )->get_local_name() << ", " ;
-				}
-				std::cout << "\n------" << std::endl ;
-			}
-			*/
-		}
-		else
-		{
-			const auto keys = iter->second->get_control() ;
-			for( auto sub_iter = keys->begin() ; sub_iter != keys->end() ; sub_iter++ )
-			{
-				for( auto sub2_iter = sub_iter->begin() ; sub2_iter != sub_iter->end() ; sub2_iter++ )
-				{
-					std::cout << ( *sub2_iter )->get_local_name() << ", " ;
-				}
-				std::cout << "\n------" << std::endl ;
-			}
+			std::cout << "\n------" << std::endl ;
 			
 		}
 		std::cout << iter->second->get_local_name() << std::endl;
