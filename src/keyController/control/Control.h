@@ -26,6 +26,7 @@ class Control
 		//Bind clearing
 		void call_remove_bind( KeyBind* _bind ) ;
 		void remove_bind( KeyBind* _bind ) ;
+		void remove_all_binds() ;
 		void reset() { binds.clear() ; } ;
 	protected:
 		//A list of the binds assigned to this key
