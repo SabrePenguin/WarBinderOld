@@ -17,28 +17,19 @@ KeyBind::~KeyBind()
 	control.clear() ;
 }
 
-/**
- * @brief Adds a vector of keys to the current Bind.
- * @param _control_combo : vector of implemented Control classes
-*/
+
 void KeyBind::add_control( std::vector<Control*> _control_combo )
 {
 	this->control.push_back( _control_combo );
 }
 
-/**
- * @brief Clears the current control for a fresh keyboard
-*/
+
 void KeyBind::reset()
 {
 	this->control.clear() ;
 }
 
-/**
- * @brief Searches through the control vector and removes all references to the key given
- * @param _key: The Control pointer to compare to
- * @param _up: Used to allow holding with Axis
- */
+
 void KeyBind::remove_key( Control* _key )
 {
 	for( auto inner_vector = control.begin() ; inner_vector != control.end() ; )
@@ -66,10 +57,7 @@ void KeyBind::remove_key( Control* _key )
 	}
 }
 
-/**
- * @brief Removes the given vector of Controls from the list of available controls
- * @param _key_combo: Pointer to the vector to remove
- */
+
 void KeyBind::remove_key_combo( std::vector<Control*>* _key_combo )
 {
 	for( auto iter = control.begin() ; iter != control.end() ; ++iter )
@@ -87,6 +75,7 @@ void KeyBind::remove_key_combo( std::vector<Control*>* _key_combo )
 	}
 }
 
+
 void KeyBind::remove_all_keys()
 {
 	for( auto iter = control.begin() ; iter != control.end() ; )
@@ -99,29 +88,30 @@ void KeyBind::remove_all_keys()
 	}
 }
 
-/**
- * @brief Get the text id of the Bind
- * @return The text id
-*/
+
 std::string KeyBind::get_local_name()
 {
 	return this->local_id ;
 }
+
 
 void KeyBind::set_local_name( std::string _name )
 {
 	this->local_id = _name ;
 }
 
+
 char KeyBind::get_mode() 
 {
 	return this->mode ;
 }
 
+
 bool KeyBind::is_axis()
 {
 	return this->axis ;
 }
+
 
 std::vector<std::vector<Control*>>* KeyBind::get_control()
 {

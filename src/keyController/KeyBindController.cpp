@@ -28,12 +28,7 @@
 // The purpose of this file is to be the surface level file that users
 //
 
-/**
- * @brief Imports the files and converts them to objects
- * @param _controlfile: The file of the controls and their local names
- * @param _bindfile: The file of all the binds and their names
- * @param _language: The language in the file. Used to find local ids.
-*/
+
 KeyBindController::KeyBindController(std::string _controlfile, std::string _bindfile, std::string _optfile, std::string _language) : 
 	language(_language) 
 {
@@ -83,9 +78,7 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 }
 
 
-/**
- * @brief Destroys the pointers by hand due to being unable to use smart pointers effectively.
-*/
+
 KeyBindController::~KeyBindController() 
 {
 	for (auto iterator = this->system_keys.begin(); iterator != this->system_keys.end(); ++iterator) 
@@ -105,13 +98,7 @@ KeyBindController::~KeyBindController()
 	device_handler->shutdown() ;
 }
 
-/**
- * @brief Adds a key pointer to the KeyBindController vector
- * @param _key_id: The internal id. Can be anything, so long as it matches Gaijin's internal id. (ie: 1, button_1)
- * @param _local_key: The local name. Can be anything
- * @param _modifier: Whether the key is a modifier such as "ctrl" or "alt"
- * @param _type: The type of control (key, mouse, controller) 
-*/
+
 void KeyBindController::add_key(std::string _key_id, std::string _local_key, bool _modifier, char _type)
 {
 	// Prevent memory leak from overwriting the previous value with this key
@@ -125,11 +112,7 @@ void KeyBindController::add_key(std::string _key_id, std::string _local_key, boo
 	this->system_keys.insert({ key_id+_key_id , new_key});
 }
 
-/**
- * @brief Adds a controller button
- * @param _key_id: The internal id. Can be anything as long as it matches Gaijin's internal id.
- * @param _local_key 
-*/
+
 void KeyBindController::add_new_joystick(std::string _key_id, std::string _local_key)
 {
 	std::string key_id = "controller" ;
@@ -141,6 +124,7 @@ void KeyBindController::add_new_joystick(std::string _key_id, std::string _local
 	//delete new_joystick ;
 	this->system_keys.insert( { key_id + _key_id, new_joystick } ) ;
 }
+
 
 void KeyBindController::add_new_controller_axis( std::string _key_id, std::string _local_key )
 {
@@ -154,12 +138,7 @@ void KeyBindController::add_new_controller_axis( std::string _key_id, std::strin
 	this->system_keys.insert( { key_id + _key_id, new_con_axis } ) ;
 }
 
-/**
- * @brief Adds a Bind pointer.
- * @param _internal_id: The internal id of the bind name.
- * @param _local_id: The local name of the bind. (ie. "Throttle Up")
- * @param _axis: Determines if the given bind needs to be an axis or regular button
-*/
+
 void KeyBindController::add_new_bind(std::string _internal_id, std::string _local_id, char _mode, bool _is_axis, bool _required)
 {
 	KeyBind* new_bind ;
@@ -230,20 +209,14 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 	}
 }
 
-/**
- * @brief Sets the language of the keybind controller.
- * @param _language: The language to be used. Must match a language in the csv files.
-*/
+
 void KeyBindController::set_language(std::string _language)
 {
 	this->language = _language;
+	//TODO
 }
 
-/**
- * @brief A method to check whether the given button is on the keyboard, mouse, or a controller
- * @param t_key: The enum to check
- * @return A string
-*/
+
 std::string KeyBindController::check_type( Key_Type t_key )
 {
 	if( t_key == Key_Type::KEYBOARD )
@@ -253,10 +226,7 @@ std::string KeyBindController::check_type( Key_Type t_key )
 	return "controller" ;
 }
 
-/**
- * @brief Imports the control file. Must be a .blk file and must follow Gaijin's format
- * @param _filename 
-*/
+
 void KeyBindController::import( std::string _filename )
 {
 	t_return data = file_handler->import_controls( _filename ) ;
@@ -386,29 +356,25 @@ void KeyBindController::import( std::string _filename )
 	return ;
 }
 
-/**
- * @brief Gets the internal map with all the binds
- * @return A pointer to the map. Returns reference due to size.
- */
+
 std::unordered_map<std::string, KeyBind*>* KeyBindController::get_binds_map()
 {
 	return &( this->system_binds ) ;
 }
 
-/**
- * @brief Gets the internal map with all the controls
- * @return A pointer to the map. Returns reference due to size.
- */
+
 std::unordered_map<std::string, Control*>* KeyBindController::get_controls_map()
 {
 	return &( this->system_keys ) ;
 }
+
 
 int KeyBindController::find_pos( std::string name, char ch )
 {
 	int pos = name.find_first_of( ch ) ;
 	return pos ;
 }
+
 
 void KeyBindController::notify_device( SDL_Event* cur_event )
 {
@@ -437,28 +403,19 @@ void KeyBindController::notify_device( SDL_Event* cur_event )
 	}
 }
 
-/**
- * @brief Adds a ui observer to the device handler
- * @param _user_interface: The User Interface to add as an observer
-*/
+
 void KeyBindController::add_ui_observer( std::shared_ptr<UserInterface> _user_interface )
 {
 	device_handler.get()->add_ui_observer( _user_interface ) ;
 }
 
-/**
- * @brief Clears the observer to allow the release of the circular references
-*/
+
 void KeyBindController::clear_ui_observers()
 {
 	device_handler.get()->clear_ui_observers() ;
 }
 
-/**
- * @brief Checks if the given key exists
- * @param _key_id: The key to search for
- * @return True if the key exists
-*/
+
 bool KeyBindController::check_key_exists( std::string _key_id )
 {
 	if( this->system_keys.find( _key_id ) != this->system_keys.end() )
@@ -466,11 +423,7 @@ bool KeyBindController::check_key_exists( std::string _key_id )
 	return false ;
 }
 
-/**
- * @brief Checks if the given bind exists
- * @param _bind_id: The bind to search for
- * @return True if the bind exists
-*/
+
 bool KeyBindController::check_bind_exists( std::string _bind_id )
 {
 	if( this->system_binds.find( _bind_id ) != this->system_binds.end() )
@@ -478,24 +431,13 @@ bool KeyBindController::check_bind_exists( std::string _bind_id )
 	return false ;
 }
 
-/**
- * @brief Checks if the requested bind is an axis bind
- * @param _key_id: The key to check
- * @return True if it is an axis
-*/
+
 bool KeyBindController::check_bind_is_axis( std::string _bind_id )
 {
 	return this->system_binds.find( _bind_id )->second->is_axis() ;
 }
 
-//TODO. Multi-key additions
 
-/**
- * @brief Assigns the given key to a bind based on the input strings
- * @param _key_id_list: The key to assign to
- * @param _bind_id: The bind to assign to
- * @return True if the bind assignment successful
-*/
 void KeyBindController::assign_key_to_bind( std::vector<std::string> _key_id_list, std::string _bind_id )
 {
 	//Create a list for storage
@@ -515,10 +457,7 @@ void KeyBindController::assign_key_to_bind( std::vector<std::string> _key_id_lis
 	}
 }
 
-/**
- * @brief Assigns the given bind to a key.
- * @return True if the assignment was successful
-*/
+
 bool KeyBindController::assign_bind_to_key()
 {
 	return false ;

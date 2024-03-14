@@ -19,6 +19,9 @@ struct Imported_Axis {
 	int non_linearity;
 };
 
+/**
+ * @brief A struct to hold information about the device imported from the file
+ */
 struct Device_Data
 {
 	bool connected ;
@@ -35,6 +38,11 @@ typedef std::tuple<t_keys, t_import_axis, t_options, t_device, t_options> t_retu
 class Reader
 {
 	public:
+		/**
+		* @brief A method to import a file given either by the user or on startup
+		* @param _filename: The name of the file to import
+		* @return A vector of tuples in the order of bind name (ie. fire_AAM) and the ids assigned (ie. 44)
+		*/
 		t_return import_controls( std::string _filename ) ;
 	private:
 		std::string version ;

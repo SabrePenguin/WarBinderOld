@@ -5,11 +5,6 @@
 #include "reader.h"
 
 //TODO: Limit maximum character size
-/**
- * @brief A method to import a file given either by the user or on startup
- * @param _filename: The name of the file to import
- * @return A vector of tuples in the order of bind name (ie. fire_AAM) and the ids assigned (ie. 44)
-*/
 t_return Reader::import_controls( std::string _filename )
 {
 	std::ifstream in_file( _filename ) ;

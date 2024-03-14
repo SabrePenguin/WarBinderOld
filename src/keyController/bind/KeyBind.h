@@ -17,10 +17,17 @@ class KeyBind
 	public:
 		KeyBind(char _mode, bool _axis, bool _required, std::string _local_name, std::string _internal_id) ;
 		virtual ~KeyBind() ;
+		/**
+		* @brief Adds a vector of keys to the current Bind.
+		* @param _control_combo : vector of implemented Control classes
+		*/
 		void add_control( std::vector<Control*> _control_combo ) ;
 		virtual void add_axis( Control* _axis ) {} ;
 		virtual void add_data( Imported_Axis* _imported ) {} ;
 		virtual void add_other_controls( KeyBind* _axis_one, KeyBind* _axis_two ) {} ;
+		/**
+		* @brief Clears the current control for a fresh keybind
+		*/
 		void reset() ;
 		/**
 		 * @brief Gets the list of controls from the current Bind
@@ -28,19 +35,26 @@ class KeyBind
 		 */
 		std::vector<std::vector<Control*>>* get_control() ;
 		/**
-		 * @brief Removes the given Control pointer from all key combinations in the dedicated control
-		 * @param _key: The pointer to remove
-		 * @param _up: The direction to apply to. Non-axis binds do not care what this is
-		 */
+		* @brief Searches through the control vector and removes all references to the key given
+		* @param _key: The Control pointer to compare to
+		* @param _up: Used to allow holding with Axis
+		*/
 		void remove_key( Control* _key ) ;
 		/**
-		 * @brief Removes the given vector from the list
-		 * @param _key_combo: The pointer to the vector to remove
-		 */
+		* @brief Removes the given vector of Controls from the list of available controls
+		* @param _key_combo: Pointer to the vector to remove
+		*/
 		void remove_key_combo( std::vector<Control*>* _key_combo ) ;
+		/**
+		 * @brief Removes all Control pointers from this KeyBind
+		 */
 		void remove_all_keys() ;
 
 		char get_mode() ;
+		/**
+		* @brief Get the text id of the Bind
+		* @return The text id
+		*/
 		std::string get_local_name() ;
 		void set_local_name( std::string _name ) ;
 		bool is_axis() ;

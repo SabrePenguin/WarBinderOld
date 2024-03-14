@@ -14,14 +14,7 @@ void AxisChange::add_other_controls( KeyBind* _axis_one, KeyBind* _axis_two )
 	axis_two = _axis_two ;
 }
 
-/**
- * @brief The constructor for the axis
- * @param _internal_id: The internal id of the data
- * @param _text_id: The text id of the axis
- * @param _mode: The gamemode to be passed to KeyBind
- * @param _increase: Whether the given keybind name corresponds to an increase
- * @param _required: Whether this keybind is required
-*/
+
 AxisReset::AxisReset( std::string _internal_id, std::string _text_id, char _mode, bool _required ) :
 	AxisChange( _internal_id, _text_id, _mode, _required ), inverted(false), relative(false),
 	keep_value_for_disabled( false ), dead_zone( 0.0f ), non_linearity( 0 ), multiplier( 0.0f ),
@@ -29,26 +22,20 @@ AxisReset::AxisReset( std::string _internal_id, std::string _text_id, char _mode
 {
 }
 
+
 AxisReset::~AxisReset()
 {
 	game_axis = nullptr ;
 }
 
 
-/**
- * @brief Adds a singular control axis to the bind axis
- * @param _axis: The Control
-*/
 void AxisReset::add_axis( Control* _axis )
 {
 	//TODO: Rename axes to be more descriptive as single "axis" exists in the superclas
 	game_axis = _axis ;
 }
 
-/**
- * @brief Imports the data from the structure into the class fields
- * @param _data: A structure containing the data
-*/
+
 void AxisReset::add_data( Imported_Axis* _data )
 {
 	inverted = _data->inverted ;

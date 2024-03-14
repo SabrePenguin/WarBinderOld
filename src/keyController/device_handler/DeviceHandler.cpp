@@ -11,10 +11,7 @@ DeviceHandler::DeviceHandler() :
 {
 }
 
-/**
- * @brief Adds devices to the game_controllers vector and returns a vector of Devices(?)
- * @return A vector of Devices(?)
-*/
+
 std::vector<Device> DeviceHandler::find_devices()
 {
 	std::vector<Device> device_list ;
@@ -28,11 +25,7 @@ std::vector<Device> DeviceHandler::find_devices()
 	return device_list ;
 }
 
-/**
- * @brief Converted version of SDL2's example find_device function
- * @param _dev_id: The game controller's id
- * @return The pointer of the item. Will return nullptr if it isn't in the list
-*/
+
 SDL_GameController* DeviceHandler::find_device( SDL_JoystickID _dev_id )
 {
 	//Loop through devices. Uses vector instead of array.
@@ -46,10 +39,7 @@ SDL_GameController* DeviceHandler::find_device( SDL_JoystickID _dev_id )
 	return nullptr ;
 }
 
-/**
- * @brief Adds a controller to the DeviceHandler vector.
- * @param device_index: The index to add
-*/
+
 std::string DeviceHandler::add_device( int device_index )
 {
 	std::string mapping ;
@@ -93,9 +83,7 @@ void DeviceHandler::remove_device( SDL_JoystickID _controller )
 	}
 }
 
-/**
- * @brief Clears everything from this
-*/
+
 void DeviceHandler::shutdown()
 {
 	for( auto iter = this->game_controllers.begin() ; iter != this->game_controllers.end() ; ++iter )
@@ -105,20 +93,13 @@ void DeviceHandler::shutdown()
 	SDL_Quit() ;
 }
 
-/**
- * @brief Adds a ui observer to be notified
- * @param _ui: The ui to be added.
-*/
+
 void DeviceHandler::add_ui_observer( std::shared_ptr<UserInterface> _ui )
 {
 	this->ui_observer.push_back( _ui ) ;
 }
 
 
-/**
- * @brief Informs this that a device change has occurred and that it must notify the UI
- * @param con_event: A detach or attach of a controller
-*/
 std::string DeviceHandler::device_change( SDL_Event* con_event )
 {
 	std::string result ;
@@ -137,6 +118,7 @@ std::string DeviceHandler::device_change( SDL_Event* con_event )
 
 	return result ;
 }
+
 
 void DeviceHandler::clear_ui_observers()
 {
