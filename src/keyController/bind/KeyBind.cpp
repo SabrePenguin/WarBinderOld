@@ -115,6 +115,18 @@ void KeyBind::remove_all_keys()
 }
 
 
+void KeyBind::add_single_key( std::vector<Control*>* _key_combo, Control* _key )
+{
+	for( auto iter = control.begin() ; iter != control.end() ; ++iter )
+	{
+		if( *iter == *_key_combo )
+		{
+			iter->push_back( _key ) ;
+		}
+	}
+}
+
+
 std::string KeyBind::get_local_name()
 {
 	return this->local_id ;

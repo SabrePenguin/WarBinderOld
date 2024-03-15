@@ -55,7 +55,12 @@ class KeyBind
 		 * @brief Removes all Control pointers from this KeyBind
 		 */
 		void remove_all_keys() ;
-
+		/**
+		 * @brief Adds a single key to the vector. Doesn't check if it's duplicate.
+		 * @param _key_combo: The vector to edit
+		 * @param _key: The Control to add
+		 */
+		void add_single_key( std::vector<Control*>* _key_combo, Control* _key ) ;
 		char get_mode() ;
 		/**
 		* @brief Get the text id of the Bind
