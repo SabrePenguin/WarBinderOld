@@ -58,6 +58,32 @@ void KeyBind::remove_key( Control* _key )
 }
 
 
+void KeyBind::remove_single_key( std::vector<Control*>* _key_combo, Control* _key )
+{
+	for( auto iter = control.begin() ; iter != control.end() ; ++iter )
+	{
+		if( *iter == *_key_combo )
+		{
+			// Call each Control individually and remove this KeyBind from it
+			for( auto remove_control = iter->begin() ; remove_control != iter->end() ; ++remove_control )
+			{
+				if( *remove_control == _key )
+				{
+					( *remove_control )->call_remove_bind( this ) ;
+					//A successful removal needs to be deleted, and then broken out because there needs to be no
+					//other searches
+					iter->erase( remove_control ) ;
+					break ;
+				}
+			}
+			if( iter->size() == 0 )
+				control.erase( iter ) ;
+			break ;
+		}
+	}
+}
+
+
 void KeyBind::remove_key_combo( std::vector<Control*>* _key_combo )
 {
 	for( auto iter = control.begin() ; iter != control.end() ; ++iter )

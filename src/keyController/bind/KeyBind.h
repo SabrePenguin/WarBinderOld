@@ -41,6 +41,12 @@ class KeyBind
 		*/
 		void remove_key( Control* _key ) ;
 		/**
+		 * @brief Removes the single key from the vector
+		 * @param _key_combo: The vector to edit
+		 * @param _key: The Control to remove
+		 */
+		void remove_single_key( std::vector<Control*>* _key_combo, Control* _key ) ;
+		/**
 		* @brief Removes the given vector of Controls from the list of available controls
 		* @param _key_combo: Pointer to the vector to remove
 		*/
