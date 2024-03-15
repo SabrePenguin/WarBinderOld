@@ -3,12 +3,6 @@
 #include <vector>
 #include <string>
 
-enum class controller
-{
-	INCREASE,
-	DECREASE,
-	RESET
-};
 
 class Control ;
 struct Imported_Axis ;
