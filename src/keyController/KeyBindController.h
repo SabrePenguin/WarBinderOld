@@ -113,11 +113,49 @@ class KeyBindController
 		*/
 		void assign_key_to_bind( std::vector<std::string> _key_id_list, std::string _bind_id ) ;
 		/**
-		* @brief Assigns the given bind to a key.
-		* @return True if the assignment was successful
+		* @brief Remove all references of the given _bind pointer from the sent in Control
+		* @param _control: The Control to use
+		* @param _bind: The pointer to remove all references of.
 		*/
-		bool assign_bind_to_key() ;
-	private:;
+		void remove_bind( Control* _control, KeyBind* _bind ) ;
+		/**
+		* @brief Removes all the binds available to this specific Control
+		* @param _control: The specific Control to use
+		*/
+		void remove_all_binds( Control* _control ) ;
+		/**
+		* @brief Searches through the control vector of the given KeyBind and removes all 
+		* references to the key given
+		* @param _bind: The KeyBind to operate on
+		* @param _key: The Control pointer to compare to
+		*/
+		void remove_key( KeyBind* _bind, Control* _key ) ;
+		/**
+		 * @brief Removes the single key from the vector of the KeyBind given
+		 * @param _bind: The KeyBind to operate on
+		 * @param _key_combo: The vector to edit
+		 * @param _key: The Control to remove
+		 */
+		void remove_single_key( KeyBind* _bind, std::vector<Control*>* _key_combo, Control* _key ) ;
+		/**
+		* @brief Removes the given vector of Controls from the list of available controls in the KeyBind given
+		* @param _bind: The KeyBind to operate on
+		* @param _key_combo: Pointer to the vector to remove
+		*/
+		void remove_key_combo( KeyBind* _bind, std::vector<Control*>* _key_combo ) ;
+		/**
+		 * @brief Removes all Control pointers from this KeyBind
+		 * @param _bind: The KeyBind to operate on
+		 */
+		void remove_all_keys( KeyBind* _bind ) ;
+		/**
+		 * @brief Adds a single key to the vector inside the given bind. Doesn't check if it's duplicate.
+		 * @param _bind: The KeyBind to add to
+		 * @param _key_combo: The vector to edit
+		 * @param _key: The Control to add
+		 */
+		void add_single_key( KeyBind* _bind, std::vector<Control*>* _key_combo, Control* _key ) ;
+	private:
 		/**
 		* @brief A method to check whether the given button is on the keyboard, mouse, or a controller
 		* @param t_key: The enum to check

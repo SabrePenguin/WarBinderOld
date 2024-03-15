@@ -457,8 +457,44 @@ void KeyBindController::assign_key_to_bind( std::vector<std::string> _key_id_lis
 	}
 }
 
-
-bool KeyBindController::assign_bind_to_key()
+void KeyBindController::remove_bind( Control* _control, KeyBind* _bind )
 {
-	return false ;
+	//Temporary until I figure out how the UI sends information to here
+	_control->remove_bind( _bind ) ;
+}
+
+
+void KeyBindController::remove_all_binds( Control* _control )
+{
+	_control->remove_all_binds() ;
+}
+
+
+void KeyBindController::remove_key( KeyBind* _bind, Control* _key )
+{
+	_bind->remove_key( _key ) ;
+}
+
+
+void KeyBindController::remove_single_key( KeyBind* _bind, std::vector<Control*>* _key_combo, Control* _key )
+{
+	_bind->remove_single_key( _key_combo, _key ) ;
+}
+
+
+void KeyBindController::remove_key_combo( KeyBind* _bind, std::vector<Control*>* _key_combo )
+{
+	_bind->remove_key_combo( _key_combo ) ;
+}
+
+
+void KeyBindController::remove_all_keys( KeyBind* _bind )
+{
+	_bind->remove_all_keys() ;
+}
+
+
+void KeyBindController::add_single_key( KeyBind* _bind, std::vector<Control*>* _key_combo, Control* _key )
+{
+	_bind->add_single_key( _key_combo, _key ) ;
 }
