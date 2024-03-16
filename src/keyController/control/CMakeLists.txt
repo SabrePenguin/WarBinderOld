@@ -10,9 +10,11 @@ target_sources ( Control
 		"${CMAKE_CURRENT_LIST_DIR}/Key.cpp"
 		"${CMAKE_CURRENT_LIST_DIR}/Mouse.cpp"
 		"${CMAKE_CURRENT_LIST_DIR}/Joystick.cpp"
+		"${CMAKE_CURRENT_LIST_DIR}/Control.cpp"
 )
 
 target_include_directories(Control
 	PUBLIC
 		"${CMAKE_CURRENT_LIST_DIR}"
+		"${CMAKE_CURRENT_LIST_DIR}/../bind"
 )

@@ -9,14 +9,14 @@ class ptui : public UserInterface
 {
 public:
 	ptui( std::shared_ptr<KeyBindController> _controller ) ;
-	void main_loop( std::shared_ptr<KeyBindController> _controller ) ;
+	void main_loop(  ) ;
 	void controller_change_notify() ;
 
 private:
-	std::string line_one ;
-	std::string line_two ;
-	std::string line_three ;
-	std::shared_ptr<KeyBindController> controller ;
+	void assign_key_to_bind( ) ;
+	void display_keys_from_bind() ;
+	void display_binds_from_key() ;
+	void tester() ;
 };
 
 #endif // !PTUI_H

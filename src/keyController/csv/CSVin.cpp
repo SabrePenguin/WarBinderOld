@@ -7,12 +7,7 @@
 
 #include "CSVin.h"
 
-/**
- * @brief Reads in the control_list.csv and selects the language, then returns a vector of keys
- * @param _filename: The name of the file to import
- * @param _language: The language to import
- * @return A vector of tuples in the <id, local_name, modifier> format
-*/
+
 std::vector<std::tuple<std::string, char, std::string, bool>> get_control( std::string _filename, std::string _language ) 
 {
 	std::vector<std::tuple<std::string, char, std::string, bool>> controls;
@@ -45,7 +40,7 @@ std::vector<std::tuple<std::string, char, std::string, bool>> get_control( std::
 					{
 						header = !header ;
 					}
-					base_index++ ;
+					++base_index ;
 				}
 				else if( local_index == 0 )
 				{
@@ -63,7 +58,7 @@ std::vector<std::tuple<std::string, char, std::string, bool>> get_control( std::
 				}
 
 				in_string = "" ;
-				local_index++ ;
+				++local_index ;
 				break ;
 
 			case '\n':
@@ -89,12 +84,7 @@ std::vector<std::tuple<std::string, char, std::string, bool>> get_control( std::
 	return controls;
 }
 
-/**
- * @brief A version of a csv parser that takes out only 2 pieces of information per row
- * @param _filename: The name of the file
- * @param _language: The language to use 
- * @return A vector of tuples with 5 parameters
-*/
+
 std::vector<std::tuple<std::string, char, std::string, bool, bool>> get_binds( std::string _filename, std::string _language )
 {
 	std::vector<std::tuple<std::string, char, std::string, bool, bool>> binds;
@@ -127,7 +117,7 @@ std::vector<std::tuple<std::string, char, std::string, bool, bool>> get_binds( s
 				{
 					if( in_string.compare( _language ) == 0 )
 						header = !header ;
-					base_index++;
+					++base_index ;
 				}
 				else if( local_index == 0 )
 				{
@@ -156,7 +146,7 @@ std::vector<std::tuple<std::string, char, std::string, bool, bool>> get_binds( s
 				}
 				else
 				{
-					local_index++ ;
+					++local_index ;
 				}
 				in_string = "" ;
 				break ;
@@ -169,12 +159,7 @@ std::vector<std::tuple<std::string, char, std::string, bool, bool>> get_binds( s
 	return binds ;
 }
 
-/**
- * @brief A csv parser that generates a list of options in the system
- * @param _filename: The name of the file
- * @param _language: The language to use 
- * @return A vector of tuple with data about each aspect
-*/
+
 std::vector<std::tuple<std::string, char, std::string, float, float, bool, std::list<std::string>>> 
 	get_options( std::string _filename, std::string _language )
 {
@@ -241,7 +226,7 @@ std::vector<std::tuple<std::string, char, std::string, float, float, bool, std::
 				{
 					max_value = std::stof( in_string ) ;
 				}
-				column++ ;
+				++column ;
 				in_string = "";
 				break ;
 			case '/':
@@ -258,7 +243,7 @@ std::vector<std::tuple<std::string, char, std::string, float, float, bool, std::
 						options.push_back( in_string ) ;
 					}
 					in_string = "" ;
-					option_col++ ;
+					++option_col ;
 				}
 				break ;
 			default:

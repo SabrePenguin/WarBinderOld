@@ -77,7 +77,7 @@ int main()
 		std::shared_ptr<UserInterface> user_interface = std::make_shared<ptui>(key1);
 		key1.get()->add_ui_observer( user_interface ) ;
 
-		std::thread ui( &UserInterface::main_loop, user_interface, key1 ) ;
+		std::thread ui( &UserInterface::main_loop, user_interface ) ;
 		sdl_loop( key1 ) ;
 		ui.join() ;
 		key1.get()->clear_ui_observers() ;

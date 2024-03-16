@@ -13,11 +13,14 @@ public:
 //Model contains SDL loop
 //Gets information by calling relevant controller. Will be assigned here.
 
+	UserInterface( std::shared_ptr<KeyBindController> _controller );
 	// Informs the UI that the controllers been added or removed
 	virtual void controller_change_notify() {} ;
-	virtual void main_loop( std::shared_ptr<KeyBindController> _controller ) {} ;
-private:
-
+	// Runs the main logic
+	virtual void main_loop( ) {} ;
+protected:
+	// The primary controllers
+	std::shared_ptr<KeyBindController> controller ;
 };
 
 #endif // !USER_INTERFACE_H
