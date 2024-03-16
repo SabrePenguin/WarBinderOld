@@ -1,17 +1,18 @@
 ﻿// WarBinder.cpp : The entry point of the program. Controls basic loop logic.
 //
 #define SDL_MAIN_HANDLED
-#include "WarBinder.h"
-#include "KeyBindController.h"
 #include <iostream>
 #include <string>
 #include <tuple>
 #include <vector>
 #include <SDL.h>
 #include <thread>
+#include <memory>
+#include "WarBinder.h"
+#include "KeyBindController.h"
 #include "UserInterface.h"
 #include "ptui.h"
-#include <memory>
+#include "WXGui.h"
 
 
 #define _CRTDBG_MAP_ALLOC
@@ -61,7 +62,7 @@ void sdl_loop( std::shared_ptr<KeyBindController> key_controller )
 }
 
 
-int main()
+int main( int argc, char* argv[] )
 {
 	if( initialize() )
 		return 1 ;
@@ -85,4 +86,10 @@ int main()
 	_CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG );
 	_CrtDumpMemoryLeaks();
 	return 0;
+}
+
+
+int WinMain( int argc, char* argv[] )
+{
+	return main( argc, argv ) ;
 }
