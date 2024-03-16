@@ -9,6 +9,7 @@ target_include_directories(Keybind
 	"keyController"
 	"user_interface"
 	${SDL2}
+	${wxWidgets_SOURCE_DIR}/include
 )
 
 target_link_libraries(WarBinder

@@ -11,6 +11,8 @@ endif()
 
 project ("WarBinder")
 
+set(wxWidgets_USE_STATIC ON)
+set(wxBUILD_SHARED OFF)
 
 include(FetchContent)
 # Include SDL for controller and mouse detection
@@ -22,15 +24,18 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(SDL2)
 # Include wxWidgets for window control. Note that this should be easily replaceable in the future
-#FetchContent_Declare(
-#	wxWidgets
-#	GIT_REPOSITORY https://github.com/wxWidgets/wxWidgets.git
-#	GIT_TAG 085a136dcb11aca5b1102193f006f8056d5f0876
-#)
+find_package(wxWidgets COMPONENTS core base)
+if(NOT wxWidgets_FOUND)
+	FetchContent_Declare(
+		wxWidgets
+		GIT_REPOSITORY https://github.com/wxWidgets/wxWidgets.git
+		GIT_TAG 085a136dcb11aca5b1102193f006f8056d5f0876
+	)
 
-#FetchContent_GetProperties(wxWidgets)
-#FetchContent_MakeAvailable(wxWidgets)
-
+	FetchContent_MakeAvailable(wxWidgets)
+	include(CMakePrintHelpers)
+	cmake_print_variables(wxWidgets_INCLUDE_DIRS)
+endif()
 # Add source to this project's executable.
 add_subdirectory(src)
 
