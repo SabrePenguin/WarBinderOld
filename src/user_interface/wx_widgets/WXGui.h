@@ -12,12 +12,25 @@ class KeyBindController ;
 class WXGui : public UserInterface, public wxApp
 {
 public:
+	WXGui() ;
 	WXGui( std::shared_ptr<KeyBindController> _controller ) ;
-	void controller_change_notify() ;
-	void main_loop() ;
+	void controller_change_notify() {} ;
+	void main_loop() {} ;
 
 	virtual bool OnInit() ;
 
 private:
+	
 };
+
+class testFrame : public wxFrame
+{
+public:
+	testFrame( const wxString& title, const wxPoint& pos, const wxSize& size );
+private:
+	void OnExit( wxCommandEvent& event );
+	void OnAbout( wxCommandEvent& event );
+	wxDECLARE_EVENT_TABLE();
+};
+
 #endif //WXGUI_H

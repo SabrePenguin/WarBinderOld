@@ -13,6 +13,7 @@
 #include "UserInterface.h"
 #include "ptui.h"
 #include "WXGui.h"
+#include <wx/wxprec.h>
 
 
 #define _CRTDBG_MAP_ALLOC
@@ -77,7 +78,11 @@ int main( int argc, char* argv[] )
 
 		std::shared_ptr<UserInterface> user_interface = std::make_shared<ptui>(key1);
 		key1.get()->add_ui_observer( user_interface ) ;
-
+		wxApp::SetInstance( new WXGui( ) ) ;
+		wxEntryStart( argc, argv ) ;
+		wxTheApp->CallOnInit() ;
+		wxTheApp->OnRun() ;
+		wxEntryCleanup() ;
 		std::thread ui( &UserInterface::main_loop, user_interface ) ;
 		sdl_loop( key1 ) ;
 		ui.join() ;
@@ -89,7 +94,3 @@ int main( int argc, char* argv[] )
 }
 
 
-int WinMain( int argc, char* argv[] )
-{
-	return main( argc, argv ) ;
-}
