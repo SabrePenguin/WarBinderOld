@@ -17,7 +17,7 @@ public:
 	// Informs the UI that the controllers been added or removed
 	virtual void controller_change_notify() {} ;
 	// Runs the main logic
-	virtual void main_loop( ) {} ;
+	virtual int main_loop( int argc, char* argv[] ) { return  0 ; } ;
 protected:
 	// The primary controllers
 	std::shared_ptr<KeyBindController> controller ;

@@ -9,7 +9,7 @@ class ptui : public UserInterface
 {
 public:
 	ptui( std::shared_ptr<KeyBindController> _controller ) ;
-	void main_loop(  ) ;
+	int main_loop( int argc, char* argv[] ) ;
 	void controller_change_notify() ;
 
 private:

@@ -15,7 +15,7 @@ ptui::ptui( std::shared_ptr<KeyBindController> _controller )
 {
 }
 
-void ptui::main_loop(  )
+int ptui::main_loop( int argc, char* argv[] )
 {
 	bool active = true ;
 	char in ;
@@ -81,6 +81,7 @@ void ptui::main_loop(  )
 			break ;
 		}
 	}
+	return 0 ;
 }
 
 void ptui::controller_change_notify()
