@@ -12,16 +12,12 @@
 #include "KeyBindController.h"
 #include "UserInterface.h"
 #include "ptui.h"
-#include "WXGui.h"
+#include "WXWrapper.h"
 #include <wx/wxprec.h>
 
-
-#define _CRTDBG_MAP_ALLOC
-#include<iostream>
-#include <crtdbg.h>
-#ifdef _DEBUG
-#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
-#define new DEBUG_NEW
+//Use wxWidgets builtin because the regular has some conflicts with globals
+#ifdef __WXMSW__
+#include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
 
 
@@ -65,6 +61,8 @@ void sdl_loop( std::shared_ptr<KeyBindController> key_controller )
 
 int main( int argc, char* argv[] )
 {
+	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+	//_CrtSetBreakAlloc( 14299 ) ;
 	if( initialize() )
 		return 1 ;
 	{
@@ -75,21 +73,23 @@ int main( int argc, char* argv[] )
 
 		//TODO: Check proper file type
 		key1.get()->import( "../../../../controller_settings.blk" ) ;
-
+		//ptui
+		/*
 		std::shared_ptr<UserInterface> user_interface = std::make_shared<ptui>(key1);
 		key1.get()->add_ui_observer( user_interface ) ;
-		wxApp::SetInstance( new WXGui( ) ) ;
-		wxEntryStart( argc, argv ) ;
-		wxTheApp->CallOnInit() ;
-		wxTheApp->OnRun() ;
-		wxEntryCleanup() ;
-		std::thread ui( &UserInterface::main_loop, user_interface ) ;
+		std::thread ui( &UserInterface::main_loop, user_interface, argc, argv ) ;
+		//*/
+		///*
+		std::shared_ptr<UserInterface> user_interface = std::make_shared<WXWrapper>( key1 ) ;
+		key1.get()->add_ui_observer( user_interface ) ;
+		std::thread ui( &UserInterface::main_loop, user_interface, argc, argv ) ;
+		//*/
+
 		sdl_loop( key1 ) ;
 		ui.join() ;
 		key1.get()->clear_ui_observers() ;
 	}
-	_CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG );
-	_CrtDumpMemoryLeaks();
+
 	return 0;
 }
 
