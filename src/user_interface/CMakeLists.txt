@@ -9,6 +9,8 @@ target_sources(userInterface
 		"${CMAKE_CURRENT_LIST_DIR}/ptui.cpp"
 		"${CMAKE_CURRENT_LIST_DIR}/ptui.h"
 		"${CMAKE_CURRENT_LIST_DIR}/UserInterface.cpp"
+		"${CMAKE_CURRENT_LIST_DIR}/WXWrapper.cpp"
+		"${CMAKE_CURRENT_LIST_DIR}/WXWrapper.h"
 )
 
 target_include_directories(userInterface
@@ -18,7 +20,7 @@ target_include_directories(userInterface
 		"${CMAKE_CURRENT_LIST_DIR}/../keyController/"
 		"${CMAKE_CURRENT_LIST_DIR}/../keyController/control/"
 		"${CMAKE_CURRENT_LIST_DIR}/../keyController/bind/"
-		"${SDL2}"
+		"${SDL2}" 
 )
 
 target_link_libraries(userInterface
