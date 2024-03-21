@@ -1,5 +1,4 @@
-add_executable(WarBinder "WarBinder.cpp" )
-
+add_executable(WarBinder WIN32 "WarBinder.cpp" )
 ##Library insertion
 add_subdirectory(keyController)
 add_subdirectory(user_interface)

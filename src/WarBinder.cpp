@@ -20,6 +20,9 @@
 #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
 
+#ifdef _MSC_VER
+#    pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+#endif
 
 int initialize()
 {
@@ -92,5 +95,3 @@ int main( int argc, char* argv[] )
 
 	return 0;
 }
-
-
