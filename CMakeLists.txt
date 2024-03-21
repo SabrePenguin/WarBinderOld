@@ -10,7 +10,7 @@ if (POLICY CMP0141)
 endif()
 
 project ("WarBinder")
-
+set(BUILD_SHARED_LIBS OFF)
 set(wxWidgets_USE_STATIC ON)
 set(wxBUILD_SHARED OFF)
 
