@@ -7,6 +7,20 @@
 class Device ;
 class UserInterface ;
 
+/**
+ * @brief Represents a controller
+ */
+struct GameController
+{
+	int id ; /** The id of the Controller */
+	int instanceid ; /** The SDL id of the Controller */
+	std::string name ; /** The name of the Controller */
+	std::vector<int> hats ; /** Holds the value for each hat */
+	std::vector<double> axes ; /** Holds the value for each axis */
+	std::vector<bool> buttons ; /** Holds the value for each button */
+	bool disabled ; /** Is this Controller active? */
+};
+
 class DeviceHandler
 {
 public:

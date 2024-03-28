@@ -9,6 +9,7 @@
 DeviceHandler::DeviceHandler() :
 	num_controllers( 0 )
 {
+	SDL_GameControllerAddMappingsFromFile("../../../../third_party/gamecontrollerdb.txt") ;
 }
 
 
@@ -60,6 +61,7 @@ std::string DeviceHandler::add_device( int device_index )
 
 	mapping = SDL_GameControllerMapping( controller ) ;
 	game_controllers.push_back( controller ) ;
+	++num_controllers ;
 	return mapping ;
 }
 
@@ -78,6 +80,7 @@ void DeviceHandler::remove_device( SDL_JoystickID _controller )
 		if( *iter == control_p )
 		{
 			game_controllers.erase( iter ) ;
+			--num_controllers ;
 			return ;
 		}
 	}
