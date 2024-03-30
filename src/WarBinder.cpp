@@ -12,16 +12,16 @@
 #include "KeyBindController.h"
 #include "UserInterface.h"
 #include "ptui.h"
-#include "WXWrapper.h"
-#include <wx/wxprec.h>
-
-//Use wxWidgets builtin because the regular has some conflicts with globals
-#ifdef __WXMSW__
-#include <wx/msw/msvcrt.h>      // redefines the new() operator 
-#endif
-
-#ifdef _MSC_VER
-#    pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+#ifdef WX_WIDGETS
+	#include "WXWrapper.h"
+	#include <wx/wxprec.h>
+	//Use wxWidgets builtin because the regular has some conflicts with globals
+	#ifdef __WXMSW__
+		#include <wx/msw/msvcrt.h>      // redefines the new() operator 
+	#endif
+	#ifdef _MSC_VER
+	#    pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+	#endif
 #endif
 
 int initialize()
@@ -78,14 +78,18 @@ int main( int argc, char* argv[] )
 		key1.get()->import( "../../../../controller_settings.blk" ) ;
 		//ptui
 		/*
-		std::shared_ptr<UserInterface> user_interface = std::make_shared<ptui>(key1);
-		key1.get()->add_ui_observer( user_interface ) ;
-		std::thread ui( &UserInterface::main_loop, user_interface, argc, argv ) ;
+		
 		//*/
 		///*
+		#ifdef WX_WIDGETS
 		std::shared_ptr<UserInterface> user_interface = std::make_shared<WXWrapper>( key1 ) ;
 		key1.get()->add_ui_observer( user_interface ) ;
 		std::thread ui( &UserInterface::main_loop, user_interface, argc, argv ) ;
+		#else
+		std::shared_ptr<UserInterface> user_interface = std::make_shared<ptui>( key1 );
+		key1.get()->add_ui_observer( user_interface ) ;
+		std::thread ui( &UserInterface::main_loop, user_interface, argc, argv ) ;
+		#endif
 		//*/
 
 		sdl_loop( key1 ) ;
