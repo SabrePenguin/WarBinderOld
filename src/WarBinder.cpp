@@ -37,7 +37,7 @@ int initialize()
 void sdl_loop( std::shared_ptr<KeyBindController> key_controller )
 {
 	bool active = true ;
-
+	int i = 0 ;
 	SDL_Event event ;
 
 	while( active )
@@ -52,11 +52,17 @@ void sdl_loop( std::shared_ptr<KeyBindController> key_controller )
 			case SDL_CONTROLLERDEVICEREMOVED:
 				key_controller->notify_device( &event ) ;
 				break ;
+			case SDL_CONTROLLERBUTTONDOWN:
+				i++ ;
+				break ;
+			case SDL_CONTROLLERAXISMOTION:
+				i++ ;
+				std::cout << i << std::endl ;
+				break ;
 			case SDL_USEREVENT:
 				active = false ;
 				break ;
 			}
-
 		}
 	}
 }
@@ -66,6 +72,7 @@ int main( int argc, char* argv[] )
 {
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 	//_CrtSetBreakAlloc( 14299 ) ;
+	//SDL_SetHint( SDL_HINT_JOYSTICK_THREAD, "1" );
 	if( initialize() )
 		return 1 ;
 	{
