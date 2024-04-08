@@ -51,16 +51,16 @@ private:
 	* @brief Adds a controller to the DeviceHandler vector.
 	* @param device_index: The index to add
 	*/
-	std::string add_device( int index ) ;
+	std::string add_device( SDL_JoystickID index ) ;
 	/**
 	* @brief Converted version of SDL2's example find_device function
 	* @param _dev_id: The game controller's id
 	* @return The pointer of the item. Will return nullptr if it isn't in the list
 	*/
-	SDL_GameController* find_device( SDL_JoystickID _joy_id ) ;
+	SDL_Gamepad* find_device( SDL_JoystickID _joy_id ) ;
 	/*The observer for the ui. Made a vector in case of wierd stuff.*/
 	std::vector<std::shared_ptr<UserInterface>> ui_observer ;
-	std::vector<SDL_GameController*> game_controllers ;
+	std::vector<SDL_Gamepad*> game_controllers ;
 	int num_controllers ; 
 };
 

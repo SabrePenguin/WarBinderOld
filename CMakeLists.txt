@@ -20,12 +20,12 @@ include(FetchContent)
 
 # Include SDL for controller and mouse detection
 FetchContent_Declare(
-	SDL2
+	SDL3
 	GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-	GIT_TAG 859844eae358447be8d66e6da59b6fb3df0ed778
+	GIT_TAG 17d4f8d6990d2bd92d6a8be4b23c4dc1626fb923
 )
 
-FetchContent_MakeAvailable(SDL2)
+FetchContent_MakeAvailable(SDL3)
 
 if(UI_OPTION STREQUAL "wxWidgets")
 	set(UI_INCLUDE_DIRS ${wxWidgets_SOURCE_DIR}/include)

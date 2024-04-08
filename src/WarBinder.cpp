@@ -6,12 +6,17 @@
 #include <tuple>
 #include <vector>
 #include <SDL.h>
+#include <SDL_main.h>
 #include <thread>
 #include <memory>
+#include <atomic>
+
 #include "WarBinder.h"
 #include "KeyBindController.h"
 #include "UserInterface.h"
 #include "ptui.h"
+
+//wxWidgets block
 #ifdef WX_WIDGETS
 	#include "WXWrapper.h"
 	#include <wx/wxprec.h>
@@ -19,14 +24,15 @@
 	#ifdef __WXMSW__
 		#include <wx/msw/msvcrt.h>      // redefines the new() operator 
 	#endif
-	#ifdef _MSC_VER
+
+	#ifdef _MSC_VER //Make you sane and never use WinMain
 	#    pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 	#endif
 #endif
 
 int initialize()
 {
-	if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER ) < 0 )
+	if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_GAMEPAD ) < 0 )
 	{
 		std::cerr << "Failed to initialize SDL: " << SDL_GetError() << std::endl ;
 		return 1 ;
@@ -39,6 +45,8 @@ void sdl_loop( std::shared_ptr<KeyBindController> key_controller )
 	bool active = true ;
 	int i = 0 ;
 	SDL_Event event ;
+	// Use this to prevent any issues with button being read before ready.
+	bool button_lock = true ;
 
 	while( active )
 	{
@@ -46,20 +54,30 @@ void sdl_loop( std::shared_ptr<KeyBindController> key_controller )
 		{
 			switch( event.type )
 			{
-			case SDL_CONTROLLERDEVICEADDED:
+			case SDL_EVENT_GAMEPAD_ADDED:
 				key_controller->notify_device( &event ) ;
 				break ;
-			case SDL_CONTROLLERDEVICEREMOVED:
+			case SDL_EVENT_GAMEPAD_REMOVED:
 				key_controller->notify_device( &event ) ;
 				break ;
+			/*
 			case SDL_CONTROLLERBUTTONDOWN:
+				// Checks if locked is false
+				if( !key_controller->get_lock() )
+				{
+
+				}
+				break ;
+			case SDL_CONTROLLERBUTTONUP:
+				key_controller->set_lock( &event ) ;
 				i++ ;
 				break ;
 			case SDL_CONTROLLERAXISMOTION:
 				i++ ;
 				std::cout << i << std::endl ;
 				break ;
-			case SDL_USEREVENT:
+				*/
+			case SDL_EVENT_USER:
 				active = false ;
 				break ;
 			}

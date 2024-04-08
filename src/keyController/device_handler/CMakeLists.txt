@@ -16,6 +16,6 @@ target_include_directories(Devices
 		"${CMAKE_CURRENT_SOURCE_DIR}/../../user_interface"
 )
 
-target_include_directories(Devices PRIVATE ${SDL2})
+target_include_directories(Devices PRIVATE ${SDL3})
 
-target_link_libraries(Devices PRIVATE SDL2::SDL2-static)
+target_link_libraries(Devices PRIVATE SDL3::SDL3-static)

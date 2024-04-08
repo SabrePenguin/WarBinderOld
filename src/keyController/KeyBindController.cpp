@@ -532,7 +532,7 @@ void KeyBindController::set_lock( SDL_Event* _event )
 	{
 		// If this program's id is equal to the internal id of the event
 		// and if any of the second equal the event button which was released.
-		if( iter->first == _event->cbutton.which && iter->second == _event->cbutton.button )
+		if( iter->first == _event->gbutton.which && iter->second == _event->gbutton.button )
 		{
 			this->buttons_locked.store( true ) ;
 		}

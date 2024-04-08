@@ -19,7 +19,7 @@ target_include_directories(Keybind
 	PRIVATE 
 	"keyController"
 	"user_interface"
-	${SDL2}
+	${SDL3}
 	${UI_INCLUDE_DIRS}
 ) 
 
@@ -27,7 +27,7 @@ target_link_libraries(WarBinder
 	PRIVATE
 	Keybind
 	userInterface
-	SDL2::SDL2-static
+	SDL3::SDL3-static
 )
 
 

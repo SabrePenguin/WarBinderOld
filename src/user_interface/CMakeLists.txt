@@ -28,12 +28,12 @@ target_include_directories(userInterface
 		"${CMAKE_CURRENT_LIST_DIR}/../keyController/"
 		"${CMAKE_CURRENT_LIST_DIR}/../keyController/control/"
 		"${CMAKE_CURRENT_LIST_DIR}/../keyController/bind/"
-		"${SDL2}" 
+		"${SDL3}" 
 )
 
 target_link_libraries(userInterface
 	PRIVATE
-	SDL2::SDL2-static
+	SDL3::SDL3-static
 	PUBLIC
 	${WX_LINK}
 )

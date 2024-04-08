@@ -17,7 +17,7 @@ target_link_libraries(Keybind
 	FileHandler
 	Opts
 	Devices
-	SDL2::SDL2-static
+	SDL3::SDL3-static
 
 )
 
@@ -29,7 +29,7 @@ target_include_directories(Keybind
 		"file_handler" 
 		"options" 
 		"device_handler"
-		${SDL2}
+		${SDL3}
 )
 ##End of library insertion
 
