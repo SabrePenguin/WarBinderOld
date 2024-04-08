@@ -10,20 +10,7 @@ DeviceHandler::DeviceHandler() :
 	num_controllers( 0 )
 {
 	SDL_GameControllerAddMappingsFromFile("../../../../third_party/gamecontrollerdb.txt") ;
-}
-
-
-std::vector<Device> DeviceHandler::find_devices()
-{
-	std::vector<Device> device_list ;
-	for( int iter = 0 ; iter < SDL_NumJoysticks() ; ++iter )
-	{
-		if( SDL_IsGameController( iter ) )
-		{
-			add_device( iter ) ;
-		}
-	}
-	return device_list ;
+	//SDL_GameControllerAddMapping("a:b0,b:b1,back:b6,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b8,leftshoulder:b4,leftstick:b9,lefttrigger:a2,leftx:a0,lefty:a1,rightshoulder:b5,rightstick:b10,righttrigger:a5,rightx:a3,righty:a4,start:b7,x:b2,y:b3,platform:Windows,") ;
 }
 
 
@@ -60,6 +47,7 @@ std::string DeviceHandler::add_device( int device_index )
 		return mapping ;
 
 	mapping = SDL_GameControllerMapping( controller ) ;
+	int button_count = SDL_JoystickNumButtons( SDL_GameControllerGetJoystick( controller ) ) ;
 	game_controllers.push_back( controller ) ;
 	++num_controllers ;
 	return mapping ;
