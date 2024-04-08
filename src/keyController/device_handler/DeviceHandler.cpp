@@ -92,7 +92,7 @@ void DeviceHandler::add_ui_observer( std::shared_ptr<UserInterface> _ui )
 std::string DeviceHandler::device_change( SDL_Event* con_event )
 {
 	std::string result ;
-	if( con_event->type == SDL_EVENT_GAMEPAD_REMOVED )
+	if( con_event->type == SDL_EVENT_GAMEPAD_ADDED )
 	{
 		result = this->add_device( con_event->jdevice.which ) ;
 	}
