@@ -261,7 +261,7 @@ void KeyBindController::import( std::string _filename )
 		}
 	}
 
-
+	/*
 	//Import the controllers before the axes
 	t_device devices = std::get<3>( data ) ;
 	int total_buttons = 1 ;
@@ -331,7 +331,7 @@ void KeyBindController::import( std::string _filename )
 		this->system_keys.erase( find_axes ) ;
 		find_axes = this->system_keys.find( front + std::to_string( ++total_axes ) ) ;
 	}
-
+	*/
 	//Now run to get the axes
 	t_import_axis axes = std::get<1>( data ) ;
 	for( t_import_axis::iterator iter = axes.begin() ; iter != axes.end() ; ++iter )
