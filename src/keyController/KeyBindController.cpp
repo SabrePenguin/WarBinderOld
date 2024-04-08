@@ -15,7 +15,9 @@
 #include "Device.h"
 #include "DeviceHandler.h"
 
+#ifdef WX_WIDGETS
 
+#endif
 
 #define _CRTDBG_MAP_ALLOC
 #include<iostream>
@@ -30,7 +32,7 @@
 
 
 KeyBindController::KeyBindController(std::string _controlfile, std::string _bindfile, std::string _optfile, std::string _language) : 
-	language(_language) 
+	language(_language), buttons_locked( true )
 {
 	// SDL2 initialization. Run first to check for errors.
 	device_handler = std::make_unique<DeviceHandler>() ;
@@ -73,8 +75,6 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 			std::get<4>( *iterator )
 		) ;
 	}
-	// Run a scan for any controllers
-	device_handler->find_devices() ;
 }
 
 
@@ -268,6 +268,7 @@ void KeyBindController::import( std::string _filename )
 	int total_axes = 1 ;
 	for( t_device::iterator iter = devices.begin() ; iter != devices.end() ; ++iter )
 	{
+		//TODO: Ask user if they want to try matching controllers. Mainly because War Thunder gets info from another method.
 		auto check = this->device_list.find( (*iter).name ) ;
 		bool enabled = iter->connected ;
 		//If it exists, remove everything of the device and replace so that it's easier
@@ -379,26 +380,52 @@ int KeyBindController::find_pos( std::string name, char ch )
 void KeyBindController::notify_device( SDL_Event* cur_event )
 {
 	std::string result = device_handler.get()->device_change( cur_event ) ;
+
 	int pos = 0 ;
 	std::string name ;
 	if( result.length() > 0 )
 	{
-		//Remove guid
-		pos = find_pos( result, ',' ) ;
-		result = result.substr(pos) ;
-		//Remove name
-		pos = find_pos( result, ',' ) ;
-		name = result.substr( 0, pos ) ;
-		result = result.substr( pos ) ;
-		std::string a ;
-		std::string b ;
-		//while( result.length() > 0 )
+		//Remove the GUID
+		result.erase( 0, result.find_first_of( ',' )+1 ) ;
+		pos = result.find_first_of( ',' ) ;
+		if( result[ 0 ] != '*' )
 		{
-			pos = find_pos( result, ',' ) ;
+			name = result.substr( 0, pos ) ;
+		}
+		else
+		{
+			#ifdef WX_WIDGETS
+			//Run an SDL event to call the observer
+			#else
+			std::cin >> name ; //Due to parallel threads, a space must be added at the start
+			#endif
+		}
+		result.erase( 0, pos + 1 ) ;
+		int middle ;
+		while( result.length() > 0 )
+		{
+			//a = axis
+			//h = button
+			//b = button
+			pos = result.find_first_of( ',' ) ;
+			middle = result.find_first_of( ':' ) ;
+			if( pos == std::string::npos )
+			{
+				pos = result.length() - 1 ;
+			}
+			if( result[ middle+1 ] == 'b' )
+			{
 
-			pos = find_pos( result, ',' ) ;
+			}
+			else if( result[ middle+1 ] == 'h' )
+			{
 
-			pos = find_pos( result, ',' ) ;
+			}
+			else if( result[ middle+1 ] == 'a' )
+			{
+
+			}
+			result.erase( 0, pos+1 ) ;
 		}
 	}
 }
@@ -497,4 +524,22 @@ void KeyBindController::remove_all_keys( KeyBind* _bind )
 void KeyBindController::add_single_key( KeyBind* _bind, std::vector<Control*>* _key_combo, Control* _key )
 {
 	_bind->add_single_key( _key_combo, _key ) ;
+}
+
+void KeyBindController::set_lock( SDL_Event* _event )
+{
+	for( auto iter = this->button_combo.begin() ; iter != this->button_combo.end() ; iter++ )
+	{
+		// If this program's id is equal to the internal id of the event
+		// and if any of the second equal the event button which was released.
+		if( iter->first == _event->cbutton.which && iter->second == _event->cbutton.button )
+		{
+			this->buttons_locked.store( true ) ;
+		}
+	}
+	this->buttons_locked.store( false ) ;
+}
+bool KeyBindController::get_lock()
+{
+	return this->buttons_locked.load() ;
 }
