@@ -60,23 +60,22 @@ void sdl_loop( std::shared_ptr<KeyBindController> key_controller )
 			case SDL_EVENT_GAMEPAD_REMOVED:
 				key_controller->notify_device( &event ) ;
 				break ;
-			/*
-			case SDL_CONTROLLERBUTTONDOWN:
+			
+			case SDL_EVENT_GAMEPAD_BUTTON_DOWN:
 				// Checks if locked is false
 				if( !key_controller->get_lock() )
 				{
-
+					key_controller->add_button_to_set( &event ) ;
 				}
 				break ;
-			case SDL_CONTROLLERBUTTONUP:
+			case SDL_EVENT_GAMEPAD_BUTTON_UP:
+				// If the button is part of the stored set, this automatically locks the current vector
 				key_controller->set_lock( &event ) ;
-				i++ ;
 				break ;
-			case SDL_CONTROLLERAXISMOTION:
+			case SDL_EVENT_GAMEPAD_AXIS_MOTION:
 				i++ ;
 				std::cout << i << std::endl ;
 				break ;
-				*/
 			case SDL_EVENT_USER:
 				active = false ;
 				break ;

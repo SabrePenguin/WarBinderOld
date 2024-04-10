@@ -423,7 +423,7 @@ void KeyBindController::notify_device( SDL_Event* cur_event )
 			}
 			else if( result[ middle+1 ] == 'a' )
 			{
-
+				
 			}
 			result.erase( 0, pos+1 ) ;
 		}
@@ -535,11 +535,18 @@ void KeyBindController::set_lock( SDL_Event* _event )
 		if( iter->first == _event->gbutton.which && iter->second == _event->gbutton.button )
 		{
 			this->buttons_locked.store( true ) ;
+			//Push buttons into a Control
 		}
 	}
 	this->buttons_locked.store( false ) ;
 }
+
 bool KeyBindController::get_lock()
 {
 	return this->buttons_locked.load() ;
+}
+
+void KeyBindController::add_button_to_set( SDL_Event* _event )
+{
+	this->button_combo.push_back( { _event->gbutton.which, _event->gbutton.button } ) ;
 }
