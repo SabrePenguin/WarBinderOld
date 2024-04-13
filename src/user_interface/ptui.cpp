@@ -26,8 +26,9 @@ int ptui::main_loop( int argc, char* argv[] )
 		std::cout << "\nEnter one of the following choices:" << std::endl ;
 		std::cout << "D(isplay)" << std::endl;
 		std::cout << "A(ssign)" << std::endl ;
-		std::cout << "Q(uit)" << std::endl;
 		std::cout << "R(emove)" << std::endl ;
+		std::cout << "C(ontroller)" << std::endl ;
+		std::cout << "Q(uit)" << std::endl;
 		std::cin >> in ;
 		switch( in )
 		{
@@ -59,6 +60,11 @@ int ptui::main_loop( int argc, char* argv[] )
 		case 'r':
 		case 'R':
 			tester() ;
+			break ;
+
+		case 'c':
+		case 'C':
+			this->controller.get()->set_lock( false ) ;
 			break ;
 
 			//Quit the loop

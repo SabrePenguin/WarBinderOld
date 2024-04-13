@@ -157,6 +157,7 @@ class KeyBindController
 		 */
 		void add_single_key( KeyBind* _bind, std::vector<Control*>* _key_combo, Control* _key ) ;
 		void set_lock( SDL_Event* _event ) ;
+		void disable_lock( bool _lock ) ;
 		bool get_lock() ;
 		void add_button_to_set( SDL_Event* _event ) ;
 	private:
