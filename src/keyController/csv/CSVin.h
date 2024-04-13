@@ -19,7 +19,7 @@ std::vector<std::tuple<std::string, char, std::string, bool>> get_control( std::
  * @param _language: The language to use
  * @return A vector of tuples with 5 parameters
 */
-std::vector<std::tuple<std::string, char, std::string, bool, bool>> get_binds( std::string _filename, std::string _language ) ;
+std::vector<std::tuple<std::string, char, char, std::string, bool, bool>> get_binds( std::string _filename, std::string _language ) ;
 //
 /**
  * @brief A csv parser that generates a list of options in the system

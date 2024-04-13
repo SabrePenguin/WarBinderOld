@@ -9,7 +9,7 @@ struct Imported_Axis ;
 class KeyBind
 {
 	public:
-		KeyBind(char _mode, bool _axis, bool _required, std::string _local_name, std::string _internal_id) ;
+		KeyBind(char _mode, char _sub_mode, bool _axis, bool _required, std::string _local_name, std::string _internal_id) ;
 		virtual ~KeyBind() ;
 		/**
 		* @brief Adds a vector of keys to the current Bind.
@@ -70,6 +70,7 @@ class KeyBind
 		bool is_reset ;
 		//The gamemode character representation
 		char mode ;
+		char sub_mode ; /* Indicates one of four sub-modes */
 		//Whether the given control is required to play the game (ie. Fire guns)
 		bool required ;
 		std::vector<std::vector<Control*>> control;

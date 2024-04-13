@@ -32,7 +32,7 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 	// Import all the files
 	file_handler = std::make_unique<Reader>() ;
 	std::vector<std::tuple<std::string, char, std::string, bool>> controls = get_control( _controlfile, _language ) ;
-	std::vector<std::tuple<std::string, char, std::string, bool, bool>> binds = get_binds( _bindfile, _language ) ;
+	std::vector<std::tuple<std::string, char, char, std::string, bool, bool>> binds = get_binds( _bindfile, _language ) ;
 	auto options = get_options( _optfile, _language ) ;
 
 	// Add data to internal structures
@@ -54,17 +54,19 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 	
 	for( auto iterator = binds.begin() ; iterator != binds.end() ; ++iterator )
 	{
-		//Position zero has the internal name
-		//Position two has the local name
-		//Position three controls if it's an axis
-		//Position one controls its mode
-		//Position four is whether the bind is required to play
+		// Position zero has the internal name
+		// Position three has the local name
+		// Position four controls if it's an axis
+		// Position one controls its mode
+		// Position two controls the submode
+		// Position five is whether the bind is required to play
 		this->add_new_bind(
 			std::get<0>( *iterator ),
-			std::get<2>( *iterator ),
-			std::get<1>( *iterator ),
 			std::get<3>( *iterator ),
-			std::get<4>( *iterator )
+			std::get<1>( *iterator ),
+			std::get<2>( *iterator ),
+			std::get<4>( *iterator ),
+			std::get<5>( *iterator )
 		) ;
 	}
 }
@@ -131,7 +133,8 @@ void KeyBindController::add_new_controller_axis( std::string _key_id, std::strin
 }
 
 
-void KeyBindController::add_new_bind(std::string _internal_id, std::string _local_id, char _mode, bool _is_axis, bool _required)
+void KeyBindController::add_new_bind(std::string _internal_id, std::string _local_id, 
+	char _mode, char _sub_mode, bool _is_axis, bool _required)
 {
 	KeyBind* new_bind ;
 	if( !_is_axis )
@@ -141,7 +144,7 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 		{
 			return ;
 		}
-		new_bind = new KeyBind( _mode, _is_axis, _required, _local_id, _internal_id ) ;
+		new_bind = new KeyBind( _mode, _sub_mode, _is_axis, _required, _local_id, _internal_id ) ;
 		//delete new_bind ;
 		this->system_binds.insert( { _internal_id, new_bind } ) ;
 	}

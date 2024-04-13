@@ -61,9 +61,12 @@ class KeyBindController
 		* @brief Adds a Bind pointer.
 		* @param _internal_id: The internal id of the bind name.
 		* @param _local_id: The local name of the bind. (ie. "Throttle Up")
-		* @param _axis: Determines if the given bind needs to be an axis or regular button
+		* @param _mode: The mode this bind belongs to (p,t,h,s,c,...)
+		* @param _sub_mode: The control scheme to use. One of 4.
+		* @param _is_axis: Determines if the given bind needs to be an axis or regular button
+		* @param _required: Is this bind required to play the game
 		*/
-		void add_new_bind(std::string _internal_id, std::string _local_id, char _mode, bool _is_axis, bool _required);
+		void add_new_bind(std::string _internal_id, std::string _local_id, char _mode, char _sub_mode, bool _is_axis, bool _required);
 
 		/**
 		* @brief Gets the internal map with all the binds

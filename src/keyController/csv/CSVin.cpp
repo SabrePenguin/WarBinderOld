@@ -85,9 +85,9 @@ std::vector<std::tuple<std::string, char, std::string, bool>> get_control( std::
 }
 
 
-std::vector<std::tuple<std::string, char, std::string, bool, bool>> get_binds( std::string _filename, std::string _language )
+std::vector<std::tuple<std::string, char, char, std::string, bool, bool>> get_binds( std::string _filename, std::string _language )
 {
-	std::vector<std::tuple<std::string, char, std::string, bool, bool>> binds;
+	std::vector<std::tuple<std::string, char, char, std::string, bool, bool>> binds;
 	{
 		std::ifstream in_file( _filename );
 		if( !in_file.is_open() )
@@ -103,6 +103,7 @@ std::vector<std::tuple<std::string, char, std::string, bool, bool>> get_binds( s
 		bool header = true ;
 		bool axis = true ;
 		char mode ;
+		char sub_mode ;
 		bool required ;
 
 		while( in_file.good() )
@@ -131,11 +132,15 @@ std::vector<std::tuple<std::string, char, std::string, bool, bool>> get_binds( s
 				}
 				else if( local_index == 2 )
 				{
+					sub_mode = in_string[ 0 ] ;
+				}
+				else if( local_index == 3 )
+				{
 					required = 't' ==  in_string[0] ;
 				}
 				else if( local_index == base_index )
 				{
-					binds.push_back( { bind_id, mode, in_string, axis, required } ) ;
+					binds.push_back( { bind_id, mode, sub_mode, in_string, axis, required } ) ;
 					bind_id = "" ;
 					axis = true ; 
 				}
