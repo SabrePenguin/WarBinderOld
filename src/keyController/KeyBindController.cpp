@@ -388,18 +388,18 @@ void KeyBindController::notify_device( SDL_Event* cur_event )
 		//Remove the GUID
 		result.erase( 0, result.find_first_of( ',' )+1 ) ;
 		pos = result.find_first_of( ',' ) ;
-		if( result[ 0 ] != '*' )
+		//if( result[ 0 ] != '*' )
 		{
 			name = result.substr( 0, pos ) ;
 		}
-		else
+		/*else
 		{
 			#ifdef WX_WIDGETS
 			//Run an SDL event to call the observer
 			#else
 			std::cin >> name ; //Due to parallel threads, a space must be added at the start
 			#endif
-		}
+		}*/
 		result.erase( 0, pos + 1 ) ;
 		int middle ;
 		//Insert a section to count buttons, hats, and axes
@@ -559,9 +559,15 @@ void KeyBindController::set_lock( SDL_Event* _event )
 		if( iter->first == _event->gbutton.which && iter->second == _event->gbutton.button )
 		{
 			this->buttons_locked.store( true ) ;
+			return ;
 			//Push buttons into a Control
 		}
 	}
+	this->buttons_locked.store( false ) ;
+}
+
+void KeyBindController::disable_lock( bool _lock )
+{
 	this->buttons_locked.store( false ) ;
 }
 
