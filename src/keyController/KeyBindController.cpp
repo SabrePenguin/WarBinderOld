@@ -402,11 +402,35 @@ void KeyBindController::notify_device( SDL_Event* cur_event )
 		}
 		result.erase( 0, pos + 1 ) ;
 		int middle ;
+		//Insert a section to count buttons, hats, and axes
+		pos = result.find_last_of( ',' ) ;
+		result.erase( pos-1 ) ;
+		int button_count = 0 ;
+		int axis_count = 0 ;
+		for( int iter = 1 ; iter < result.length() ; ++iter )
+		{
+			// If previous character is ':'
+			if( result[ iter - 1 ] )
+			{
+				// If the current character is b
+				if( result[ iter ] == 'b')
+				{
+					++button_count ;
+				}
+				else if( result[ iter ] == 'h' )
+				{
+					++button_count ;
+				}
+				else if( result[ iter ] == 'a' )
+				{
+					++axis_count ;
+				}
+			}
+		}
+
 		while( result.length() > 0 )
 		{
-			//a = axis
-			//h = button
-			//b = button
+			//a = axis, h = button, b = button
 			pos = result.find_first_of( ',' ) ;
 			middle = result.find_first_of( ':' ) ;
 			if( pos == std::string::npos )
@@ -423,7 +447,7 @@ void KeyBindController::notify_device( SDL_Event* cur_event )
 			}
 			else if( result[ middle+1 ] == 'a' )
 			{
-				
+				//add_new_joystick(,) ;
 			}
 			result.erase( 0, pos+1 ) ;
 		}
