@@ -91,11 +91,11 @@ void sdl_loop( std::shared_ptr<KeyBindController> key_controller )
 int main( int argc, char* argv[] )
 {
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-	//_CrtSetBreakAlloc( 14299 ) ;
+	_CrtSetBreakAlloc( 501 ) ;
 	//SDL_SetHint( SDL_HINT_JOYSTICK_THREAD, "1" );
-	if( initialize() )
-		return 1 ;
 	{
+		if( initialize() )
+			return 1 ;
 		std::shared_ptr<KeyBindController> key1 = std::make_shared<KeyBindController>( "../../../../control_list.csv",
 			"../../../../wt_bind_list.csv",
 			"../../../../options.csv",
@@ -103,10 +103,6 @@ int main( int argc, char* argv[] )
 
 		//TODO: Check proper file type
 		key1.get()->import( "../../../../controller_settings.blk" ) ;
-		//ptui
-		/*
-		
-		//*/
 		///*
 		#ifdef WX_WIDGETS
 		std::shared_ptr<UserInterface> user_interface = std::make_shared<WXWrapper>( key1 ) ;
@@ -123,6 +119,5 @@ int main( int argc, char* argv[] )
 		ui.join() ;
 		key1.get()->clear_ui_observers() ;
 	}
-
 	return 0;
 }

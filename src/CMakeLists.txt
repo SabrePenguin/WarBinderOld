@@ -2,11 +2,11 @@
 ## I'm unfamiliar with CMake, so feel free to make it better.
 if(WXSET)
 	message(STATUS "Enabled wxWidgets")
+	add_executable(WarBinder WIN32 "WarBinder.cpp" )
 	target_compile_definitions(WarBinder
 		PRIVATE
 			WX_WIDGETS
 	)
-	add_executable(WarBinder WIN32 "WarBinder.cpp" )
 else()
 	message(STATUS "Enabled PTUI")
 	add_executable(WarBinder "WarBinder.cpp" )
