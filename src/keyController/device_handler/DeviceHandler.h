@@ -7,6 +7,20 @@
 class Device ;
 class UserInterface ;
 
+/**
+ * @brief Represents a controller
+ */
+struct GameController
+{
+	int id ; /** The id of the Controller */
+	int instanceid ; /** The SDL id of the Controller */
+	std::string name ; /** The name of the Controller */
+	std::vector<int> hats ; /** Holds the value for each hat */
+	std::vector<double> axes ; /** Holds the value for each axis */
+	std::vector<bool> buttons ; /** Holds the value for each button */
+	bool disabled ; /** Is this Controller active? */
+};
+
 class DeviceHandler
 {
 public:
@@ -37,16 +51,16 @@ private:
 	* @brief Adds a controller to the DeviceHandler vector.
 	* @param device_index: The index to add
 	*/
-	std::string add_device( int index ) ;
+	std::string add_device( SDL_JoystickID index ) ;
 	/**
 	* @brief Converted version of SDL2's example find_device function
 	* @param _dev_id: The game controller's id
 	* @return The pointer of the item. Will return nullptr if it isn't in the list
 	*/
-	SDL_GameController* find_device( SDL_JoystickID _joy_id ) ;
+	SDL_Gamepad* find_device( SDL_JoystickID _joy_id ) ;
 	/*The observer for the ui. Made a vector in case of wierd stuff.*/
 	std::vector<std::shared_ptr<UserInterface>> ui_observer ;
-	std::vector<SDL_GameController*> game_controllers ;
+	std::vector<SDL_Gamepad*> game_controllers ;
 	int num_controllers ; 
 };
 

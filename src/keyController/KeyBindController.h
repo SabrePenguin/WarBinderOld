@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <memory>
 #include <SDL.h>
+#include <atomic>
 
 enum class Key_Type ;
 class Control ;
@@ -155,6 +156,9 @@ class KeyBindController
 		 * @param _key: The Control to add
 		 */
 		void add_single_key( KeyBind* _bind, std::vector<Control*>* _key_combo, Control* _key ) ;
+		void set_lock( SDL_Event* _event ) ;
+		bool get_lock() ;
+		void add_button_to_set( SDL_Event* _event ) ;
 	private:
 		/**
 		* @brief A method to check whether the given button is on the keyboard, mouse, or a controller
@@ -178,5 +182,8 @@ class KeyBindController
 		std::unique_ptr<DeviceHandler> device_handler ;
 		//A set of devices.
 		std::unordered_map<std::string,std::shared_ptr<Device>> device_list ;
+		//Whether or not KeyBindController is accepting controller input
+		std::atomic_bool buttons_locked ;
+		std::vector<std::pair<int, int>> button_combo;
 };
 #endif // KEYBINDCONTROL_H

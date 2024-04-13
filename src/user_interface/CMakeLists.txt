@@ -1,6 +1,15 @@
 add_library(userInterface)
 
-add_subdirectory(wx_widgets)
+if(WXSET)
+	add_subdirectory(wx_widgets)
+	set(WX_LIST_SOURCES
+		"${CMAKE_CURRENT_LIST_DIR}/WXWrapper.cpp"
+		"${CMAKE_CURRENT_LIST_DIR}/WXWrapper.h"
+	)
+	set(WX_LINK
+		wx_gui
+	)
+endif()
 
 target_sources(userInterface
 	PUBLIC
@@ -9,8 +18,7 @@ target_sources(userInterface
 		"${CMAKE_CURRENT_LIST_DIR}/ptui.cpp"
 		"${CMAKE_CURRENT_LIST_DIR}/ptui.h"
 		"${CMAKE_CURRENT_LIST_DIR}/UserInterface.cpp"
-		"${CMAKE_CURRENT_LIST_DIR}/WXWrapper.cpp"
-		"${CMAKE_CURRENT_LIST_DIR}/WXWrapper.h"
+		${WX_LIST_SOURCES}
 )
 
 target_include_directories(userInterface
@@ -20,12 +28,12 @@ target_include_directories(userInterface
 		"${CMAKE_CURRENT_LIST_DIR}/../keyController/"
 		"${CMAKE_CURRENT_LIST_DIR}/../keyController/control/"
 		"${CMAKE_CURRENT_LIST_DIR}/../keyController/bind/"
-		"${SDL2}" 
+		"${SDL3}" 
 )
 
 target_link_libraries(userInterface
 	PRIVATE
-	SDL2::SDL2-static
+	SDL3::SDL3-static
 	PUBLIC
-	wx_gui
+	${WX_LINK}
 )

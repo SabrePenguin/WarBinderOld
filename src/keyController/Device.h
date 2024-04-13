@@ -1,6 +1,8 @@
 #ifndef DEVICE_H
 #define DEVICE_H
 #include <string>
+#include <unordered_map>
+
 
 class Device
 {
@@ -25,6 +27,7 @@ class Device
 		int button_count ;
 		int axes_count ;
 		std::string type ;
+		std::unordered_map<std::string,std::string> device_controls ; /* First string is the type+id, second is the name */
 };
 
 #endif // !DEVICE_H
