@@ -5,8 +5,8 @@
 
 
 template<class T> 
-Options<T>::Options( T _cur_val, T _max, bool _option )
-	: max( _max ), value( _cur_val ), option( _option )
+Options<T>::Options( T _cur_val, T _max, bool _option, char _mode, std::string _section )
+	: max( _max ), value( _cur_val ), option( _option ), mode( _mode ), section( _section )
 {
 }
 
@@ -25,8 +25,8 @@ void Options<T>::set_value( T _value )
 }
 
 
-Option_Integer::Option_Integer( int _cur_val, int _max, bool _option, std::list<std::string> _choices )
-	: Options<int>( _cur_val, _max, _option ), choices( _choices )
+Option_Integer::Option_Integer( int _cur_val, int _max, bool _option, std::list<std::string> _choices, char _mode, std::string _section )
+	: Options<int>( _cur_val, _max, _option, _mode, _section ), choices( _choices )
 {
 }
 

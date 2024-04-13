@@ -3,8 +3,8 @@
 #include "../control/Control.h"
 #include "../file_handler/reader.h"
 
-AxisChange::AxisChange( std::string _internal_id, std::string _text_id, char _mode, bool _required ) :
-	KeyBind( _mode, true, _required, _text_id, _internal_id )
+AxisChange::AxisChange( std::string _internal_id, std::string _text_id, char _mode, bool _required, char _sub_mode, std::string _section ) :
+	KeyBind( _mode, _sub_mode, true, _required, _text_id, _internal_id, _section )
 {
 }
 
@@ -15,8 +15,8 @@ void AxisChange::add_other_controls( KeyBind* _axis_one, KeyBind* _axis_two )
 }
 
 
-AxisReset::AxisReset( std::string _internal_id, std::string _text_id, char _mode, bool _required ) :
-	AxisChange( _internal_id, _text_id, _mode, _required ), inverted(false), relative(false),
+AxisReset::AxisReset( std::string _internal_id, std::string _text_id, char _mode, bool _required, char _sub_mode, std::string _section ) :
+	AxisChange( _internal_id, _text_id, _mode, _required, _sub_mode, _section ), inverted(false), relative(false),
 	keep_value_for_disabled( false ), dead_zone( 0.0f ), non_linearity( 0 ), multiplier( 0.0f ),
 	correction( 0.0f ), relative_control_sensivity( 0.0f ), relative_control_step( 0.0f )
 {

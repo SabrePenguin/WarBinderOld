@@ -65,8 +65,10 @@ class KeyBindController
 		* @param _sub_mode: The control scheme to use. One of 4.
 		* @param _is_axis: Determines if the given bind needs to be an axis or regular button
 		* @param _required: Is this bind required to play the game
+		* @param _section: The section for this 
 		*/
-		void add_new_bind(std::string _internal_id, std::string _local_id, char _mode, char _sub_mode, bool _is_axis, bool _required);
+		void add_new_bind(std::string _internal_id, std::string _local_id, char _mode, 
+			char _sub_mode, bool _is_axis, bool _required, std::string _section);
 
 		/**
 		* @brief Gets the internal map with all the binds

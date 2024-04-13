@@ -8,9 +8,9 @@
 #include "CSVin.h"
 
 
-std::vector<std::tuple<std::string, char, std::string, bool>> get_control( std::string _filename, std::string _language ) 
+t_control_raw get_control( std::string _filename, std::string _language )
 {
-	std::vector<std::tuple<std::string, char, std::string, bool>> controls;
+	t_control_raw controls;
 	{
 		std::ifstream in_file(_filename);
 		if( !in_file.is_open() )
@@ -85,9 +85,9 @@ std::vector<std::tuple<std::string, char, std::string, bool>> get_control( std::
 }
 
 
-std::vector<std::tuple<std::string, char, char, std::string, bool, bool>> get_binds( std::string _filename, std::string _language )
+t_binds_raw get_binds( std::string _filename, std::string _language )
 {
-	std::vector<std::tuple<std::string, char, char, std::string, bool, bool>> binds;
+	t_binds_raw binds;
 	{
 		std::ifstream in_file( _filename );
 		if( !in_file.is_open() )
@@ -95,6 +95,7 @@ std::vector<std::tuple<std::string, char, char, std::string, bool, bool>> get_bi
 
 		std::string in_string;
 		std::string bind_id;
+		std::string section ;
 		char c;
 		//Start base_index at -1 to allow for loop to work
 		int base_index = -1 ;
@@ -136,11 +137,15 @@ std::vector<std::tuple<std::string, char, char, std::string, bool, bool>> get_bi
 				}
 				else if( local_index == 3 )
 				{
+					section = in_string ;
+				}
+				else if( local_index == 4 )
+				{
 					required = 't' ==  in_string[0] ;
 				}
 				else if( local_index == base_index )
 				{
-					binds.push_back( { bind_id, mode, sub_mode, in_string, axis, required } ) ;
+					binds.push_back( { bind_id, mode, sub_mode, section, in_string, axis, required } ) ;
 					bind_id = "" ;
 					axis = true ; 
 				}
@@ -165,10 +170,10 @@ std::vector<std::tuple<std::string, char, char, std::string, bool, bool>> get_bi
 }
 
 
-std::vector<std::tuple<std::string, char, std::string, float, float, bool, std::list<std::string>>> 
+std::vector<std::tuple<std::string, std::string, char, char, std::string, float, float, bool, std::list<std::string>>> 
 	get_options( std::string _filename, std::string _language )
 {
-	std::vector<std::tuple<std::string, char, std::string, float, float, bool, std::list<std::string>>> t_options ;
+	std::vector<std::tuple<std::string, std::string, char, char, std::string, float, float, bool, std::list<std::string>>> t_options ;
 	{
 		std::ifstream in_file( _filename ) ;
 		if( !in_file.is_open() )
@@ -185,6 +190,8 @@ std::vector<std::tuple<std::string, char, std::string, float, float, bool, std::
 		float max_value ;
 		bool parameter = false ;
 		std::list<std::string> options ;
+		char mode ;
+		std::string section ;
 		//Location variables
 		int column = 0 ;
 		int option_col = 0 ;
@@ -201,7 +208,7 @@ std::vector<std::tuple<std::string, char, std::string, float, float, bool, std::
 				else
 				{
 					parameter = in_string[ 0 ] == 't' ;
-					t_options.push_back( {internal_name, o_type, local_name, base_value, max_value, parameter, options} ) ;
+					t_options.push_back( {internal_name, section, o_type, mode, local_name, base_value, max_value, parameter, options} ) ;
 				}
 				column = 0 ;
 				option_col = 0 ;
@@ -230,6 +237,14 @@ std::vector<std::tuple<std::string, char, std::string, float, float, bool, std::
 				else if( column == 3 )
 				{
 					max_value = std::stof( in_string ) ;
+				}
+				else if( column == 4 )
+				{
+					mode = in_string[ 0 ] ;
+				}
+				else if( column == 5 )
+				{
+					section = in_string ;
 				}
 				++column ;
 				in_string = "";

@@ -9,7 +9,8 @@ struct Imported_Axis ;
 class KeyBind
 {
 	public:
-		KeyBind(char _mode, char _sub_mode, bool _axis, bool _required, std::string _local_name, std::string _internal_id) ;
+		KeyBind(char _mode, char _sub_mode, bool _axis, bool _required, 
+			std::string _local_name, std::string _internal_id, std::string _section) ;
 		virtual ~KeyBind() ;
 		/**
 		* @brief Adds a vector of keys to the current Bind.
@@ -76,6 +77,7 @@ class KeyBind
 		std::vector<std::vector<Control*>> control;
 		std::string local_id ;
 		std::string internal_id ;
+		std::string section ;
 };
 
 #endif // !KEYBIND_H

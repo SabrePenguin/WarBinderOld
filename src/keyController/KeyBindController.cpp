@@ -32,7 +32,7 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 	// Import all the files
 	file_handler = std::make_unique<Reader>() ;
 	std::vector<std::tuple<std::string, char, std::string, bool>> controls = get_control( _controlfile, _language ) ;
-	std::vector<std::tuple<std::string, char, char, std::string, bool, bool>> binds = get_binds( _bindfile, _language ) ;
+	std::vector<std::tuple<std::string, char, char, std::string, std::string, bool, bool>> binds = get_binds( _bindfile, _language ) ;
 	auto options = get_options( _optfile, _language ) ;
 
 	// Add data to internal structures
@@ -55,18 +55,19 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 	for( auto iterator = binds.begin() ; iterator != binds.end() ; ++iterator )
 	{
 		// Position zero has the internal name
-		// Position three has the local name
-		// Position four controls if it's an axis
+		// Position four has the local name
+		// Position five controls if it's an axis
 		// Position one controls its mode
 		// Position two controls the submode
-		// Position five is whether the bind is required to play
+		// Position six is whether the bind is required to play
 		this->add_new_bind(
 			std::get<0>( *iterator ),
-			std::get<3>( *iterator ),
+			std::get<4>( *iterator ),
 			std::get<1>( *iterator ),
 			std::get<2>( *iterator ),
-			std::get<4>( *iterator ),
-			std::get<5>( *iterator )
+			std::get<5>( *iterator ),
+			std::get<6>( *iterator ),
+			std::get<3>( *iterator )
 		) ;
 	}
 }
@@ -134,7 +135,7 @@ void KeyBindController::add_new_controller_axis( std::string _key_id, std::strin
 
 
 void KeyBindController::add_new_bind(std::string _internal_id, std::string _local_id, 
-	char _mode, char _sub_mode, bool _is_axis, bool _required)
+	char _mode, char _sub_mode, bool _is_axis, bool _required, std::string _section)
 {
 	KeyBind* new_bind ;
 	if( !_is_axis )
@@ -144,7 +145,7 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 		{
 			return ;
 		}
-		new_bind = new KeyBind( _mode, _sub_mode, _is_axis, _required, _local_id, _internal_id ) ;
+		new_bind = new KeyBind( _mode, _sub_mode, _is_axis, _required, _local_id, _internal_id, _section ) ;
 		//delete new_bind ;
 		this->system_binds.insert( { _internal_id, new_bind } ) ;
 	}
@@ -161,30 +162,30 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 			//This ugly section is for the new Axis type of three objects
 			if( _internal_id.find( "_rangeSet" ) != std::string::npos )
 			{
-				new_bind = new AxisReset( _internal_id, _local_id, _mode, _required ) ;
+				new_bind = new AxisReset( _internal_id, _local_id, _mode, _required, _sub_mode, _section ) ;
 				size_t cutoff = _internal_id.find_last_of( "_" ) ;
 				if( cutoff != std::string::npos )
 					_internal_id.erase( cutoff ) ;
-				bind_one = new AxisChange( _internal_id + "_rangeMin", _local_id, _mode, _required) ;
-				bind_two = new AxisChange( _internal_id + "_rangeMax", _local_id, _mode, _required) ;
+				bind_one = new AxisChange( _internal_id + "_rangeMin", _local_id, _mode, _required, _sub_mode, _section ) ;
+				bind_two = new AxisChange( _internal_id + "_rangeMax", _local_id, _mode, _required, _sub_mode, _section ) ;
 			}
 			else if( _internal_id.find( "_rangeMin" ) != std::string::npos )
 			{
-				bind_one = new AxisChange( _internal_id, _local_id, _mode, _required ) ;
+				bind_one = new AxisChange( _internal_id, _local_id, _mode, _required, _sub_mode, _section ) ;
 				size_t cutoff = _internal_id.find_last_of( "_" ) ;
 				if( cutoff != std::string::npos )
 					_internal_id.erase( cutoff ) ;
-				new_bind = new AxisReset( _internal_id + "_rangeSet", _local_id, _mode, _required ) ;
-				bind_two = new AxisChange( _internal_id + "_rangeMax", _local_id, _mode, _required ) ;
+				new_bind = new AxisReset( _internal_id + "_rangeSet", _local_id, _mode, _required, _sub_mode, _section ) ;
+				bind_two = new AxisChange( _internal_id + "_rangeMax", _local_id, _mode, _required, _sub_mode, _section ) ;
 			}
 			else
 			{
-				bind_two = new AxisChange( _internal_id, _local_id, _mode, _required ) ;
+				bind_two = new AxisChange( _internal_id, _local_id, _mode, _required, _sub_mode, _section ) ;
 				size_t cutoff = _internal_id.find_last_of( "_" ) ;
 				if( cutoff != std::string::npos )
 					_internal_id.erase( cutoff ) ;
-				new_bind = new AxisReset( _internal_id + "_rangeSet", _local_id, _mode, _required ) ;
-				bind_one = new AxisChange( _internal_id + "_rangeMin", _local_id, _mode, _required ) ;
+				new_bind = new AxisReset( _internal_id + "_rangeSet", _local_id, _mode, _required, _sub_mode, _section ) ;
+				bind_one = new AxisChange( _internal_id + "_rangeMin", _local_id, _mode, _required, _sub_mode, _section ) ;
 			}
 			//Circular reference to allow for easy comm
 			bind_one->add_other_controls( new_bind, bind_two ) ;

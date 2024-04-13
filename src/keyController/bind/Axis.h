@@ -18,7 +18,7 @@ public:
 	/**
 	 * AxisChange constructor
 	 */
-	AxisChange( std::string _internal_id, std::string _text_id, char _mode, bool _required );
+	AxisChange( std::string _internal_id, std::string _text_id, char _mode, bool _required, char _sub_mode, std::string _section );
 	/**
 	 * @brief The main method for adding two other keybinds in a triangular relation. Used to
 	 * allow for axis controls
@@ -39,7 +39,7 @@ class AxisReset: public AxisChange
 		* @brief The constructor for the axis
 		* @param _mode: The gamemode to be passed to KeyBind
 		*/
-		AxisReset( std::string _internal_id, std::string _text_id, char _mode, bool _required);
+		AxisReset( std::string _internal_id, std::string _text_id, char _mode, bool _required, char _sub_mode, std::string _section );
 		~AxisReset() ;
 		/**
 		* @brief Adds a singular control axis to the bind axis

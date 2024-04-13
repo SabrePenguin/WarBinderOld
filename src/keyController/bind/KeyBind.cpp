@@ -2,9 +2,9 @@
 #include "Control.h"
 
 KeyBind::KeyBind( char _mode, char _sub_mode, bool _axis,
-	bool _required, std::string _local_name, std::string _internal_id) :
+	bool _required, std::string _local_name, std::string _internal_id, std::string _section) :
 	mode( _mode ), sub_mode( _sub_mode ),  axis( _axis ), required( _required ), 
-	local_id( _local_name ), internal_id( _internal_id ), is_reset( false )
+	local_id( _local_name ), internal_id( _internal_id ), is_reset( false ), section( _section )
 {
 
 }
