@@ -18,21 +18,8 @@
       }
     },
     {
-      "name": "x64-debug-ptui",
-      "displayName": "x64 Debug PTUI",
-      "inherits": "windows-base",
-      "architecture": {
-        "value": "x64",
-        "strategy": "external"
-      },
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "UI_OPTION": "ptui"
-      }
-    },
-    {
-      "name": "x64-debug-wx",
-      "displayName": "x64 Debug wxWidgets",
+      "name": "x64-debug",
+      "displayName": "x64 Debug",
       "inherits": "windows-base",
       "architecture": {
         "value": "x64",
@@ -46,7 +33,7 @@
     {
       "name": "x64-release",
       "displayName": "x64 Release",
-      "inherits": "x64-debug-wx",
+      "inherits": "x64-debug",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
