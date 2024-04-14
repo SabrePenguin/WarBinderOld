@@ -5,11 +5,17 @@
 #endif
 #include <wx/splitter.h>
 #include <memory>
+#include <unordered_map>
+
 
 //Include the crt to track any memory leaks
 #ifdef __WXMSW__
 #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
+
+#include "KeyBind.h"
+#include "Control.h"
+#include "WXWrapper.h"
 
 wxBEGIN_EVENT_TABLE( mainFrame, wxFrame )
 EVT_MENU( wxID_EXIT, mainFrame::OnExit )
@@ -21,12 +27,18 @@ WXGui::WXGui()
 
 }
 
+WXGui::WXGui( WXWrapper* _wrapper )
+	: wrapper( _wrapper )
+{
+
+}
+
 
 bool WXGui::OnInit()
 {
-	mainFrame* frame = new mainFrame( "Test", wxDefaultPosition, wxDefaultSize ) ;
+	mainFrame* frame = new mainFrame( "Test", wxDefaultPosition, wxDefaultSize, wrapper ) ;
 	frame->Show( true ) ;
-	frame->SetMinSize( wxSize( 600, 300 ) ) ;
+	frame->SetMinSize( wxSize( 700, 300 ) ) ;
 	return true ;
 }
 
