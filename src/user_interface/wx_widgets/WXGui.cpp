@@ -34,8 +34,25 @@ wxIMPLEMENT_APP_NO_MAIN(WXGui) ;
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-mainFrame::mainFrame( const wxString& title, const wxPoint& pos, const wxSize& size )
-	: wxFrame( NULL, wxID_ANY, title, pos, size )
+void mainFrame::on_button_clicked( wxCommandEvent& event )
+{
+	wxButton* button = dynamic_cast<wxButton*>( event.GetEventObject() ) ;
+	if( !button )
+		return ;
+
+	KeyBind* data = static_cast<KeyBind*>( button->GetClientData() ) ;
+	if( !data )
+		return ;
+
+	if( !data->is_axis() )
+	{
+		wxMessageBox( "A", "Popup A" ) ;
+	}
+}
+
+
+mainFrame::mainFrame( const wxString& title, const wxPoint& pos, const wxSize& size, WXWrapper* _wrapper )
+	: wxFrame( NULL, wxID_ANY, title, pos, size ), wrapper( _wrapper )
 {
     //Create the bar
     this->create_bar() ;
