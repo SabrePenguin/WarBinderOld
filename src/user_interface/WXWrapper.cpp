@@ -1,11 +1,15 @@
 #include "WXWrapper.h"
 #include "WXGui.h"
 #include <SDL.h>
+#include <unordered_map>
+#include <string>
 
 //Include this here because it handles some of the pointers
 #ifdef __WXMSW__
 #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
+
+#include "KeyBindController.h"
 
 WXWrapper::WXWrapper( std::shared_ptr<KeyBindController> _controller )
 	: UserInterface( _controller )
@@ -14,7 +18,7 @@ WXWrapper::WXWrapper( std::shared_ptr<KeyBindController> _controller )
 
 int WXWrapper::main_loop( int argc, char* argv[] )
 {
-	wxApp::SetInstance( new WXGui() ) ;
+	wxApp::SetInstance( new WXGui( this ) ) ;
 	wxEntryStart( argc, argv ) ;
 	wxTheApp->CallOnInit() ;
 	wxTheApp->OnRun() ;
@@ -38,4 +42,9 @@ int WXWrapper::main_loop( int argc, char* argv[] )
 void WXWrapper::controller_change_notify()
 {
 
+}
+
+std::unordered_map<std::string, KeyBind*>* WXWrapper::get_bind_map_pointer()
+{
+	return this->controller.get()->get_binds_map() ;
 }
