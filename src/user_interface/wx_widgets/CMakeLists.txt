@@ -10,9 +10,13 @@ target_sources(wx_gui
 target_include_directories(wx_gui
 	PUBLIC
 		"${CMAKE_CURRENT_LIST_DIR}"
+		"${wxWidgets_SOURCE_DIR}/include"
 	PRIVATE
 		"${CMAKE_CURRENT_LIST_DIR}/../"
-		"${wxWidgets_SOURCE_DIR}/include"
+		#"${CMAKE_CURRENT_LIST_DIR}/../../keyController"
+		"${CMAKE_CURRENT_LIST_DIR}/../../keyController/bind"
+		"${CMAKE_CURRENT_LIST_DIR}/../../keyController/control"
+		"${CMAKE_CURRENT_LIST_DIR}/../../keyController/options"
 )
 
 target_link_libraries(wx_gui
