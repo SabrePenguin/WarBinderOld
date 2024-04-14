@@ -144,60 +144,78 @@ mainFrame::mainFrame( const wxString& title, const wxPoint& pos, const wxSize& s
 	wxBoxSizer* lower_bar;
 	lower_bar = new wxBoxSizer( wxHORIZONTAL );
 
+	////////////////////////////////////////////////////
+	// Controls section
+
 	wxBoxSizer* control_bar;
 	control_bar = new wxBoxSizer( wxVERTICAL );
 
-	wxScrolledWindow* m_scrolledWindow6 = new wxScrolledWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_SIMPLE | wxVSCROLL );
-	m_scrolledWindow6->SetScrollRate( 5, 5 );
-	m_scrolledWindow6->SetMinSize( wxSize( 250, 100 ) ) ;
+	wxScrolledWindow* scroll = new wxScrolledWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_SIMPLE | wxVSCROLL );
+	scroll->SetScrollRate( 5, 5 );
+	scroll->SetMinSize( wxSize( 250, 100 ) ) ;
 
-	wxBoxSizer* bSizer26;
-	bSizer26 = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* scroll_sizer;
+	scroll_sizer = new wxBoxSizer( wxVERTICAL );
 
-	wxBoxSizer* bSizer211;
-	bSizer211 = new wxBoxSizer( wxVERTICAL );
+	//Creation of the sections
+	
+	std::unordered_multimap<std::string, wxButton*> button_map ;
+	auto map = wrapper->get_bind_map_pointer() ;
+	for( auto iter = map->begin() ; iter != map->end() ; ++iter )
+	{
+		//Creat button with the local name and containing a pointer to itself
+		auto controls = iter->second->get_control() ;
+		std::string name = iter->second->get_local_name() + "\n";
+		for( auto control_iter = controls->begin() ; control_iter != controls->end() ; ++control_iter )
+		{
+			for( auto control_inner = control_iter->begin() ; control_inner != control_iter->end() ; ++control_inner )
+			{
+				if( control_inner != control_iter->begin() )
+				{
+					name = name + ", " ;
+				}
+				name = name + ( *control_inner )->get_local_name() ;
+			}
+			if( control_iter != controls->begin() )
+			{
+				name = name + "; " ;
+			}
+		}
+		wxButton* bind_button = new wxButton( scroll, wxID_ANY, name ) ;
+		bind_button->SetClientData( iter->second ) ;
+		bind_button->Bind( wxEVT_BUTTON, &mainFrame::on_button_clicked, this ) ;
+		std::string section = iter->second->get_section() ;
+		//button map already contains the section
+		button_map.insert( { section, bind_button } ) ;
+	}
 
-	wxButton* m_button181 = new wxButton( m_scrolledWindow6, wxID_ANY, wxT( "MyButton" ), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer211->Add( m_button181, 0, wxALL, 5 );
+	//Generate the sizers
+	{
+		std::string current_section = button_map.begin()->first ;
+		wxBoxSizer* sizer = new wxBoxSizer( wxVERTICAL ) ;
+		for( auto iter = button_map.begin() ; iter != button_map.end() ; ++iter )
+		{
+			if( current_section.compare( iter->first ) != 0 )
+			{
+				current_section = iter->first ;
+				scroll_sizer->Add( sizer, 1, wxEXPAND, 5 ) ;
+				sizer = new wxBoxSizer( wxVERTICAL ) ;
+			}
+			sizer->Add( iter->second, 0, wxALL, 5 ) ;
+		}
+		scroll_sizer->Add( sizer, 1, wxEXPAND, 5 ) ;
+	}
+	
 
-	wxButton* m_button191 = new wxButton( m_scrolledWindow6, wxID_ANY, wxT( "MyButton" ), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer211->Add( m_button191, 0, wxALL, 5 );
-
-	wxButton* m_button201 = new wxButton( m_scrolledWindow6, wxID_ANY, wxT( "MyButton" ), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer211->Add( m_button201, 0, wxALL, 5 );
-
-	wxButton* m_button211 = new wxButton( m_scrolledWindow6, wxID_ANY, wxT( "MyButton" ), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer211->Add( m_button211, 0, wxALL, 5 );
-
-
-	bSizer26->Add( bSizer211, 1, wxEXPAND, 5 );
-
-	wxBoxSizer* bSizer21;
-	bSizer21 = new wxBoxSizer( wxVERTICAL );
-
-	wxButton* m_button18 = new wxButton( m_scrolledWindow6, wxID_ANY, wxT( "MyButton" ), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer21->Add( m_button18, 0, wxALL, 5 );
-
-	wxButton* m_button19 = new wxButton( m_scrolledWindow6, wxID_ANY, wxT( "MyButton" ), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer21->Add( m_button19, 0, wxALL, 5 );
-
-	wxButton* m_button20 = new wxButton( m_scrolledWindow6, wxID_ANY, wxT( "MyButton" ), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer21->Add( m_button20, 0, wxALL, 5 );
-
-	wxButton* m_button21 = new wxButton( m_scrolledWindow6, wxID_ANY, wxT( "MyButton" ), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer21->Add( m_button21, 0, wxALL, 5 );
-
-
-	bSizer26->Add( bSizer21, 1, wxEXPAND, 5 );
-
-
-	m_scrolledWindow6->SetSizer( bSizer26 );
-	m_scrolledWindow6->Layout();
-	bSizer26->Fit( m_scrolledWindow6 );
-	control_bar->Add( m_scrolledWindow6, 1, wxEXPAND | wxALL, 5 );
+	scroll->SetSizer( scroll_sizer );
+	scroll->Layout();
+	scroll_sizer->Fit( scroll );
+	control_bar->Add( scroll, 1, wxEXPAND | wxALL, 5 );
 
 
 	lower_bar->Add( control_bar, 3, wxEXPAND, 5 );
+
+	//////////////////////////////////////////////
 
 	//Control region
 	wxBoxSizer* keyboard_area;
@@ -255,34 +273,6 @@ mainFrame::mainFrame( const wxString& title, const wxPoint& pos, const wxSize& s
 	main_grid->Fit( this );
 
 	this->Centre( wxBOTH );
-
-    /*
-    wxPanel* panel_top = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxSize( 200, 100 ) ) ;
-    panel_top->SetBackgroundColour( wxColor( 100, 100, 100 ) ) ;
-    wxPanel* panel_bottom = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxSize( 200, 100 ) )  ;
-    panel_bottom->SetBackgroundColour( wxColor( 100, 200, 0 ) ) ;
-
-
-    wxSplitterWindow* split = new wxSplitterWindow( panel_bottom, wxID_ANY, wxDefaultPosition, wxDefaultSize ) ;
-    wxPanel* panel_bottom_l = new wxPanel( split, wxID_ANY, wxDefaultPosition, wxSize( 100, 100 ) ) ;
-    panel_bottom_l->SetBackgroundColour( wxColor( 100, 100, 200 ) ) ;
-    wxPanel* panel_bottom_r = new wxPanel( split, wxID_ANY, wxDefaultPosition, wxSize( 100, 100 ) ) ;
-    panel_bottom_r->SetBackgroundColour( wxColor( 0, 100, 200 ) ) ;
-
-
-    split->SplitVertically( panel_bottom_l, panel_bottom_r ) ;
-    split->SetMinimumPaneSize( 100 ) ;
-    split->SetSashGravity( 0.5 ) ;
-
-    wxBoxSizer* sizer = new wxBoxSizer( wxVERTICAL ) ;
-    sizer->Add( panel_top, 1, wxEXPAND ) ;
-    wxBoxSizer* size_bottom = new wxBoxSizer( wxHORIZONTAL ) ;
-    size_bottom->Add( panel_bottom, 1, wxEXPAND ) ;
-    //size_bottom->Add( panel_bottom_r, 0, wxEXPAND ) ;
-    //sizer->Add( panel_bottom, 1, wxEXPAND ) ;
-    sizer->Add( size_bottom, 1, wxEXPAND ) ;
-    this->SetSizerAndFit( sizer ) ;
-    */
 }
 
 void mainFrame::OnExit( wxCommandEvent& event )
