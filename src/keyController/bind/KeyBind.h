@@ -64,6 +64,8 @@ class KeyBind
 		std::string get_local_name() ;
 		void set_local_name( std::string _name ) ;
 		bool is_axis() ;
+
+		std::string get_section() ;
 	protected:
 		//Unfortunate type check
 		bool axis ;

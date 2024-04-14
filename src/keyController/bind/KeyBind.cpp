@@ -157,3 +157,8 @@ std::vector<std::vector<Control*>>* KeyBind::get_control()
 {
 	return &this->control ;
 }
+
+std::string KeyBind::get_section()
+{
+	return this->section ;
+}
