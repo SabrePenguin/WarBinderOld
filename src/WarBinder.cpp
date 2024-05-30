@@ -79,6 +79,12 @@ void sdl_loop( std::shared_ptr<KeyBindController> key_controller )
 				i++ ;
 				std::cout << i << std::endl ;
 				break ;
+
+			case SDL_EVENT_KEY_DOWN:
+				std::cout << event.key.keysym.scancode; 
+				std::cout << SDL_GetKeyFromScancode( event.key.keysym.scancode ) ;
+				std::cout << event.key.keysym.sym ;
+				break ;
 			case SDL_EVENT_USER:
 				active = false ;
 				break ;
