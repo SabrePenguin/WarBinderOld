@@ -5,6 +5,8 @@ target_sources(wx_gui
 		"${CMAKE_CURRENT_LIST_DIR}/WXGui.h"
 	PRIVATE
 		"${CMAKE_CURRENT_LIST_DIR}/WXGui.cpp"
+		"WXKeyInput.cpp"
+		"WXKeyInput.h"
 )
 
 target_include_directories(wx_gui
@@ -17,6 +19,7 @@ target_include_directories(wx_gui
 		"${CMAKE_CURRENT_LIST_DIR}/../../keyController/bind"
 		"${CMAKE_CURRENT_LIST_DIR}/../../keyController/control"
 		"${CMAKE_CURRENT_LIST_DIR}/../../keyController/options"
+		${SDL3}
 )
 
 target_link_libraries(wx_gui
