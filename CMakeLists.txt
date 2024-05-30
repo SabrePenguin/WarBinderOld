@@ -15,6 +15,7 @@ set(BUILD_SHARED_LIBS OFF)
 
 set(UI_OPTION ON CACHE STRING "Select ui type")
 set_property(CACHE UI_OPTION PROPERTY STRINGS "ptui" "wxWidgets" "Qt")
+set(UI_OPTION "wxWidgets")
 
 include(FetchContent)
 
