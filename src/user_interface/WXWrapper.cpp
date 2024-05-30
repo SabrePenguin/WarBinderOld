@@ -1,9 +1,10 @@
 #include "WXWrapper.h"
 #include "WXGui.h"
 #include <SDL.h>
+#include <SDL_system.h>
 #include <unordered_map>
 #include <string>
-
+//TODO: Remove?
 //Include this here because it handles some of the pointers
 #ifdef __WXMSW__
 #include <wx/msw/msvcrt.h>      // redefines the new() operator 
@@ -21,8 +22,25 @@ int WXWrapper::main_loop( int argc, char* argv[] )
 	wxApp::SetInstance( new WXGui( this ) ) ;
 	wxEntryStart( argc, argv ) ;
 	wxTheApp->CallOnInit() ;
+
+	wxFrame* mainFrame = dynamic_cast< wxFrame* >( wxTheApp->GetTopWindow() ) ;
+	if( !mainFrame )
+		return 1 ;
+
+
+	SDL_PropertiesID props = SDL_CreateProperties() ;
+	SDL_SetProperty( props, SDL_PROP_WINDOW_CREATE_WIN32_HWND_POINTER, mainFrame->GetHandle() ) ;
+
+	SDL_Window* sdlWindow = SDL_CreateWindowWithProperties( props )  ;
+
+	if( !sdlWindow )
+	{
+		return 1 ;
+	}
+
 	wxTheApp->OnRun() ;
 	//wxTheApp->Exit() ;
+	SDL_DestroyWindow( sdlWindow ) ;
 	wxEntryCleanup() ;
 
 
