@@ -16,6 +16,7 @@
 #include "KeyBind.h"
 #include "Control.h"
 #include "WXWrapper.h"
+#include "WXKeyInput.h"
 
 wxBEGIN_EVENT_TABLE( mainFrame, wxFrame )
 EVT_MENU( wxID_EXIT, mainFrame::OnExit )
@@ -36,7 +37,7 @@ WXGui::WXGui( WXWrapper* _wrapper )
 
 bool WXGui::OnInit()
 {
-	mainFrame* frame = new mainFrame( "Test", wxDefaultPosition, wxDefaultSize, wrapper ) ;
+	mainFrame* frame = new mainFrame( "WarBinder", wxDefaultPosition, wxDefaultSize, wrapper ) ;
 	frame->Show( true ) ;
 	frame->SetMinSize( wxSize( 700, 300 ) ) ;
 	return true ;
@@ -58,7 +59,14 @@ void mainFrame::on_button_clicked( wxCommandEvent& event )
 
 	if( !data->is_axis() )
 	{
-		wxMessageBox( "A", "Popup A" ) ;
+		WXKeyInput* input = new WXKeyInput( this, "Test", data ) ;
+		input->ShowModal() ;
+		input->Destroy() ;
+		//wxMessageBox( "A", "Popup A" ) ;
+	}
+	else
+	{
+		wxMessageBox( "B", "Popup B" ) ;
 	}
 }
 
@@ -198,12 +206,12 @@ mainFrame::mainFrame( const wxString& title, const wxPoint& pos, const wxSize& s
 			if( current_section.compare( iter->first ) != 0 )
 			{
 				current_section = iter->first ;
-				scroll_sizer->Add( sizer, 1, wxEXPAND, 5 ) ;
+				scroll_sizer->Add( sizer, 0, wxEXPAND, 5 ) ;
 				sizer = new wxBoxSizer( wxVERTICAL ) ;
 			}
 			sizer->Add( iter->second, 0, wxALL, 5 ) ;
 		}
-		scroll_sizer->Add( sizer, 1, wxEXPAND, 5 ) ;
+		scroll_sizer->Add( sizer, 0, wxEXPAND, 5 ) ;
 	}
 	
 
