@@ -23,12 +23,14 @@ int WXWrapper::main_loop( int argc, char* argv[] )
 	wxEntryStart( argc, argv ) ;
 	wxTheApp->CallOnInit() ;
 
-	wxFrame* mainFrame = dynamic_cast< wxFrame* >( wxTheApp->GetTopWindow() ) ;
+	/*wxFrame* mainFrame = dynamic_cast< wxFrame* >( wxTheApp->GetTopWindow() ) ;
 	if( !mainFrame )
 		return 1 ;
 
 
 	SDL_PropertiesID props = SDL_CreateProperties() ;
+	SDL_SetBooleanProperty( props, SDL_PROP_WINDOW_CREATE_EXTERNAL_GRAPHICS_CONTEXT_BOOLEAN, true ) ;
+
 	SDL_SetProperty( props, SDL_PROP_WINDOW_CREATE_WIN32_HWND_POINTER, mainFrame->GetHandle() ) ;
 
 	SDL_Window* sdlWindow = SDL_CreateWindowWithProperties( props )  ;
@@ -37,10 +39,10 @@ int WXWrapper::main_loop( int argc, char* argv[] )
 	{
 		return 1 ;
 	}
-
+	*/
 	wxTheApp->OnRun() ;
 	//wxTheApp->Exit() ;
-	SDL_DestroyWindow( sdlWindow ) ;
+	//SDL_DestroyWindow( sdlWindow ) ;
 	wxEntryCleanup() ;
 
 
