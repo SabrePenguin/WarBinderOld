@@ -24,6 +24,8 @@
 #include <wx/notebook.h>
 #include <wx/frame.h>
 #include <string>
+#include <SDL.h>
+
 
 class KeyBind ;
 class WXWrapper ;
@@ -35,7 +37,7 @@ public:
 	 * @brief WarBinder implementation of wxApp
 	 */
 	WXGui() ;
-	WXGui( WXWrapper* _wrapper ) ;
+	WXGui( WXWrapper* _wrapper) ;
 	/**
 	 * @brief The main logic startup
 	 * @return Success or failure
@@ -55,6 +57,7 @@ private:
 	void create_bar() ;
 	void on_button_clicked( wxCommandEvent& event ) ;
 	wxDECLARE_EVENT_TABLE();
+	SDL_Window** window ;
 	WXWrapper* wrapper ; /* Used for communication. Do not delete, as it's shared and making this shared causes issues */
 };
 
