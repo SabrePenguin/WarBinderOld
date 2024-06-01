@@ -39,4 +39,5 @@ target_link_libraries(wx_gui
 		wxwebview
 		wxxml
 		wxxrc
+	SDL3::SDL3-static
 )
