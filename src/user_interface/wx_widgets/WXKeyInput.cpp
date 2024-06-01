@@ -7,6 +7,7 @@
 #include <string>
 #include "KeyBind.h"
 #include "Control.h"
+#include <SDL_system.h>
 
 WXKeyInput::WXKeyInput( wxWindow* parent, const wxString& name, KeyBind* keybind )
 	: wxDialog(parent, -1, name)
@@ -14,6 +15,7 @@ WXKeyInput::WXKeyInput( wxWindow* parent, const wxString& name, KeyBind* keybind
 	wxBoxSizer* stack = new wxBoxSizer( wxVERTICAL ) ;
 	wxBoxSizer* main_control = new wxBoxSizer( wxHORIZONTAL ) ;
 	auto controls = keybind->get_control() ;
+	Bind( wxEVT_SIZE, &WXKeyInput::OnSize, this );
 	for( auto iter = controls->begin() ; iter != controls->end() ; ++iter )
 	{
 		std::string name ;
@@ -31,9 +33,45 @@ WXKeyInput::WXKeyInput( wxWindow* parent, const wxString& name, KeyBind* keybind
 	wxButton* confirm = new wxButton( this, wxID_OK, "Confirm" ) ;
 	/// TODO: Fire event here where we wait until key is lifted
 	wxButton* newControl = new wxButton( this, wxID_ANY, "Add new combo" ) ;
+	newControl->Bind( wxEVT_BUTTON, &WXKeyInput::start_addition, this) ;
 
 	main_control->Add( newControl, 0 ) ;
 	main_control->Add( confirm, 0 ) ;
 	stack->Add( main_control, 0 ) ;
 	SetSizer( stack ) ;
+
+	SDL_PropertiesID props = SDL_CreateProperties() ;
+	//SDL_SetBooleanProperty( props, SDL_PROP_WINDOW_CREATE_MENU_BOOLEAN, true ) ;
+	//SDL_SetProperty( props, SDL_PROP_WINDOW_CREATE_PARENT_POINTER, parent->GetHWND() ) ;
+	SDL_SetProperty( props, SDL_PROP_WINDOW_CREATE_WIN32_HWND_POINTER, GetHandle() ) ;
+
+	window = SDL_CreateWindowWithProperties( props )  ;
+}
+
+void WXKeyInput::onSize( wxCommandEvent& event )
+{
+	Update() ;
+	Refresh() ;
+}
+
+WXKeyInput::~WXKeyInput()
+{
+	if( window )
+		SDL_DestroyWindow( window ) ;
+}
+
+void WXKeyInput::start_addition( wxCommandEvent& event )
+{
+
+	//data->add_control() ;
+}
+
+WXReadIn::WXReadIn( wxWindow* parent, const wxString& name, KeyBind* keybind )
+	: wxDialog( parent, -1, name )
+{
+}
+
+WXReadIn::~WXReadIn()
+{
+
 }
