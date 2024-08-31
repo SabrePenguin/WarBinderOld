@@ -1,12 +1,12 @@
-internal_name,mode,required,english
-ID_AAM,p,f,Fire AAM
-ID_AAM_HELICOPTER,h,f,Fire helicopter AAM
-ID_AIR_REVERSE,p,f,Enable Thrust Reversal
-ID_BAY_DOOR,p,f,Open Bomb Bay
-ID_BOMBS,p,f,Drop Single Bomb
-ID_BOMBS_SERIES,p,f,Drop Bomb Series
-ID_CAMERA_COMMANDER,t,f,Enter Commander View
-ID_CAMERA_DRIVER,t,f,Enter Driver View
-ID_CAMERA_FOLLOW_OBJECT,p,f,Follow the launched object
-throttle_rangeMax,p,t,Throttle Up
-throttle_rangeMin,p,t,Throttle Down
+internal_name,mode,sub_mode,section,required,english
+ID_AAM,p,s,Weaponry,f,Fire AAM
+ID_AAM_HELICOPTER,h,s,Weaponry,f,Fire helicopter AAM
+ID_AIR_REVERSE,p,Movement,f,Enable Thrust Reversal
+ID_BAY_DOOR,p,s,Weaponry,f,Open Bomb Bay
+ID_BOMBS,p,s,Weaponry,f,Drop Single Bomb
+ID_BOMBS_SERIES,p,s,Weaponry,f,Drop Bomb Series
+ID_CAMERA_COMMANDER,t,s,Camera,f,Enter Commander View
+ID_CAMERA_DRIVER,t,s,Camera,f,Enter Driver View
+ID_CAMERA_FOLLOW_OBJECT,p,s,Camera,f,Follow the launched object
+throttle_rangeMax,p,s,Movement,t,Throttle Up
+throttle_rangeMin,p,s,Movement,t,Throttle Down

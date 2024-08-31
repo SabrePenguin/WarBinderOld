@@ -15,7 +15,7 @@ ptui::ptui( std::shared_ptr<KeyBindController> _controller )
 {
 }
 
-void ptui::main_loop(  )
+int ptui::main_loop( int argc, char* argv[] )
 {
 	bool active = true ;
 	char in ;
@@ -26,8 +26,9 @@ void ptui::main_loop(  )
 		std::cout << "\nEnter one of the following choices:" << std::endl ;
 		std::cout << "D(isplay)" << std::endl;
 		std::cout << "A(ssign)" << std::endl ;
-		std::cout << "Q(uit)" << std::endl;
 		std::cout << "R(emove)" << std::endl ;
+		std::cout << "C(ontroller)" << std::endl ;
+		std::cout << "Q(uit)" << std::endl;
 		std::cin >> in ;
 		switch( in )
 		{
@@ -61,6 +62,11 @@ void ptui::main_loop(  )
 			tester() ;
 			break ;
 
+		case 'c':
+		case 'C':
+			this->controller.get()->set_lock( false ) ;
+			break ;
+
 			//Quit the loop
 		case 'Q':
 		case 'q':
@@ -81,6 +87,7 @@ void ptui::main_loop(  )
 			break ;
 		}
 	}
+	return 0 ;
 }
 
 void ptui::controller_change_notify()

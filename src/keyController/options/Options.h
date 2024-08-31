@@ -16,7 +16,7 @@ class Options
 		* @param _max: The maximum value it can be. For booleans, this is true
 		* @param _option: Whether this option is a middle or lower file section (may be removed)
 		*/
-		Options( T _cur_val, T _max, bool _option ) ;
+		Options( T _cur_val, T _max, bool _option, char _mode, std::string _section ) ;
 		/**
 		* @brief Gets the value of the parameter type
 		* @tparam T: Int, Boolean, or Float
@@ -36,6 +36,8 @@ class Options
 		T max ;
 		//Whether this exists in the lower or upper section of the .blk file
 		bool option ;
+		char mode ; /* The gamemode this should appear under */
+		std::string section ; /* The section this should appear in */
 };
 class Option_Integer : public Options<int>
 {
@@ -47,7 +49,7 @@ class Option_Integer : public Options<int>
 		* @param _option: If this option belongs in the upper or lower section of the file
 		* @param _choices: A list of all the choices
 		*/
-		Option_Integer( int _cur_val, int _max, bool _option, std::list<std::string> _choices ) ;
+		Option_Integer( int _cur_val, int _max, bool _option, std::list<std::string> _choices, char _mode, std::string _section ) ;
 		~Option_Integer() ;
 		/**
 		* @brief The overloaded method for getting the list of options. Used for visually inspecting the options.

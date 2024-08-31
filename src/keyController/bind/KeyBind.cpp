@@ -1,8 +1,10 @@
 #include "KeyBind.h"
 #include "Control.h"
 
-KeyBind::KeyBind( char _mode, bool _axis, bool _required, std::string _local_name, std::string _internal_id) :
-	mode( _mode ), axis( _axis ), required( _required ), local_id( _local_name ), internal_id( _internal_id ), is_reset( false )
+KeyBind::KeyBind( char _mode, char _sub_mode, bool _axis,
+	bool _required, std::string _local_name, std::string _internal_id, std::string _section) :
+	mode( _mode ), sub_mode( _sub_mode ),  axis( _axis ), required( _required ), 
+	local_id( _local_name ), internal_id( _internal_id ), is_reset( false ), section( _section )
 {
 
 }
@@ -154,4 +156,9 @@ bool KeyBind::is_axis()
 std::vector<std::vector<Control*>>* KeyBind::get_control()
 {
 	return &this->control ;
+}
+
+std::string KeyBind::get_section()
+{
+	return this->section ;
 }

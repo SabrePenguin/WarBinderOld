@@ -15,14 +15,8 @@
 #include "Device.h"
 #include "DeviceHandler.h"
 
+#ifdef WX_WIDGETS
 
-
-#define _CRTDBG_MAP_ALLOC
-#include<iostream>
-#include <crtdbg.h>
-#ifdef _DEBUG
-#define DEBUG_NEW new(_NORMAL_BLOCK, __FILE__, __LINE__)
-#define new DEBUG_NEW
 #endif
 
 // The purpose of this file is to be the surface level file that users
@@ -30,7 +24,7 @@
 
 
 KeyBindController::KeyBindController(std::string _controlfile, std::string _bindfile, std::string _optfile, std::string _language) : 
-	language(_language) 
+	language(_language), buttons_locked( true )
 {
 	// SDL2 initialization. Run first to check for errors.
 	device_handler = std::make_unique<DeviceHandler>() ;
@@ -38,7 +32,7 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 	// Import all the files
 	file_handler = std::make_unique<Reader>() ;
 	std::vector<std::tuple<std::string, char, std::string, bool>> controls = get_control( _controlfile, _language ) ;
-	std::vector<std::tuple<std::string, char, std::string, bool, bool>> binds = get_binds( _bindfile, _language ) ;
+	std::vector<std::tuple<std::string, char, char, std::string, std::string, bool, bool>> binds = get_binds( _bindfile, _language ) ;
 	auto options = get_options( _optfile, _language ) ;
 
 	// Add data to internal structures
@@ -60,21 +54,22 @@ KeyBindController::KeyBindController(std::string _controlfile, std::string _bind
 	
 	for( auto iterator = binds.begin() ; iterator != binds.end() ; ++iterator )
 	{
-		//Position zero has the internal name
-		//Position two has the local name
-		//Position three controls if it's an axis
-		//Position one controls its mode
-		//Position four is whether the bind is required to play
+		// Position zero has the internal name
+		// Position four has the local name
+		// Position five controls if it's an axis
+		// Position one controls its mode
+		// Position two controls the submode
+		// Position six is whether the bind is required to play
 		this->add_new_bind(
 			std::get<0>( *iterator ),
-			std::get<2>( *iterator ),
+			std::get<4>( *iterator ),
 			std::get<1>( *iterator ),
-			std::get<3>( *iterator ),
-			std::get<4>( *iterator )
+			std::get<2>( *iterator ),
+			std::get<5>( *iterator ),
+			std::get<6>( *iterator ),
+			std::get<3>( *iterator )
 		) ;
 	}
-	// Run a scan for any controllers
-	device_handler->find_devices() ;
 }
 
 
@@ -139,7 +134,8 @@ void KeyBindController::add_new_controller_axis( std::string _key_id, std::strin
 }
 
 
-void KeyBindController::add_new_bind(std::string _internal_id, std::string _local_id, char _mode, bool _is_axis, bool _required)
+void KeyBindController::add_new_bind(std::string _internal_id, std::string _local_id, 
+	char _mode, char _sub_mode, bool _is_axis, bool _required, std::string _section)
 {
 	KeyBind* new_bind ;
 	if( !_is_axis )
@@ -149,7 +145,7 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 		{
 			return ;
 		}
-		new_bind = new KeyBind( _mode, _is_axis, _required, _local_id, _internal_id ) ;
+		new_bind = new KeyBind( _mode, _sub_mode, _is_axis, _required, _local_id, _internal_id, _section ) ;
 		//delete new_bind ;
 		this->system_binds.insert( { _internal_id, new_bind } ) ;
 	}
@@ -166,30 +162,30 @@ void KeyBindController::add_new_bind(std::string _internal_id, std::string _loca
 			//This ugly section is for the new Axis type of three objects
 			if( _internal_id.find( "_rangeSet" ) != std::string::npos )
 			{
-				new_bind = new AxisReset( _internal_id, _local_id, _mode, _required ) ;
+				new_bind = new AxisReset( _internal_id, _local_id, _mode, _required, _sub_mode, _section ) ;
 				size_t cutoff = _internal_id.find_last_of( "_" ) ;
 				if( cutoff != std::string::npos )
 					_internal_id.erase( cutoff ) ;
-				bind_one = new AxisChange( _internal_id + "_rangeMin", _local_id, _mode, _required) ;
-				bind_two = new AxisChange( _internal_id + "_rangeMax", _local_id, _mode, _required) ;
+				bind_one = new AxisChange( _internal_id + "_rangeMin", _local_id, _mode, _required, _sub_mode, _section ) ;
+				bind_two = new AxisChange( _internal_id + "_rangeMax", _local_id, _mode, _required, _sub_mode, _section ) ;
 			}
 			else if( _internal_id.find( "_rangeMin" ) != std::string::npos )
 			{
-				bind_one = new AxisChange( _internal_id, _local_id, _mode, _required ) ;
+				bind_one = new AxisChange( _internal_id, _local_id, _mode, _required, _sub_mode, _section ) ;
 				size_t cutoff = _internal_id.find_last_of( "_" ) ;
 				if( cutoff != std::string::npos )
 					_internal_id.erase( cutoff ) ;
-				new_bind = new AxisReset( _internal_id + "_rangeSet", _local_id, _mode, _required ) ;
-				bind_two = new AxisChange( _internal_id + "_rangeMax", _local_id, _mode, _required ) ;
+				new_bind = new AxisReset( _internal_id + "_rangeSet", _local_id, _mode, _required, _sub_mode, _section ) ;
+				bind_two = new AxisChange( _internal_id + "_rangeMax", _local_id, _mode, _required, _sub_mode, _section ) ;
 			}
 			else
 			{
-				bind_two = new AxisChange( _internal_id, _local_id, _mode, _required ) ;
+				bind_two = new AxisChange( _internal_id, _local_id, _mode, _required, _sub_mode, _section ) ;
 				size_t cutoff = _internal_id.find_last_of( "_" ) ;
 				if( cutoff != std::string::npos )
 					_internal_id.erase( cutoff ) ;
-				new_bind = new AxisReset( _internal_id + "_rangeSet", _local_id, _mode, _required ) ;
-				bind_one = new AxisChange( _internal_id + "_rangeMin", _local_id, _mode, _required ) ;
+				new_bind = new AxisReset( _internal_id + "_rangeSet", _local_id, _mode, _required, _sub_mode, _section ) ;
+				bind_one = new AxisChange( _internal_id + "_rangeMin", _local_id, _mode, _required, _sub_mode, _section ) ;
 			}
 			//Circular reference to allow for easy comm
 			bind_one->add_other_controls( new_bind, bind_two ) ;
@@ -261,13 +257,14 @@ void KeyBindController::import( std::string _filename )
 		}
 	}
 
-
+	/*
 	//Import the controllers before the axes
 	t_device devices = std::get<3>( data ) ;
 	int total_buttons = 1 ;
 	int total_axes = 1 ;
 	for( t_device::iterator iter = devices.begin() ; iter != devices.end() ; ++iter )
 	{
+		//TODO: Ask user if they want to try matching controllers. Mainly because War Thunder gets info from another method.
 		auto check = this->device_list.find( (*iter).name ) ;
 		bool enabled = iter->connected ;
 		//If it exists, remove everything of the device and replace so that it's easier
@@ -330,7 +327,7 @@ void KeyBindController::import( std::string _filename )
 		this->system_keys.erase( find_axes ) ;
 		find_axes = this->system_keys.find( front + std::to_string( ++total_axes ) ) ;
 	}
-
+	*/
 	//Now run to get the axes
 	t_import_axis axes = std::get<1>( data ) ;
 	for( t_import_axis::iterator iter = axes.begin() ; iter != axes.end() ; ++iter )
@@ -379,26 +376,76 @@ int KeyBindController::find_pos( std::string name, char ch )
 void KeyBindController::notify_device( SDL_Event* cur_event )
 {
 	std::string result = device_handler.get()->device_change( cur_event ) ;
+
 	int pos = 0 ;
 	std::string name ;
 	if( result.length() > 0 )
 	{
-		//Remove guid
-		pos = find_pos( result, ',' ) ;
-		result = result.substr(pos) ;
-		//Remove name
-		pos = find_pos( result, ',' ) ;
-		name = result.substr( 0, pos ) ;
-		result = result.substr( pos ) ;
-		std::string a ;
-		std::string b ;
-		//while( result.length() > 0 )
+		//Remove the GUID
+		result.erase( 0, result.find_first_of( ',' )+1 ) ;
+		pos = result.find_first_of( ',' ) ;
+		//if( result[ 0 ] != '*' )
 		{
-			pos = find_pos( result, ',' ) ;
+			name = result.substr( 0, pos ) ;
+		}
+		/*else
+		{
+			#ifdef WX_WIDGETS
+			//Run an SDL event to call the observer
+			#else
+			std::cin >> name ; //Due to parallel threads, a space must be added at the start
+			#endif
+		}*/
+		result.erase( 0, pos + 1 ) ;
+		int middle ;
+		//Insert a section to count buttons, hats, and axes
+		pos = result.find_last_of( ',' ) ;
+		result.erase( pos-1 ) ;
+		int button_count = 0 ;
+		int axis_count = 0 ;
+		for( int iter = 1 ; iter < result.length() ; ++iter )
+		{
+			// If previous character is ':'
+			if( result[ iter - 1 ] )
+			{
+				// If the current character is b
+				if( result[ iter ] == 'b')
+				{
+					++button_count ;
+				}
+				else if( result[ iter ] == 'h' )
+				{
+					++button_count ;
+				}
+				else if( result[ iter ] == 'a' )
+				{
+					++axis_count ;
+				}
+			}
+		}
 
-			pos = find_pos( result, ',' ) ;
+		while( result.length() > 0 )
+		{
+			//a = axis, h = button, b = button
+			pos = result.find_first_of( ',' ) ;
+			middle = result.find_first_of( ':' ) ;
+			if( pos == std::string::npos )
+			{
+				pos = result.length() - 1 ;
+			}
+			if( result[ middle+1 ] == 'b' )
+			{
 
-			pos = find_pos( result, ',' ) ;
+			}
+			else if( result[ middle+1 ] == 'h' )
+			{
+
+			}
+			else if( result[ middle+1 ] == 'a' )
+			{
+				//add_new_joystick(,) ;
+			}
+			result.erase( 0, pos+1 ) ;
 		}
 	}
 }
@@ -497,4 +544,35 @@ void KeyBindController::remove_all_keys( KeyBind* _bind )
 void KeyBindController::add_single_key( KeyBind* _bind, std::vector<Control*>* _key_combo, Control* _key )
 {
 	_bind->add_single_key( _key_combo, _key ) ;
+}
+
+void KeyBindController::set_lock( SDL_Event* _event )
+{
+	for( auto iter = this->button_combo.begin() ; iter != this->button_combo.end() ; iter++ )
+	{
+		// If this program's id is equal to the internal id of the event
+		// and if any of the second equal the event button which was released.
+		if( iter->first == _event->gbutton.which && iter->second == _event->gbutton.button )
+		{
+			this->buttons_locked.store( true ) ;
+			return ;
+			//Push buttons into a Control
+		}
+	}
+	this->buttons_locked.store( false ) ;
+}
+
+void KeyBindController::disable_lock( bool _lock )
+{
+	this->buttons_locked.store( false ) ;
+}
+
+bool KeyBindController::get_lock()
+{
+	return this->buttons_locked.load() ;
+}
+
+void KeyBindController::add_button_to_set( SDL_Event* _event )
+{
+	this->button_combo.push_back( { _event->gbutton.which, _event->gbutton.button } ) ;
 }

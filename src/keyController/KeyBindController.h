@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <memory>
 #include <SDL.h>
+#include <atomic>
 
 enum class Key_Type ;
 class Control ;
@@ -60,9 +61,14 @@ class KeyBindController
 		* @brief Adds a Bind pointer.
 		* @param _internal_id: The internal id of the bind name.
 		* @param _local_id: The local name of the bind. (ie. "Throttle Up")
-		* @param _axis: Determines if the given bind needs to be an axis or regular button
+		* @param _mode: The mode this bind belongs to (p,t,h,s,c,...)
+		* @param _sub_mode: The control scheme to use. One of 4.
+		* @param _is_axis: Determines if the given bind needs to be an axis or regular button
+		* @param _required: Is this bind required to play the game
+		* @param _section: The section for this 
 		*/
-		void add_new_bind(std::string _internal_id, std::string _local_id, char _mode, bool _is_axis, bool _required);
+		void add_new_bind(std::string _internal_id, std::string _local_id, char _mode, 
+			char _sub_mode, bool _is_axis, bool _required, std::string _section);
 
 		/**
 		* @brief Gets the internal map with all the binds
@@ -155,6 +161,10 @@ class KeyBindController
 		 * @param _key: The Control to add
 		 */
 		void add_single_key( KeyBind* _bind, std::vector<Control*>* _key_combo, Control* _key ) ;
+		void set_lock( SDL_Event* _event ) ;
+		void disable_lock( bool _lock ) ;
+		bool get_lock() ;
+		void add_button_to_set( SDL_Event* _event ) ;
 	private:
 		/**
 		* @brief A method to check whether the given button is on the keyboard, mouse, or a controller
@@ -178,5 +188,8 @@ class KeyBindController
 		std::unique_ptr<DeviceHandler> device_handler ;
 		//A set of devices.
 		std::unordered_map<std::string,std::shared_ptr<Device>> device_list ;
+		//Whether or not KeyBindController is accepting controller input
+		std::atomic_bool buttons_locked ;
+		std::vector<std::pair<int, int>> button_combo;
 };
 #endif // KEYBINDCONTROL_H
