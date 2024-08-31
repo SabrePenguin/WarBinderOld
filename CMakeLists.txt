@@ -1,5 +1,4 @@
-﻿# CMakeList.txt : CMake project for WarBinder, include source and define
-# project specific logic here.
+﻿# CMakeList.txt : CMake project for WarBinder
 #
 cmake_minimum_required (VERSION 3.11)
 
@@ -13,13 +12,17 @@ project ("WarBinder")
 
 set(BUILD_SHARED_LIBS OFF)
 
+#Sets the specific ui build type. 3 main options are supported by default.
+# ptui: useful for debugging
+# wxWidgets: A basic window. Relies entirely on itself and SDL. No external tools (qui, etc.) needed.
+# Qt: Fancier graphics and better designed. Requires Qt to be installed.
 set(UI_OPTION ON CACHE STRING "Select ui type")
 set_property(CACHE UI_OPTION PROPERTY STRINGS "ptui" "wxWidgets" "Qt")
 set(UI_OPTION "wxWidgets")
 
 include(FetchContent)
 
-# Include SDL for controller and mouse detection
+# Include SDL for game-like handling of input
 FetchContent_Declare(
 	SDL3
 	GIT_REPOSITORY https://github.com/libsdl-org/SDL.git

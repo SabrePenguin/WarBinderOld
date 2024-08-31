@@ -16,7 +16,8 @@
 #include "KeyBind.h"
 #include "Control.h"
 #include "WXWrapper.h"
-#include "WXKeyInput.h"
+#include "SDLKeyInput.h"
+
 
 wxBEGIN_EVENT_TABLE( mainFrame, wxFrame )
 EVT_MENU( wxID_EXIT, mainFrame::OnExit )
@@ -59,10 +60,8 @@ void mainFrame::on_button_clicked( wxCommandEvent& event )
 
 	if( !data->is_axis() )
 	{
-		WXKeyInput* input = new WXKeyInput( this, "Test", data ) ;
-		input->ShowModal() ;
-		input->Destroy() ;
-		//wxMessageBox( "A", "Popup A" ) ;
+		new_window() ;
+		
 	}
 	else
 	{

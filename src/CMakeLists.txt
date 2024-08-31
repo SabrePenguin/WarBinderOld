@@ -29,7 +29,3 @@ target_link_libraries(WarBinder
 	userInterface
 	SDL3::SDL3-static
 )
-
-
-
-##End of library insertion

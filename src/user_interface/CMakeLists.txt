@@ -1,5 +1,6 @@
 add_library(userInterface)
 
+#Include the wxWidgets specific information
 if(WXSET)
 	add_subdirectory(wx_widgets)
 	set(WX_LIST_SOURCES
@@ -10,6 +11,9 @@ if(WXSET)
 		wx_gui
 	)
 endif()
+
+add_subdirectory(sdl_common)
+
 
 target_sources(userInterface
 	PUBLIC

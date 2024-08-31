@@ -39,7 +39,7 @@ int initialize()
 	}
 	return 0 ;
 }
-
+//Consider the need for the controls being received here
 void sdl_loop( std::shared_ptr<KeyBindController> key_controller )
 {
 	bool active = true ;
@@ -52,6 +52,7 @@ void sdl_loop( std::shared_ptr<KeyBindController> key_controller )
 	{
 		if( SDL_WaitEvent( &event ) )
 		{
+			//Check for event GAMEPADS. Switch to if statement to allow for keyController global if statement and filter out events. Pass event to gui?
 			switch( event.type )
 			{
 			case SDL_EVENT_GAMEPAD_ADDED:
@@ -88,6 +89,10 @@ void sdl_loop( std::shared_ptr<KeyBindController> key_controller )
 			case SDL_EVENT_USER:
 				active = false ;
 				break ;
+
+			case SDL_EVENT_MOUSE_BUTTON_DOWN:
+				std::cout << "yes" ;
+				break;
 			}
 		}
 	}
